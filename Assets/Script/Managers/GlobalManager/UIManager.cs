@@ -196,8 +196,7 @@ public class UIManager : MonoBehaviour, IGlobalManager
             // 클래스 없이 객체만 있는 경우 이름으로 타입변환
             else if (Enum.TryParse(child.name, out MyUi UiType))
             {
-                // 초기화 없이 딕셔너리에 삽입
-                InitChildUiByDFS(uiContainer, UiType, asUserInterface);
+                Debug.LogError($"{child.name} has no BaseUi");
             }
 
             // child.gameObject.SetActive(false);를 if문 바깥으로 빼면 Ui의 모든 자식객체가 비활성화되어버림
