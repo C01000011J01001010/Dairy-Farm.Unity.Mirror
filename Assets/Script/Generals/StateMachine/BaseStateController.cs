@@ -7,46 +7,43 @@ public abstract class BaseStateController<TState> : MonoBehaviour where TState :
 {
     [SerializeField]protected TState currentStateType;
     protected BaseState<TState> CurrentState;
-    protected Dictionary<TState, BaseState<TState>> stateDict = new();
+    protected Dictionary<TState, BaseState<TState>> stateDict;
 
     public TState CurrentStateType => currentStateType;
 
     public virtual void Exit()
     {
-        foreach (var state in stateDict.Values)
-        {
-            state.Dispose();
-        }
+        // None을 전달
+        CurrentState?.Exit(null);
     }
 
     public virtual void Initialize(TState defaultState)
     {
-        StateAdd();
+        stateDict = ProductState();
         currentStateType = defaultState;
         CurrentState = GetState(defaultState);
         CurrentState.Enter();
     }
-    protected abstract void StateAdd();
+    protected abstract Dictionary<TState, BaseState<TState>> ProductState();
 
     public virtual void UpdateFromOwner()
     {
-        TState? want = CurrentState.CheckTransitions();
-        if (want == null)
+        TState? nextState = CurrentState.CheckTransitions();
+
+        if (nextState.HasValue)
         {
-            CurrentState?.Update();
+            TransitionTo(nextState.Value);
+            return;
         }
-        else
-        {
-            TransitionTo(want.Value);
-        }
+        CurrentState?.Update();
     }
 
-    protected virtual void TransitionTo(TState want)
+    protected virtual void TransitionTo(TState nextState)
     {
-        CurrentState.Exit(want);
+        CurrentState.Exit(nextState);
 
-        currentStateType = want;
-        CurrentState = GetState(want);
+        currentStateType = nextState;
+        CurrentState = GetState(nextState);
 
         CurrentState.Enter();
     }
@@ -56,7 +53,7 @@ public abstract class BaseStateController<TState> : MonoBehaviour where TState :
         if (stateDict.ContainsKey(wantState)) return stateDict[wantState];
         else
         {
-            Debug.Log($"the key({wantState.ToString()}) not contained in stateDict");
+            Debug.LogWarning($"the key({wantState.ToString()}) not contained in stateDict");
             return null;
         }
     }

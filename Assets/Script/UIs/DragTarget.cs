@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public sealed class DragTarget : MonoBehaviour, IInitializable, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public sealed class DragTarget : MonoBehaviour, IInitialize, IPointerDownHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private DragManager _dragManager;
     public RectTransform moveObjRectTransform {  get; private set; }
@@ -15,8 +15,6 @@ public sealed class DragTarget : MonoBehaviour, IInitializable, IPointerDownHand
     /// </summary>
     private Canvas _canvas;
 
-    public bool IsInit {  get; private set; }
-
     public IEnumerator Initialize()
     {
 
@@ -24,8 +22,11 @@ public sealed class DragTarget : MonoBehaviour, IInitializable, IPointerDownHand
         if(_canvas is null) yield break;
         _dragManager = GameManager.GetManager<DragManager>();
         if(_dragManager is null) yield break;
+    }
 
-        IsInit = true;
+    public IEnumerator LateInitialize()
+    {
+        yield break;
     }
 
     public void Exit()

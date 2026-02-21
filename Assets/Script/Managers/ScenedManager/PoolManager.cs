@@ -66,7 +66,7 @@ public class PoolManager : MonoBehaviour, IScenedManager
         {
             foreach(GameObject obj in memoryPool)
             {
-                if (obj != null && obj.TryGetComponent(out IInitializable initialziable))
+                if (obj != null && obj.TryGetComponent(out IInitialize initialziable))
                 {
                     initialziable.Exit();
                 }
@@ -83,6 +83,11 @@ public class PoolManager : MonoBehaviour, IScenedManager
         //yield return Register(requestWeapon, FileManager.GetWeaponPrefab);
 
         yield return null;
+    }
+
+    public IEnumerator LateInitialize()
+    {
+        yield break;
     }
 
     protected IEnumerator Register<T_Enum>(PoolRequest<T_Enum>[] request, Func<T_Enum, GameObject> GetPrefab)
@@ -145,7 +150,7 @@ public class PoolManager : MonoBehaviour, IScenedManager
         {
             poolable.RootQueue = queue;
         }
-        if(target.TryGetComponent(out IInitializable initializable))
+        if(target.TryGetComponent(out IInitialize initializable))
         {
             yield return initializable.Initialize();
         }

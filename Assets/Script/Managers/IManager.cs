@@ -1,9 +1,10 @@
 
-public interface IManager : IInitializable
-{
+using System.Collections;
 
-}
-
-public interface IScenedManager : IManager,IPriority {}
+public interface IManager : IInitialize { }
 
 public interface IGlobalManager : IManager { }
+
+public interface IScenedManager : IManager, ILateInitialize, IPriority { }
+
+

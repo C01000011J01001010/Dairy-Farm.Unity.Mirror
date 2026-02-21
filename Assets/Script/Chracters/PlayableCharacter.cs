@@ -1,24 +1,29 @@
+using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(MaleAnim))]
-[RequireComponent(typeof(CharacterMove))]
-public class PlayableCharacter : MonoBehaviour
+
+public class PlayableCharacter : BaseCharacter, IScenedInitialize
 {
-    public MaleAnim anim;
-    public CharacterMove move;
-
-    private void Awake()
-    {
-        anim = GetComponent<MaleAnim>();
-    }
-
-    public void IsMove()
+    
+    public override void Exit()
     {
 
     }
 
-    public void SetMoveDir(CharacterDirection dir)
+    public override IEnumerator Initialize()
     {
-        anim.MoveDir((int)dir);
+        // 현재 조작가능한 캐릭터가 없다면 해당 캐릭터를 사용하도록 함
+        PlayerCotroller owner = WorldManager.GetObject<PlayerCotroller>();
+        owner.character ??= this;
+
+        yield return base.Initialize();
+        yield return null;
+    }
+
+    
+
+    public override void Tick()
+    {
+        stateController.UpdateFromOwner();
     }
 }

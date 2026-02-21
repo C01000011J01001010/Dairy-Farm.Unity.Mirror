@@ -1,13 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class BaseUi : MonoBehaviour, IInitializable
+public abstract class BaseUi : MonoBehaviour, IInitialize
 {
     public abstract MyUi UiType { get; }
 
     public abstract void Exit();
 
     public abstract IEnumerator Initialize();
+
+    public virtual IEnumerator LateInitialize() { yield break; }
 
     public virtual void ClaimOpen()
     {

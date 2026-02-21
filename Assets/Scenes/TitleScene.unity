@@ -505,6 +505,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneModule
       objectReference: {fileID: 0}
+    - target: {fileID: 6933529304533105984, guid: 2afe0957e2872e54e87d56f83441face, type: 3}
+      propertyPath: InitialUis.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6933529304533105984, guid: 2afe0957e2872e54e87d56f83441face, type: 3}
+      propertyPath: 'InitialUis.Array.data[0]'
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6933529304533105984, guid: 2afe0957e2872e54e87d56f83441face, type: 3}
+      propertyPath: 'InitialUis.Array.data[1]'
+      value: 101
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

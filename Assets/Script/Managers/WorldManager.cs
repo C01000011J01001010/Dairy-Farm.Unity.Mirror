@@ -2,9 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 
 
@@ -14,17 +12,19 @@ public sealed class WorldManager : MonoBehaviour, IManager
     public  static WorldManager Inst => _instance;
 
     private Dictionary<Type, IScenedManager> managerDict = new();
-    private Dictionary<Type, List<IWorldInitializable> /*중복된 객체 허용*/> objectsDict = new();
+    private Dictionary<Type, List<IScenedInitialize> /*중복된 객체 허용*/> objectsDict = new();
 
     // Manager에 할당된 초기화 퍼센트는 70%
     // 개별 WorldManager에서 초기화할 객체의 개수를 설정해줘야함
     private float _processPercent;
     private float _currentPercent;
 
-    public static bool IsInit { get; private set; }
+    public static bool IsInit { get; private set; } = false;
 
     public void Exit()
     {
+        IsInit = false;
+
         // 초기화 할 때와 반대 순서로 해제
 
         IScenedManager[] targetManagers = managerDict.Values.ToArray();
@@ -34,7 +34,7 @@ public sealed class WorldManager : MonoBehaviour, IManager
             manager?.Exit();
         }
 
-        List<IWorldInitializable> targetObjects = new();
+        List<IScenedInitialize> targetObjects = new();
         foreach (var objList in objectsDict.Values) targetObjects.AddRange(objList);
         targetObjects.Sort((x, y) => y.Priority - x.Priority);
         foreach (var obj in targetObjects)
@@ -66,16 +66,23 @@ public sealed class WorldManager : MonoBehaviour, IManager
         var allMonoBehaviours = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         var managerList = AddToDict<IScenedManager>(allMonoBehaviours, AddManager);
-        var ObjectList = AddToDict<IWorldInitializable>(allMonoBehaviours, AddObject);
-        SetInitializeCount(managerList.Count + ObjectList.Count);
+        var ObjectList = AddToDict<IScenedInitialize>(allMonoBehaviours, AddObject);
+
+        int InitilzieSize = (managerList.Count + ObjectList.Count) * 2; // 2단계 초기화
+        SetInitializeCount(InitilzieSize);
         yield return Initialize(managerList);
         yield return Initialize(ObjectList);
+        yield return LateInitialize(managerList);
+        yield return LateInitialize(ObjectList);
+
+        yield return null;
 
         // 월드매니저 초기화 종료 후 CALLBACK_Update 와 입력 활성화
         IsInit = true;
     }
 
-    private List<T> AddToDict<T>(MonoBehaviour[] allMonoBehaviours, Action<T> Add) where T : IInitializable, IPriority
+    private List<T> AddToDict<T>(MonoBehaviour[] allMonoBehaviours, Action<T> Add) 
+        where T : IInitialize, ILateInitialize, IPriority
     {
         // 같은 오브젝트에 붙은것 체크 하고
         // 전체 오브젝트
@@ -91,6 +98,8 @@ public sealed class WorldManager : MonoBehaviour, IManager
         }
         return targetList;
     }
+
+
 
     private void AddManager(IScenedManager manager)
     {
@@ -110,17 +119,17 @@ public sealed class WorldManager : MonoBehaviour, IManager
         }
     }
 
-    private void AddObject(IWorldInitializable obj)
+    private void AddObject(IScenedInitialize obj)
     {
         Type objType = obj.GetType();
         if (!objectsDict.ContainsKey(objType))
         {
-            objectsDict.Add(objType, new List<IWorldInitializable>());
+            objectsDict.Add(objType, new List<IScenedInitialize>());
         }
         objectsDict[objType].Add(obj);
     }
 
-    private IEnumerator Initialize<T>(List<T> InitList) where T : IInitializable, IPriority
+    private IEnumerator Initialize<T>(List<T> InitList) where T : IInitialize, ILateInitialize, IPriority
     {
         // 우선순위로 정렬
         InitList.Sort((x, y) => x.Priority - y.Priority);
@@ -130,6 +139,17 @@ public sealed class WorldManager : MonoBehaviour, IManager
         {
             VisualizeNextLoading();
             yield return obj.Initialize();
+            yield return null;
+        }
+    }
+
+    private IEnumerator LateInitialize<T>(List<T> InitList) where T : IInitialize, ILateInitialize, IPriority
+    {
+        // 2단계 초기화 진행
+        foreach (var obj in InitList)
+        {
+            VisualizeNextLoading();
+            yield return obj.LateInitialize();
             yield return null;
         }
     }
@@ -149,19 +169,19 @@ public sealed class WorldManager : MonoBehaviour, IManager
     
 
 
-    public static T GetObject<T>() where T : MonoBehaviour, IWorldInitializable
+    public static T GetObject<T>() where T : MonoBehaviour, IScenedInitialize
     {
         // 딕셔너리에 들어있는 리스트에서 첫번째 원소를 반환
         return (T)GetRawObjects<T>()?[0];
     }
 
-    public static T[] GetObjects<T>() where T : MonoBehaviour, IWorldInitializable
+    public static T[] GetObjects<T>() where T : MonoBehaviour, IScenedInitialize
     {
         // 딕셔너리에 있는 리스트를 T로 캐스팅하여 배열로 반환
         return GetRawObjects<T>()?.Cast<T>().ToArray();
     }
 
-    private static List<IWorldInitializable> GetRawObjects<T>() where T : MonoBehaviour, IWorldInitializable
+    private static List<IScenedInitialize> GetRawObjects<T>() where T : MonoBehaviour, IScenedInitialize
     {
         Type wantType = typeof(T);
 

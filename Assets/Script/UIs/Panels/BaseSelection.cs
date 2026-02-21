@@ -1,6 +1,6 @@
 using System.Collections;
 
-public abstract class BaseSelection : BaseUi, IInitializable
+public abstract class BaseSelection : BaseUi, IInitialize
 {
     public override void Exit()
     {

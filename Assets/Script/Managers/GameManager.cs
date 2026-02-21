@@ -91,12 +91,13 @@ public sealed class GameManager : MonoBehaviour, IManager
 
         // 모든 매니저 초기화 실행
         yield return ProcessManagerLoading();
-        SceneLoadManager loadManager = GetManager<SceneLoadManager>();
         UIManager.ClaimLoading_End();
+
+        SceneLoadManager loadManager = GetManager<SceneLoadManager>();
 
 #if UNITY_EDITOR
         // 테스트 씬인 경우에 사용
-        if(SceneManager.sceneCount == 1)
+        if (SceneManager.sceneCount == 1)
 #endif
 #pragma warning disable CS4014 // 이 호출을 대기하지 않으므로 호출이 완료되기 전에 현재 메서드가 계속 실행됩니다.
             loadManager.ChangeScene(Constants.SCENE_NAME_TitleScene);
@@ -137,10 +138,6 @@ public sealed class GameManager : MonoBehaviour, IManager
         {
             UPDATE_Physics?.Invoke();
         }
-        else
-        {
-
-        }
     }
 
     private void Update()
@@ -155,10 +152,6 @@ public sealed class GameManager : MonoBehaviour, IManager
             UPDATE_OnCharacter?.Invoke();
             UPDATE_Object?.Invoke();
         }
-        else
-        {
-
-        }
     }
 
     private void LateUpdate()
@@ -169,10 +162,6 @@ public sealed class GameManager : MonoBehaviour, IManager
         {
             UPDATE_Camera?.Invoke();
             UPDATE_Post?.Invoke();
-        }
-        else
-        {
-
         }
     }
 

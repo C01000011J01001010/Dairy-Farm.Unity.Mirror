@@ -82,9 +82,8 @@ public class OptionManager : MonoBehaviour, IGlobalManager
         CreateVolume();
         ApplyGraphicSetting(FileManager.savedGraphicOption);
 
-        yield break;
+        yield return null;
     }
-
     private void CreateVolume()
     {
         optionVolume = gameObject.AddComponent<Volume>();

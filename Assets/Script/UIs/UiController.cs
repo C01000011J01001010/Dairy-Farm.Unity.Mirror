@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class UiController : MonoBehaviour, IWorldInitializable
+public class UiController : MonoBehaviour, IScenedInitialize
 {
     [SerializeField] private int _priority;
 
@@ -38,18 +39,20 @@ public class UiController : MonoBehaviour, IWorldInitializable
         {
             yield return uiManager.InitChildUiByDFS(canvas.transform, UI_Dictionary);
         }
-
         // 로딩 후 초기화면에 보여줄 Ui만 호출
-        foreach(MyUi ui in InitialUis)
+        foreach (MyUi ui in InitialUis)
         {
             ClaimUiOpen(ui);
         }
-
         yield return null;
     }
 
+    public IEnumerator LateInitialize()
+    {
+        yield break;
+    }
 
-    
+
 
     protected virtual bool TryGetScenedUi(MyUi type, out BaseUi ui)
     {
@@ -109,4 +112,6 @@ public class UiController : MonoBehaviour, IWorldInitializable
             ui.gameObject.SetActive(false);
         }
     }
+
+    
 }

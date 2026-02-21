@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Window 객체 기본 클래스
 /// </summary>
-public abstract class BaseWindow : MonoBehaviour, IInitializable
+public abstract class BaseWindow : MonoBehaviour, IInitialize
 {
     IPoolable prefab;
 
@@ -28,7 +28,12 @@ public abstract class BaseWindow : MonoBehaviour, IInitializable
 
     public IEnumerator Initialize()
     {
-        yield return null;
+        yield break;
+    }
+
+    public IEnumerator LateInitialize()
+    {
+        yield break;
     }
 
 

@@ -14,7 +14,7 @@ public sealed class DragManager : MonoBehaviour, IGlobalManager
 
     public IEnumerator Initialize()
     {
-        yield return null;
+        yield break;
     }
 
     public void Exit()

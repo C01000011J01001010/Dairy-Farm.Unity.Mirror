@@ -9,6 +9,7 @@ public class UserInputManager : MonoBehaviour, IGlobalManager
     private  UserInputActions input;
 
     public Vector2 Move => input.Player.Move.ReadValue<Vector2>();
+    public bool Sprint => input.Player.Sprint.IsPressed();
 
     private void OnEnable()
     {
