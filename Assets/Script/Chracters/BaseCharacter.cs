@@ -112,7 +112,6 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
     {
         Vector2 nextVec = inputMove.normalized * moveSpeed * Time.fixedDeltaTime;
         if (isSprint) nextVec *= SprintMul;
-        Debug.Log("다음 이동량 : " + nextVec);
         rigidBody.MovePosition(rigidBody.position + nextVec);
     }
 }
