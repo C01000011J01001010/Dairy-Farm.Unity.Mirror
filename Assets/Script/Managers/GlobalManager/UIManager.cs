@@ -13,6 +13,9 @@ public enum MyUi
     LoadingScreen = 0,
     InventoryScreen,
     TargetMarker,
+    
+    // HUD
+    QuickSlot = 50,
     #endregion
 
     #region TitleScene

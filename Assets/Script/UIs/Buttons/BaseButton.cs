@@ -34,7 +34,7 @@ public class BaseButton : MonoBehaviour, IInitialize
 
 
 
-    public bool isInteractable => _button.interactable;
+    public bool IsInteractable => _button.interactable;
 
     
 
@@ -42,44 +42,25 @@ public class BaseButton : MonoBehaviour, IInitialize
     /// 콜백함수는 오로지 하나만 넣을 수 있으며, 여러 개를 넣을 시 람다함수로 여러 함수를 묶어야함
     /// </summary>
     /// <param name="callback"></param>
-    public virtual void SetButtonCallback(UnityAction callback)
+    public virtual void SetCallback(UnityAction callback)
     {
         _onClick.RemoveAllListeners();
         _onClick.AddListener(callback);
     }
 
-    public virtual void AddButtonCallback(UnityAction callback)
+    public virtual void AddCallback(UnityAction callback)
     {
         _onClick.RemoveListener(callback);
         _onClick.AddListener(callback);
     }
 
-    public virtual void ClearButtonCallback()
+    public virtual void ClearCallback()
     {
         _onClick.RemoveAllListeners();
     }
 
-    public virtual void SetButtonInteractable(bool isOn)
+    public virtual void SetInteractable(bool isOn)
     {
         _button.interactable = isOn;
     }
-
-    public virtual void SetDisabledColorAlpha_1()
-    {
-        if (_button.colors.disabledColor.a > 0.99f) return;
-
-        else
-        {
-            // 상호작용을 하지 않을 시 기본으로 적용되는 반투명 제거
-            ColorBlock colorBlock = _button.colors;
-            Color color = colorBlock.disabledColor;
-
-            color.a = 1.0f;
-
-            colorBlock.disabledColor = color;
-            _button.colors = colorBlock;
-        }
-    }
-
-    
 }

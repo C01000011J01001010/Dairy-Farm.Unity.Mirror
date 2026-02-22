@@ -27,16 +27,16 @@ public sealed class TitleSelection : BaseSelection, IInitialize
 
     protected override void SetButtonCallback()
     {
-        _buttonList[0].SetButtonCallback(CALLBACK_StatNewGame);
-        _buttonList[1].SetButtonCallback(CALLBACK_OpenGameSettingsWindow);
-        _buttonList[2].SetButtonCallback(CALLBACK_ExitGame);
+        _buttonList[0].SetCallback(CALLBACK_StatNewGame);
+        _buttonList[1].SetCallback(CALLBACK_OpenGameSettingsWindow);
+        _buttonList[2].SetCallback(CALLBACK_ExitGame);
     }
 
     protected override void ClearButtonCallback()
     {
         foreach (BaseButton button in _buttonList)
         {
-            button.ClearButtonCallback();
+            button.ClearCallback();
         }
     }
 

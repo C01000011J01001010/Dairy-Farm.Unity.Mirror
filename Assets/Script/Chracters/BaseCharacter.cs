@@ -19,8 +19,8 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
     public Vector2 inputMove;
     public bool isMove;
     public bool isSprint;
-    public float moveSpeed = 3f;
-    public float SprintMul = 1.5f;
+    public float moveSpeed = 2.5f;
+    public float SprintMul = 2f;
 
     protected bool isReady;
 
