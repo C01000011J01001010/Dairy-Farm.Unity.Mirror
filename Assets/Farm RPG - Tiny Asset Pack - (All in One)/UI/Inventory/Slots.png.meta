@@ -459,6 +459,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Slots_14
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 262
+        width: 22
+        height: 22
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15c257e8d16ceb8499f74defbfc397a2
+      internalID: -985003970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -479,6 +501,7 @@ TextureImporter:
       Slots_11: -3307446982361912897
       Slots_12: 8273111984537462468
       Slots_13: -5265063564374339900
+      Slots_14: -985003970
       Slots_2: -7085861625263896070
       Slots_3: 6109788423898166172
       Slots_4: 8382754832659277255
