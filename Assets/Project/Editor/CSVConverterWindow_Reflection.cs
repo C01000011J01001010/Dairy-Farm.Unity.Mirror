@@ -13,7 +13,7 @@ public class CSVConverterWindow_Reflection : EditorWindow
     private const string SavePathPrefsKey = "CSV_TO_SO_SAVE_PATH";
     private const string ClassNamePrefsKey = "CSV_TO_SO_CLASS_NAME";
 
-    [MenuItem("Tools/CSV to SO Converter (Universal)")]
+    [MenuItem("Tools/CSV/CSV to SO Converter (Universal)")]
     public static void ShowWindow() => GetWindow<CSVConverterWindow_Reflection>("Universal CSV Converter");
 
     private void OnEnable()

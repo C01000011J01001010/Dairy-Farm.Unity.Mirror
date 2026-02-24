@@ -8,8 +8,8 @@ public class BatchSpriteSlicer : EditorWindow
     private int sliceWidth = 16;
     private int sliceHeight = 16;
 
-    // ¸Ş´º ¾ÆÀÌÅÛÀ» ´©¸£¸é Ã¢ÀÌ »ı¼ºµÊ
-    [MenuItem("Tools/Custom Batch Slice")]
+    // ë©”ë‰´ ì•„ì´í…œì„ ëˆ„ë¥´ë©´ ì°½ì´ ìƒì„±ë¨
+    [MenuItem("Tools/2D/Custom Batch Slice")]
     public static void ShowWindow()
     {
         GetWindow<BatchSpriteSlicer>("Batch Slicer");
@@ -17,27 +17,27 @@ public class BatchSpriteSlicer : EditorWindow
 
     private void OnGUI()
     {
-        GUILayout.Label("½½¶óÀÌ½º ¼³Á¤", EditorStyles.boldLabel);
+        GUILayout.Label("ìŠ¬ë¼ì´ìŠ¤ ì„¤ì •", EditorStyles.boldLabel);
 
-        // °¡·Î, ¼¼·Î Å©±â ÀÔ·Â ÇÊµå
-        sliceWidth = EditorGUILayout.IntField("°¡·Î ÇÈ¼¿ (Width)", sliceWidth);
-        sliceHeight = EditorGUILayout.IntField("¼¼·Î ÇÈ¼¿ (Height)", sliceHeight);
+        // ê°€ë¡œ, ì„¸ë¡œ í¬ê¸° ì…ë ¥ í•„ë“œ
+        sliceWidth = EditorGUILayout.IntField("ê°€ë¡œ í”½ì…€ (Width)", sliceWidth);
+        sliceHeight = EditorGUILayout.IntField("ì„¸ë¡œ í”½ì…€ (Height)", sliceHeight);
 
         GUILayout.Space(10);
 
-        if (GUILayout.Button("¼±ÅÃÇÑ ÆÄÀÏµé ½½¶óÀÌ½º ½ÃÀÛ"))
+        if (GUILayout.Button("ì„ íƒí•œ íŒŒì¼ë“¤ ìŠ¬ë¼ì´ìŠ¤ ì‹œì‘"))
         {
             ExecuteSlice();
         }
 
-        EditorGUILayout.HelpBox("ÇÁ·ÎÁ§Æ® Ã¢¿¡¼­ ÀÌ¹ÌÁö¸¦ ¸ÕÀú ¼±ÅÃÇÑ ÈÄ ¹öÆ°À» ´©¸£¼¼¿ä.", MessageType.Info);
+        EditorGUILayout.HelpBox("í”„ë¡œì íŠ¸ ì°½ì—ì„œ ì´ë¯¸ì§€ë¥¼ ë¨¼ì € ì„ íƒí•œ í›„ ë²„íŠ¼ì„ ëˆ„ë¥´ì„¸ìš”.", MessageType.Info);
     }
 
     private void ExecuteSlice()
     {
         if (Selection.objects.Length == 0)
         {
-            Debug.LogWarning("¼±ÅÃµÈ ÆÄÀÏÀÌ ¾ø½À´Ï´Ù!");
+            Debug.LogWarning("ì„ íƒëœ íŒŒì¼ì´ ì—†ìŠµë‹ˆë‹¤!");
             return;
         }
 
@@ -52,7 +52,7 @@ public class BatchSpriteSlicer : EditorWindow
             {
                 dataProvider.InitSpriteEditorDataProvider();
 
-                // ÅØ½ºÆ® ÀÓÆ÷ÅÍ ¼³Á¤
+                // í…ìŠ¤íŠ¸ ì„í¬í„° ì„¤ì •
                 TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
                 importer.spriteImportMode = SpriteImportMode.Multiple;
                 importer.filterMode = FilterMode.Point;
@@ -64,7 +64,7 @@ public class BatchSpriteSlicer : EditorWindow
                 if (tex == null) continue;
 
                 int index = 0;
-                // À§¿¡¼­ ¾Æ·¡·Î ½½¶óÀÌ½º (À¯´ÏÆ¼ ÁÂÇ¥°è ±âÁØ)
+                // ìœ„ì—ì„œ ì•„ë˜ë¡œ ìŠ¬ë¼ì´ìŠ¤ (ìœ ë‹ˆí‹° ì¢Œí‘œê³„ ê¸°ì¤€)
                 for (int y = tex.height; y >= sliceHeight; y -= sliceHeight)
                 {
                     for (int x = 0; x < tex.width; x += sliceWidth)
@@ -85,6 +85,6 @@ public class BatchSpriteSlicer : EditorWindow
                 importer.SaveAndReimport();
             }
         }
-        Debug.Log($"ÀÏ°ı ½½¶óÀÌ½º ¿Ï·á: {sliceWidth}x{sliceHeight}");
+        Debug.Log($"ì¼ê´„ ìŠ¬ë¼ì´ìŠ¤ ì™„ë£Œ: {sliceWidth}x{sliceHeight}");
     }
 }

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fecf6a66a47b31428788806ace67f81, type: 3}
-  m_Name: "1_\uBB3C"
+  m_Name: "1_\uBD88"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  id: 1
-  itemName: "\uBB3C"
-  description: "\uB9C8\uC2E4 \uC218 \uC788\uB2E4"
+  id: 0
+  itemName: 
+  description: 

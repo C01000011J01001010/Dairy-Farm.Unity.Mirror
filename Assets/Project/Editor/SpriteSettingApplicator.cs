@@ -7,41 +7,41 @@ public class SpriteSettingApplicator : EditorWindow
     private FilterMode filterMode = FilterMode.Point;
     private TextureImporterCompression compression = TextureImporterCompression.Uncompressed;
 
-    [MenuItem("Tools/Sprite Setting Applicator")]
+    [MenuItem("Tools/2D/Sprite Setting Applicator")]
     public static void ShowWindow()
     {
-        // »õ·Î¿î ÀÌ¸§ÀÇ À©µµ¿ì »ı¼º
+        // ìƒˆë¡œìš´ ì´ë¦„ì˜ ìœˆë„ìš° ìƒì„±
         GetWindow<SpriteSettingApplicator>("Sprite Setter");
     }
 
     private void OnGUI()
     {
-        GUILayout.Label("½ºÇÁ¶óÀÌÆ® ÀÎ½ºÆåÅÍ ÀÏ°ı ¼³Á¤", EditorStyles.boldLabel);
+        GUILayout.Label("ìŠ¤í”„ë¼ì´íŠ¸ ì¸ìŠ¤í™í„° ì¼ê´„ ì„¤ì •", EditorStyles.boldLabel);
         GUILayout.Space(5);
 
-        // ¼³Á¤ °ª ÀÔ·Â ÇÊµå
+        // ì„¤ì • ê°’ ì…ë ¥ í•„ë“œ
         ppu = EditorGUILayout.IntField("Pixels Per Unit", ppu);
         filterMode = (FilterMode)EditorGUILayout.EnumPopup("Filter Mode", filterMode);
         compression = (TextureImporterCompression)EditorGUILayout.EnumPopup("Compression", compression);
 
         GUILayout.Space(15);
 
-        // ½ÇÇà ¹öÆ°
+        // ì‹¤í–‰ ë²„íŠ¼
         GUI.backgroundColor = Color.green;
-        if (GUILayout.Button("¼±ÅÃÇÑ ½ºÇÁ¶óÀÌÆ®¿¡ ¼³Á¤ Àû¿ë", GUILayout.Height(40)))
+        if (GUILayout.Button("ì„ íƒí•œ ìŠ¤í”„ë¼ì´íŠ¸ì— ì„¤ì • ì ìš©", GUILayout.Height(40)))
         {
             ApplySpriteSettings();
         }
         GUI.backgroundColor = Color.white;
 
-        EditorGUILayout.HelpBox("1. ÇÁ·ÎÁ§Æ® Ã¢¿¡¼­ ÀÌ¹ÌÁö(Texture)µéÀ» ¼±ÅÃÇÏ¼¼¿ä.\n2. ¹öÆ°À» ´©¸£¸é ÀÎ½ºÆåÅÍ ¼³Á¤ÀÌ ÀÏ°ı º¯°æµË´Ï´Ù.", MessageType.Info);
+        EditorGUILayout.HelpBox("1. í”„ë¡œì íŠ¸ ì°½ì—ì„œ ì´ë¯¸ì§€(Texture)ë“¤ì„ ì„ íƒí•˜ì„¸ìš”.\n2. ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ì¸ìŠ¤í™í„° ì„¤ì •ì´ ì¼ê´„ ë³€ê²½ë©ë‹ˆë‹¤.", MessageType.Info);
     }
 
     private void ApplySpriteSettings()
     {
         if (Selection.objects.Length == 0)
         {
-            Debug.LogWarning("¼±ÅÃµÈ ÆÄÀÏÀÌ ¾ø½À´Ï´Ù! ÇÁ·ÎÁ§Æ® Ã¢¿¡¼­ ÀÌ¹ÌÁö¸¦ ¼±ÅÃÇØÁÖ¼¼¿ä.");
+            Debug.LogWarning("ì„ íƒëœ íŒŒì¼ì´ ì—†ìŠµë‹ˆë‹¤! í”„ë¡œì íŠ¸ ì°½ì—ì„œ ì´ë¯¸ì§€ë¥¼ ì„ íƒí•´ì£¼ì„¸ìš”.");
             return;
         }
 
@@ -53,21 +53,21 @@ public class SpriteSettingApplicator : EditorWindow
 
             if (importer != null)
             {
-                // ÀÎ½ºÆåÅÍ ¼³Á¤°ªµé º¯°æ
+                // ì¸ìŠ¤í™í„° ì„¤ì •ê°’ë“¤ ë³€ê²½
                 importer.spritePixelsPerUnit = ppu;
                 importer.filterMode = filterMode;
                 importer.textureCompression = compression;
 
-                // µµÆ® ±×·¡ÇÈ ÃÖÀûÈ­: ¹Ó¸Ê ²ô°í ¾ÈÆ¼¾Ù¸®¾î½Ì ¹æÁö
+                // ë„íŠ¸ ê·¸ë˜í”½ ìµœì í™”: ë°‰ë§µ ë„ê³  ì•ˆí‹°ì•¨ë¦¬ì–´ì‹± ë°©ì§€
                 importer.mipmapEnabled = false;
 
-                // º¯°æ»çÇ× ÀúÀå ¹× ¸®ÀÓÆ÷Æ®
+                // ë³€ê²½ì‚¬í•­ ì €ì¥ ë° ë¦¬ì„í¬íŠ¸
                 EditorUtility.SetDirty(importer);
                 importer.SaveAndReimport();
                 count++;
             }
         }
 
-        Debug.Log($"{count}°³ÀÇ ½ºÇÁ¶óÀÌÆ® ¼³Á¤ÀÌ ¼º°øÀûÀ¸·Î º¯°æµÇ¾ú½À´Ï´Ù!");
+        Debug.Log($"{count}ê°œì˜ ìŠ¤í”„ë¼ì´íŠ¸ ì„¤ì •ì´ ì„±ê³µì ìœ¼ë¡œ ë³€ê²½ë˜ì—ˆìŠµë‹ˆë‹¤!");
     }
 }
