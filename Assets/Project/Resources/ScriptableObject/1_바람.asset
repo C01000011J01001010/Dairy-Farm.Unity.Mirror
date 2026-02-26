@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fecf6a66a47b31428788806ace67f81, type: 3}
-  m_Name: "3_\uD574\uC26C"
+  m_Name: "1_\uBC14\uB78C"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  id: 3
-  itemName: "*\uD574\uC26C?"
-  description: "\uC788\uC744\uAE4C\uC694? \uC5C6\uC744\uAE4C\uC694?"
+  id: 1
+  itemName: "\uBC14\uB78C"
+  description: "\uBC14\uB78C\uC774 \uBD84\uB2E4"
   testProp: 

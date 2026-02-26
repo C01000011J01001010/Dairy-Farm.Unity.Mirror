@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fecf6a66a47b31428788806ace67f81, type: 3}
-  m_Name: "1_\uBD88"
+  m_Name: "2_\uBD88"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  id: 0
-  itemName: 
-  description: 
+  id: 2
+  itemName: "\uBD88"
+  description: "\uB728\uAC81\uB2E4"
+  testProp: 

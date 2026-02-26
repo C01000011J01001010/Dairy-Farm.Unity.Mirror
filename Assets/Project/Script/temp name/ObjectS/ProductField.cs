@@ -6,7 +6,7 @@ public class ProductField : MonoBehaviour
     public event Action<GameObject> OnProductCreated;
     public event Action<GameObject> OnProductRemoved;
     public event Action<int, int>   OnCountChanged;
-    public event Action<float>   OnIntervalChanged;
+    public event Action<float> OnIntervalChanged;
     public event Action<float>   OnNextTimeChanged;
 
     System.Collections.Generic.List<GameObject> products = new();

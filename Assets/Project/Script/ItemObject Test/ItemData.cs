@@ -8,4 +8,7 @@ public class ItemData : ScriptableObject
     public string itemName;
     [TextArea] // 설명을 길게 쓸 수 있게 텍스트 영역 제공
     public string description;
+
+    
+    public string testProp;
 }

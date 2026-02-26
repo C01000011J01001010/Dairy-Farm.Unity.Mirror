@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fecf6a66a47b31428788806ace67f81, type: 3}
-  m_Name: "1_\uBB3C"
-  m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  id: 1
-  itemName: "\uBB3C"
-  description: "\uB9C8\uC2E4 \uC218 \uC788\uB2E4"
+  m_Script: {fileID: 11500000, guid: 32aaad0a42d6c8145af7006bc0118d81, type: 3}
+  m_Name: Item
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::CSVConverter_Setting
+  savePath: Assets/Project/Resources/ScriptableObject
