@@ -10,15 +10,19 @@ public static class Extensions_Editor
     {
         // 지정된 파일 이름이 없으면 클래스 이름을 기본으로 사용
         string editorSettingPath;
+        string editorSettingDirectory = target.GetCsDirectory();
+
+        // 파일 이름과 확장자 지정
         if (string.IsNullOrEmpty(fileName))
         {
-            editorSettingPath = target.GetEditorSettingPath<EditorSetting>();
+            editorSettingPath = $"{editorSettingDirectory}/{target.GetType().Name}_SetData.asset";
         }
         else
         {
-            editorSettingPath = target.GetEditorSettingPath(fileName);
-
+            fileName = string.Concat(fileName.Split(Path.GetInvalidFileNameChars()));
+            editorSettingPath = $"{editorSettingDirectory}/{fileName}.asset";
         }
+        
         EditorSetting setting = editorSettingPath.LoadSavedData<EditorSetting>();
         return setting;
     }
@@ -39,24 +43,20 @@ public static class Extensions_Editor
         return savedData;
     }
 
-    // 커스텀 에디터 세팅을 ScriptableObject로 저장해서 깃으로 팀원이랑 공유할 목적
-    public static string GetEditorSettingPath<EditorSetting>(this EditorWindow target)
-    {
-        // 항상 Editor 폴더의 하위 폴더로 EditorSettings를 사용
-        return $"{target.GetCsDirectory()}/EditorSettings/{typeof(EditorSetting).Name}.asset";
-    }
 
-    public static string GetEditorSettingPath(this EditorWindow target, string fileName)
-    {
-        // 항상 Editor 폴더의 하위 폴더로 EditorSettings를 사용
-        return $"{target.GetCsDirectory()}/EditorSettings/{fileName}.asset";
-    }
-
-    public static string GetCsDirectory(this EditorWindow target)
+    public static string GetCsDirectory(this ScriptableObject target)
     {
         // Editor와 EditorWindow는 ScriptableObject를 상속받은 클래스
-        // MonoBehaviour에 쓰고싶다면 MonoScript.FromMonoBehaviour(this); 사용
         MonoScript scriptAsset = MonoScript.FromScriptableObject(target);
+
+        // 파일 위치만 가져오기
+        string editorPath = AssetDatabase.GetAssetPath(scriptAsset);
+        return Path.GetDirectoryName(editorPath).Replace("\\", "/");
+    }
+
+    public static string GetCsDirectory(this MonoBehaviour target)
+    {
+        MonoScript scriptAsset = MonoScript.FromMonoBehaviour(target);
 
         // 파일 위치만 가져오기
         string editorPath = AssetDatabase.GetAssetPath(scriptAsset);

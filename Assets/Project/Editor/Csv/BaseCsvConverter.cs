@@ -14,12 +14,12 @@ using UnityEngine;
 //    SkillData
 //}
 
-public abstract class BaseCSVConverter : BaseEditorWindow<CSVConverter_Setting>
+public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
 {
     protected abstract string ConverterTarget { get;}
     protected const string defaultMenu = "Tools/CSV/CSV to SO Converter -> ";
 
-    protected string savePath { get => editorSetting.savePath; set => editorSetting.savePath = value; }
+    protected string saveDirectory { get => editorSetting.saveDirectory; set => editorSetting.saveDirectory = value; }
     TextAsset selectedCsv;
     bool isFileValid;
     bool isPathValid;
@@ -34,7 +34,7 @@ public abstract class BaseCSVConverter : BaseEditorWindow<CSVConverter_Setting>
     {
         // 마지막으로 선택했던 타입 불러오기
         //selectedType = (DataType)EditorPrefs.GetInt(SelectedTypePrefsKey, 0);
-        LoadSavedSettings(ConverterTarget);
+        LoadSavedSettings($"{ConverterTarget}CsvConverter_SetData");
     }
 
     private void OnGUI()
@@ -109,19 +109,27 @@ public abstract class BaseCSVConverter : BaseEditorWindow<CSVConverter_Setting>
     private bool CheckDirectory()
     {
         // --- 3. 저장 경로 (자동 설정되지만 수동으로도 변경 가능) ---
-        isPathValid = Directory.Exists(savePath);
+        isPathValid = Directory.Exists(saveDirectory);
         //EditorGUILayout.BeginHorizontal();
         using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
         {
             // 직접 수정할 수 없도록 TextField 대신 LabelField
-            EditorGUILayout.LabelField("저장 경로", savePath, EditorStyles.textField);
+            EditorGUILayout.LabelField("저장 경로", saveDirectory, EditorStyles.textField);
             if (GUILayout.Button("찾기", GUILayout.Width(50)))
             {
-                string path = EditorUtility.OpenFolderPanel("저장 폴더 선택", "Assets", "");
+                // 마지막 디렉터리를 확인
+                if(!Directory.Exists(saveDirectory))
+                {
+                    // 없으면 Assets로 이동
+                    Debug.LogWarning($"directory({saveDirectory})가 유효하지 않음");
+                    saveDirectory = Application.dataPath;
+                }
+
+                string path = EditorUtility.OpenFolderPanel("저장 폴더 선택", saveDirectory, "");
                 if (!string.IsNullOrEmpty(path))
                 {
-                    savePath = path.ToUnityPath();
-                    isPathValid = Directory.Exists(savePath);
+                    saveDirectory = path.ToUnityPath();
+                    isPathValid = Directory.Exists(saveDirectory);
                     UpdateSetting();
                 }
             }
@@ -152,7 +160,7 @@ public abstract class BaseCSVConverter : BaseEditorWindow<CSVConverter_Setting>
         // 디렉토리가 없으면 생성
         // 그런데 이전 내용대로면 디렉토리가 반드시 존재함
         // 안전하게 하려고 넣어둠
-        if (!Directory.Exists(savePath)) Directory.CreateDirectory(savePath);
+        if (!Directory.Exists(saveDirectory)) Directory.CreateDirectory(saveDirectory);
 
         string[] rows = csvFile.text.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -193,5 +201,5 @@ public abstract class BaseCSVConverter : BaseEditorWindow<CSVConverter_Setting>
     protected abstract void ConvertData(string[] cols, ref int successCount);
 
     protected string GetSafeFileName(string name) => string.Concat(name.Split(Path.GetInvalidFileNameChars())).Replace(" ", "_");
-    protected string GetTargetAssetPath(int id, string name) => $"{savePath}/{id}_{GetSafeFileName(name)}.asset";
+    protected string GetTargetAssetPath(int id, string name) => $"{saveDirectory}/{id}_{GetSafeFileName(name)}.asset";
 }

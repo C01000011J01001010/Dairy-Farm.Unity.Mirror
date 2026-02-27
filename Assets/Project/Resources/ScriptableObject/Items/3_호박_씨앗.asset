@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fecf6a66a47b31428788806ace67f81, type: 3}
-  m_Name: "2_\uBD88"
+  m_Script: {fileID: 11500000, guid: 73e6617d54b09904aa217bade6d5931f, type: 3}
+  m_Name: "3_\uD638\uBC15_\uC528\uC557"
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  id: 2
-  itemName: "\uBD88"
-  description: "\uB728\uAC81\uB2E4"
-  testProp: 
+  ID: 3
+  Name: "\uD638\uBC15 \uC528\uC557"
+  Description: "\uC528\uC557\uC744 \uC2EC\uC5B4 \uD638\uBC15\uC744 \uC218\uD655 \uD560
+    \uC218 \uC788\uB2E4."
+  Icon: {fileID: 0}
+  itemType: 0

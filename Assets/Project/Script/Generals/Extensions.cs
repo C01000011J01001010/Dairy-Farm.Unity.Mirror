@@ -13,6 +13,11 @@ public static class Extensions
     public static string ToUnityPath(this string origin) 
         => "Assets" + origin.Replace(Application.dataPath, "").Replace('\\', '/');
 
+    public static bool IsNullOrEmpty<T>(this ICollection<T> collection)
+    {
+        return collection == null || collection.Count == 0;
+    }
+
     public static string ToReflectionText<T>(this string originString, T Owner)
     {
         string result = originString;

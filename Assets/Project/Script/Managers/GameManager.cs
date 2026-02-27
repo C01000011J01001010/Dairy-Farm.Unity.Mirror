@@ -175,6 +175,8 @@ public sealed class GameManager : MonoBehaviour, IManager
         yield return ProcessManagerLoading<AudioManager>();
         yield return ProcessManagerLoading<UserInputManager>();
         yield return ProcessManagerLoading<DragManager>();
+
+        yield return ProcessManagerLoading<ItemManager>();
         yield return ProcessManagerLoading<SceneLoadManager>();
     }
 

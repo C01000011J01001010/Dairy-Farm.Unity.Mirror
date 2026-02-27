@@ -2,9 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
- 
+
+public interface IPrimaryKey
+{
+    int ID { get; }
+}
+
 
 public class FileManager : MonoBehaviour, IGlobalManager
 {
@@ -149,6 +155,63 @@ public class FileManager : MonoBehaviour, IGlobalManager
         if (!File.Exists(totalDirectory)) File.Create(totalDirectory).Close();
 
         File.WriteAllBytes(totalDirectory, data);
+    }
+
+    private string GetDirectoryForResources(string directory)
+    {
+        directory = directory.Replace("\\", "/");
+
+        // "Resources"라는 단어가 시작되는 인덱스(위치)를 찾음
+        int resourceIndex = directory.IndexOf("Resources");
+
+        // 경로에 "Resources"가 포함되어 있다면 (없으면 -1을 반환)
+        if (resourceIndex >= 0)
+        {
+            // 잘라낼 시작점 계산 ("Resources" 글자수만큼 뒤로 이동)
+            int startIndex = resourceIndex + "Resources".Length;
+
+            // 만약 "Resources" 바로 뒤에 슬래시("/")가 있다면, 슬래시까지 깔끔하게 날려줌
+            // ex) "Assets/Resources/Items" -> "/Items" 가 아니라 "Items" 로 만들기
+            if (startIndex < directory.Length && directory[startIndex] == '/')
+            {
+                startIndex++;
+            }
+
+            // 시작점부터 끝까지 문자열을 잘라서 덮어씌움
+            directory = directory.Substring(startIndex);
+        }
+        return directory;
+    }
+
+    public Dictionary<int, DataType> LoadAllGameData<DataType>(string directory)
+        where DataType : UnityEngine.Object, IPrimaryKey
+    {
+        // Resources에서 쓸 수 있는 경로로 변환
+        directory = GetDirectoryForResources(directory);
+
+        DataType[] loadedDatas = Resources.LoadAll<DataType>(directory);
+
+        if(loadedDatas.IsNullOrEmpty())
+        {
+            Debug.LogError("사용할 수 없는 데이터 로드");
+            return null;
+        }
+
+        Dictionary<int, DataType> dataDict = new Dictionary<int, DataType>();
+
+        foreach (var data in loadedDatas)
+        {
+            if(dataDict.ContainsKey(data.ID))
+            {
+                DataType old = dataDict[data.ID];
+                Debug.LogError($"유일하지 않은 PK 발견!\n" +
+                    $"기존 데이터 파일 이름 : {old.name}\n" +
+                    $"겹친 데이터 파일 이름 : {data.name}");
+                continue;
+            }
+            dataDict[data.ID] = data;
+        }
+        return dataDict;
     }
 
     public static byte[] LoadFile_FromSaveFolder(string directory, string fileName)

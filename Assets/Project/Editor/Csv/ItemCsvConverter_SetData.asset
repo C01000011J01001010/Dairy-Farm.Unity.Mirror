@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32aaad0a42d6c8145af7006bc0118d81, type: 3}
-  m_Name: Item
+  m_Name: ItemCsvConverter_SetData
   m_EditorClassIdentifier: Assembly-CSharp-Editor::CSVConverter_Setting
-  savePath: Assets/Project/Resources/ScriptableObject
+  saveDirectory: Assets/Project/Resources/ScriptableObject/Items
