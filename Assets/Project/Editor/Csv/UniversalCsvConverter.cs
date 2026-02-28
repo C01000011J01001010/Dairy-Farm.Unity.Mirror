@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection; // 리플렉션 사용을 위해 추가
 using UnityEditor;
 using UnityEngine;
@@ -9,11 +10,19 @@ public class UniversalCsvConverter : BaseCsvConverter
     const string target = "Universal(reflection)";
     protected override string ConverterTarget => target;
 
-    protected Type targetType = typeof(ItemObject);
+    protected Type targetType;
     protected override Type TargetType => targetType;
+
+    
 
     [MenuItem(defaultMenu + target)]
     public static void ShowWindow() => GetWindow<UniversalCsvConverter>("CSV Converter");
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        SetTargetType(TypeName);
+    }
 
     // 문자열을 지정된 타입으로 안전하게 변환하는 헬퍼 함수
     private object ConvertValue(string value, Type type)
@@ -33,6 +42,49 @@ public class UniversalCsvConverter : BaseCsvConverter
         return null; // 지원하지 않는 타입이거나 실패하면 null 반환 (기존 값 유지)
     }
 
+    protected override void CheckTypeNameForReflection()
+    {
+        using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+        {
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                // 1. 텍스트 입력 칸 (여기서는 글자를 치더라도 TypeName 변수만 바뀌고 아무 연산도 안 함)
+                TypeName = EditorGUILayout.TextField("타입 이름 입력", TypeName);
+
+                if (GUILayout.Button("완료", GUILayout.Width(50)))
+                {
+                    TypeName = TypeName.Trim();
+
+                    SetTargetType(TypeName); // 무거운 리플렉션 연산 실행
+                    UpdateSetting();         // 세팅 저장
+                }
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                // 1. 텍스트 입력 칸 (여기서는 글자를 치더라도 TypeName 변수만 바뀌고 아무 연산도 안 함)
+                EditorGUILayout.LabelField("현재 데이터 타입", TargetType?.Name ?? "존재하지 않는 데이터 타입");
+            }
+        }
+        
+
+        GUILayout.Space(10);
+    }
+
+    protected void SetTargetType(string targetTypeStr)
+    {
+        // 어셈블리 분리로 사용 못함(기본 cs vs 에디터cs)
+        //targetType = Type.GetType(targetTypeStr);
+
+        targetType = AppDomain.CurrentDomain.GetAssemblies()
+                        .SelectMany(assembly => assembly.GetTypes())
+                        .FirstOrDefault(type => type.Name == targetTypeStr);
+
+        if (targetType == null)
+        {
+            Debug.LogWarning($"Type({targetTypeStr})이 존재하지 않음");
+        }
+    }
 
     protected override void ConvertDetails(ScriptableObject asset, int rowNum, string[] cols)
     {

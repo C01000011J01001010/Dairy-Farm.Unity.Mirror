@@ -18,20 +18,26 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
     protected const string defaultMenu = "Tools/CSV/CSV to SO Converter -> ";
 
     protected string saveDirectory { get => editorSetting.saveDirectory; set => editorSetting.saveDirectory = value; }
+    protected string TypeName { get => editorSetting.typeName; set => editorSetting.typeName = value; }
     protected int attributeCount { get => editorSetting.attributeCount; set => editorSetting.attributeCount = value; }
     TextAsset selectedCsv;
-    bool isFileValid;
-    bool isPathValid;
+    protected bool isFileValid;
+    protected bool isPathValid;
 
     protected string[] headers;
 
     
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
-        // 마지막으로 선택했던 타입 불러오기
-        //selectedType = (DataType)EditorPrefs.GetInt(SelectedTypePrefsKey, 0);
         LoadSavedSettings($"{ConverterTarget}CsvConverter_SetData");
+
+        // 마지막으로 선택했던 타입 불러오기
+        //if (string.IsNullOrWhiteSpace(TypeName)) 
+        //{
+        //    TypeName = TargetType?.Name;
+        //    UpdateSetting();
+        //}
     }
 
     private void OnGUI()
@@ -44,6 +50,8 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
 
         ValidateCsvFile();
         GUILayout.Space(10);
+
+        CheckTypeNameForReflection();
 
         CheckColCount();
         GUILayout.Space(10);
@@ -137,12 +145,19 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
         //EditorGUILayout.EndHorizontal();
     }
 
+    protected virtual void CheckTypeNameForReflection() { }
+
     private void CheckColCount()
     {
         using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
         {
+            EditorGUI.BeginChangeCheck();
 
             attributeCount = EditorGUILayout.IntField("속성 개수", attributeCount);
+            if(EditorGUI.EndChangeCheck())
+            {
+                UpdateSetting();
+            }
         }
     }
 
@@ -150,9 +165,9 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
     {
         // --- 실행 버튼 ---
         bool isTypeValid = typeof(ScriptableObject).IsAssignableFrom(TargetType);
-        if(!isTypeValid)
+        if(!isTypeValid && TargetType != null)
         {
-            Debug.LogError($"변경 대상 타입({TargetType.Name})이 ScriptableObject가 아님");
+            Debug.LogError($"변경 대상 타입({TargetType?.Name})이 ScriptableObject가 아님");
         }
         bool valid = isFileValid && isPathValid && isTypeValid;
         //GUI.enabled = valid;
