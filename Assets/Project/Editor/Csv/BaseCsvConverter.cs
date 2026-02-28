@@ -1,9 +1,6 @@
-using NUnit.Framework.Internal;
 using System;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 
@@ -17,18 +14,18 @@ using UnityEngine;
 public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
 {
     protected abstract string ConverterTarget { get;}
+    protected abstract Type TargetType { get;}
     protected const string defaultMenu = "Tools/CSV/CSV to SO Converter -> ";
 
     protected string saveDirectory { get => editorSetting.saveDirectory; set => editorSetting.saveDirectory = value; }
+    protected int attributeCount { get => editorSetting.attributeCount; set => editorSetting.attributeCount = value; }
     TextAsset selectedCsv;
     bool isFileValid;
     bool isPathValid;
 
+    protected string[] headers;
 
-    //private DataType selectedType = DataType.ItemData;
-    //private const string SelectedTypePrefsKey = "CSV_TO_SO_TYPE";
-
-
+    
 
     private void OnEnable()
     {
@@ -39,13 +36,16 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
 
     private void OnGUI()
     {
-        GUILayout.Label("CSV -> ScriptableObject 변환기", EditorStyles.boldLabel);
+        GUILayout.Label($"For {ConverterTarget}", EditorStyles.boldLabel);
         GUILayout.Space(10);
 
         //DrawDropDown();
         //GUILayout.Space(10);
 
         ValidateCsvFile();
+        GUILayout.Space(10);
+
+        CheckColCount();
         GUILayout.Space(10);
 
         CheckDirectory();
@@ -72,7 +72,7 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
         //EditorGUILayout.EndVertical();
     }
 
-    private bool ValidateCsvFile()
+    private void ValidateCsvFile()
     {
         // --- CSV 파일 선택(유효성 검사 포함) ---
         selectedCsv = Selection.activeObject as TextAsset;
@@ -102,11 +102,11 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
             EditorGUILayout.LabelField("선택된 파일:", fileName, EditorStyles.wordWrappedLabel);
         }
         //EditorGUILayout.EndVertical();
-
-        return isFileValid;
     }
 
-    private bool CheckDirectory()
+    
+
+    private void CheckDirectory()
     {
         // --- 3. 저장 경로 (자동 설정되지만 수동으로도 변경 가능) ---
         isPathValid = Directory.Exists(saveDirectory);
@@ -135,13 +135,26 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
             }
         }
         //EditorGUILayout.EndHorizontal();
-        return isPathValid;
+    }
+
+    private void CheckColCount()
+    {
+        using (new EditorGUILayout.HorizontalScope(GUI.skin.box))
+        {
+
+            attributeCount = EditorGUILayout.IntField("속성 개수", attributeCount);
+        }
     }
 
     private void Execute()
     {
         // --- 실행 버튼 ---
-        bool valid = isFileValid && isPathValid;
+        bool isTypeValid = typeof(ScriptableObject).IsAssignableFrom(TargetType);
+        if(!isTypeValid)
+        {
+            Debug.LogError($"변경 대상 타입({TargetType.Name})이 ScriptableObject가 아님");
+        }
+        bool valid = isFileValid && isPathValid && isTypeValid;
         //GUI.enabled = valid;
         using (new EditorGUI.DisabledGroupScope(!valid))
         {
@@ -177,28 +190,141 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
         AssetDatabase.Refresh();
     }
 
-    // =========================================================================
-    // 아래부터는 각 데이터 타입별 전용 파싱 로직입니다.
-    // =========================================================================
 
     private void ConvertData(string[] rows, string fileName)
     {
         int successCount = 0;
+
+        // reflection에 사용
+        headers = rows[0].Split(',');
+
         for (int i = 1; i < rows.Length; i++)
         {
             string[] cols = rows[i].Split(',');
-            if (cols.Length < 3) continue;
+
+            //2보다 크거나 같은값
+            if (cols.Length < Mathf.Max(attributeCount, 2))
+            {
+                Debug.LogWarning($"{i}번째 행은 데이터의 개수(원소의 개수)가 부족함");
+                continue;
+            }
 
             try
             {
-                ConvertData(cols, ref successCount);
+                ConvertDataRow(i, cols, ref successCount);
             }
             catch (Exception e) { Debug.LogError($"[ItemData] {i + 1}번째 줄 실패: {e.Message}"); }
         }
         Debug.Log($"✅ [{fileName}] 총 {successCount}개의 아이템 데이터 갱신 완료!");
     }
 
-    protected abstract void ConvertData(string[] cols, ref int successCount);
+    private void ConvertDataRow(int rowNum, string[] cols, ref int successCount)
+    {
+        int id;
+        string nameTag;
+        TryParse(rowNum, cols, out id, out nameTag);
+
+        string targetAssetPath = GetTargetAssetPath(id, nameTag);
+
+        // 같은 일련번호의 파일 이름이 변경되면 바꿔주기
+        RenameOldFile(id, targetAssetPath);
+
+        // 저장장치에서 메모리로 불러오기
+        ScriptableObject asset = GetAsset(targetAssetPath, TargetType);
+
+        // 메모리에 있는 인스턴스의 데이터를 바꾸고
+        if(asset is DataObject asDataObject)
+        {
+            asDataObject.index = id;
+            asDataObject.nameTag = nameTag;
+            // 세부적인 내용은 개별 정리
+            ConvertDetails(asset, rowNum, cols);
+        }
+
+        // 현재 인스턴스와 실제 에셋의 데이터가 다르니 저장하라고 유니티에 요구하는 메서드
+        // 이 메서드가 없으면 데이터를 바꿔도 에셋으로 저장 안됨
+        EditorUtility.SetDirty(asset);
+        successCount++;
+    }
+
+    private void TryParse(int rowNum, string[] cols, out int id, out string nameTag)
+    {
+        bool valid = true;
+
+        // 둘다 데이터가 들어 있으면 참
+        valid = !(Empty(rowNum, 0, cols) || Empty(rowNum, 1, cols));
+
+        // 일련번호와 이름은 위치 고정
+        id = -1;
+        // valid가 false면 캐스팅 시도 안함
+        if (valid && !int.TryParse(cols[0].Trim(), out id))
+        {
+            Debug.LogWarning($"{selectedCsv.name}파일의 {rowNum}번째 행의 id는 숫자가 아님");
+            valid = false;
+        }
+        nameTag = cols[1].Trim();
+        if (!valid) throw new Exception($" {rowNum}번째 행은 유효하지 않은 데이터가 포함됐음");
+    }
+
+    private void RenameOldFile(int id, string targetAssetPath)
+    {
+        // 기존 파일 보존 로직 (자리에 어떤 글자가 오든 문제 없음)
+        // ex) id = 1이면 "1_"로 시작하고 ".asset"으로 끝나는 모든 파일이 해당
+        // Directory.GetFiles는 '디렉토리 + 파일 이름 + 확장자'가 모두 합쳐진 파일의 전체 경로를 배열로 반환
+        string[] existingFiles = Directory.GetFiles(saveDirectory, $"{id}_*.asset");
+        if (existingFiles != null && existingFiles.Length == 1)
+        {
+            string oldAssetPath = existingFiles[0].ToUnityPath();
+
+            // 기존 파일이 존재하고 target이름이 파일로 없으면 기존 파일에서 이름만 바꾼다
+            if (oldAssetPath != targetAssetPath)
+            {
+                // targetAssetPath에서 확장자와 경로를 제외한 '순수 파일 이름'만 추출
+                string newName = Path.GetFileNameWithoutExtension(targetAssetPath);
+
+                string error = AssetDatabase.RenameAsset(oldAssetPath, newName);
+
+                // 에러가 있다면 콘솔에 출력하여 원인 파악
+                if (!string.IsNullOrEmpty(error))
+                {
+                    Debug.LogError($"[ID: {id}] 파일 이름 변경 실패: {error}");
+                }
+            }
+        }
+        else if (existingFiles != null && existingFiles.Length > 1)
+        {
+            Debug.LogWarning($"[ID: {id}]에 해당하는 이전 파일이 여러 개 존재하여 이름 변경을 취소");
+        }
+    }
+
+    private ScriptableObject GetAsset(string assetPath, Type assetType)
+    {
+        ScriptableObject asset = AssetDatabase.LoadAssetAtPath<ScriptableObject>(assetPath);
+
+        // 없다면 새로 만들기
+        if (asset == null)
+        {
+            // 인스턴스로 만들고 해당 인스턴스를 에셋으로 저장
+            asset = CreateInstance(assetType);
+            AssetDatabase.CreateAsset(asset, assetPath);
+        }
+        return asset;
+    }
+
+    // 일련번호와 이름 외에 세부적인 데이터 처리
+    protected virtual void ConvertDetails(ScriptableObject asset, int rowNum, string[] cols) { }
+
+    protected bool Empty(int row, int col, string[] cols)
+    {
+        bool result = string.IsNullOrWhiteSpace(cols[col]);
+        if (result)
+        {
+            Debug.LogWarning($"{row}번째 행의 {col}번째 열이 비어있음");
+        }
+        return result;
+    }
+
+    protected void WarningTypeError(ScriptableObject asset) => throw new Exception($"객체({asset.name})의 타입이 [{TargetType.Name}]이 아님");
 
     protected string GetSafeFileName(string name) => string.Concat(name.Split(Path.GetInvalidFileNameChars())).Replace(" ", "_");
     protected string GetTargetAssetPath(int id, string name) => $"{saveDirectory}/{id}_{GetSafeFileName(name)}.asset";

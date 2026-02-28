@@ -10,8 +10,18 @@ using UnityEngine;
 public static class Extensions
 {
     // 절대 주소를 유니티 상대주소로 변경
-    public static string ToUnityPath(this string origin) 
-        => "Assets" + origin.Replace(Application.dataPath, "").Replace('\\', '/');
+    public static string ToUnityPath(this string origin)
+    {
+        // 절대 주소를 상대 주소로 변경
+        origin = origin.Replace(Application.dataPath, "").Replace('\\', '/');
+        
+        // 이미 상대주소였다면 이 부분을 패스함
+        if (!origin.Contains("Assets"))
+        {
+            origin = "Assets" + origin;
+        }
+        return origin;
+    }
 
     public static bool IsNullOrEmpty<T>(this ICollection<T> collection)
     {

@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class InfoItemContainer : InfoContainer<InfoItem>
+public class InfoItemContainer : InfoContainer<ItemObject>
 {
     public InfoItemContainer() : base()
     {
         currentObject = null;
     }
 
-    public InfoItemContainer(InfoItem InitialObject) : base(InitialObject)
+    public InfoItemContainer(ItemObject InitialObject) : base(InitialObject)
     {
         Set(InitialObject);
     }

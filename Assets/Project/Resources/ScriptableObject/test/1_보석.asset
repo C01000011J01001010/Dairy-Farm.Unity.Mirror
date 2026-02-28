@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb883917f15eb7f49b1d5328acdcc4d2, type: 3}
-  m_Name: "2_\uD1A0\uB9C8\uD1A0_\uC528\uC557"
+  m_Name: "1_\uBCF4\uC11D"
   m_EditorClassIdentifier: Assembly-CSharp::ItemObject
-  index: 2
-  nameTag: "\uD1A0\uB9C8\uD1A0 \uC528\uC557"
-  description: "\uC528\uC557\uC744 \uC2EC\uC5B4 \uD1A0\uB9C8\uD1A0\uC744 \uC218\uD655
-    \uD560 \uC218 \uC788\uB2E4."
+  index: 1
+  nameTag: "\uAC10\uC790 \uC528\uC557"
+  description: "\uC528\uC557\uC744 \uC2EC\uC5B4 \uAC10\uC790\uB97C \uC218\uD655 \uD560
+    \uC218 \uC788\uB2E4."
   icon: {fileID: 0}
   itemType: 0
-  maxStack: 0
+  maxStack: 3
   sellPrice: 0

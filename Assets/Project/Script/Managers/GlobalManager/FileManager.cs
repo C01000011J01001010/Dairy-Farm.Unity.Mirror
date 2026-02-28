@@ -6,11 +6,6 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-public interface IPrimaryKey
-{
-    int ID { get; }
-}
-
 
 public class FileManager : MonoBehaviour, IGlobalManager
 {
@@ -183,13 +178,13 @@ public class FileManager : MonoBehaviour, IGlobalManager
         return directory;
     }
 
-    public Dictionary<int, DataType> LoadAllGameData<DataType>(string directory)
-        where DataType : UnityEngine.Object, IPrimaryKey
+    public Dictionary<int, InfoType> LoadAllGameData<InfoType>(string directory)
+        where InfoType : InfoObject
     {
         // Resources에서 쓸 수 있는 경로로 변환
         directory = GetDirectoryForResources(directory);
 
-        DataType[] loadedDatas = Resources.LoadAll<DataType>(directory);
+        InfoType[] loadedDatas = Resources.LoadAll<InfoType>(directory);
 
         if(loadedDatas.IsNullOrEmpty())
         {
@@ -197,19 +192,19 @@ public class FileManager : MonoBehaviour, IGlobalManager
             return null;
         }
 
-        Dictionary<int, DataType> dataDict = new Dictionary<int, DataType>();
+        Dictionary<int, InfoType> dataDict = new Dictionary<int, InfoType>();
 
         foreach (var data in loadedDatas)
         {
-            if(dataDict.ContainsKey(data.ID))
+            if(dataDict.ContainsKey(data.index))
             {
-                DataType old = dataDict[data.ID];
+                InfoType old = dataDict[data.index];
                 Debug.LogError($"유일하지 않은 PK 발견!\n" +
                     $"기존 데이터 파일 이름 : {old.name}\n" +
                     $"겹친 데이터 파일 이름 : {data.name}");
                 continue;
             }
-            dataDict[data.ID] = data;
+            dataDict[data.index] = data;
         }
         return dataDict;
     }
