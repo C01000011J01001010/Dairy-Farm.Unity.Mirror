@@ -211,7 +211,7 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
         int successCount = 0;
 
         // reflection에 사용
-        headers = rows[0].Split(',');
+        headers = rows[0].Split(',');//[0..attributeCount];
 
         for (int i = 1; i < rows.Length; i++)
         {
