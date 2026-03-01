@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d081f123abd166246ae1d0ffba9f025c, type: 3}
+  m_Name: "1_\uC300"
+  m_EditorClassIdentifier: Assembly-CSharp::CropObject
+  index: 1
+  nameTag: "\uC300"
+  season: 0
+  days_ToMaturity: 3
+  result_ItemIndex: 1001
+  _growth:
+  - {fileID: -7717748059559288981, guid: ab04f9097b5b0f04e8be870a42d48a00, type: 3}
+  - {fileID: 3849808467749604940, guid: ab04f9097b5b0f04e8be870a42d48a00, type: 3}
+  - {fileID: 2080791224664143242, guid: ab04f9097b5b0f04e8be870a42d48a00, type: 3}
+  - {fileID: 5733057829911488661, guid: ab04f9097b5b0f04e8be870a42d48a00, type: 3}
+  - {fileID: -7677782447180633166, guid: ab04f9097b5b0f04e8be870a42d48a00, type: 3}

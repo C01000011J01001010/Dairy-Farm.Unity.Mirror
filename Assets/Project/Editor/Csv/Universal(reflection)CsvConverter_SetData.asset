@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Universal(reflection)CsvConverter_SetData
   m_EditorClassIdentifier: Assembly-CSharp-Editor::CSVConverter_Setting
   saveDirectory: Assets/Project/Resources/ScriptableObject/Crops
-  typeName: ItemObject
-  attributeCount: 3
+  typeName: CropObject
+  attributeCount: 5
