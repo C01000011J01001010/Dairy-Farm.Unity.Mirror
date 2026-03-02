@@ -19,6 +19,4 @@ public class ItemCsvConverter : BaseCsvConverter
 
         asItemInfo.description = cols[2].Trim();
     }
-
-    
 }

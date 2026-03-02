@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32aaad0a42d6c8145af7006bc0118d81, type: 3}
   m_Name: ItemCsvConverter_SetData
   m_EditorClassIdentifier: Assembly-CSharp-Editor::CSVConverter_Setting
-  saveDirectory: Assets
+  saveDirectory: Assets/Project/Resources/ScriptableObject/Items
+  typeName: 
   attributeCount: 2

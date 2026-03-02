@@ -178,13 +178,13 @@ public class FileManager : MonoBehaviour, IGlobalManager
         return directory;
     }
 
-    public Dictionary<int, InfoType> LoadAllGameData<InfoType>(string directory)
-        where InfoType : InfoObject
+    public Dictionary<int, DataType> LoadAllGameData<DataType>(string directory)
+        where DataType : DataObject
     {
         // Resources에서 쓸 수 있는 경로로 변환
         directory = GetDirectoryForResources(directory);
 
-        InfoType[] loadedDatas = Resources.LoadAll<InfoType>(directory);
+        DataType[] loadedDatas = Resources.LoadAll<DataType>(directory);
 
         if(loadedDatas.IsNullOrEmpty())
         {
@@ -192,13 +192,13 @@ public class FileManager : MonoBehaviour, IGlobalManager
             return null;
         }
 
-        Dictionary<int, InfoType> dataDict = new Dictionary<int, InfoType>();
+        Dictionary<int, DataType> dataDict = new Dictionary<int, DataType>();
 
         foreach (var data in loadedDatas)
         {
             if(dataDict.ContainsKey(data.index))
             {
-                InfoType old = dataDict[data.index];
+                DataType old = dataDict[data.index];
                 Debug.LogError($"유일하지 않은 PK 발견!\n" +
                     $"기존 데이터 파일 이름 : {old.name}\n" +
                     $"겹친 데이터 파일 이름 : {data.name}");

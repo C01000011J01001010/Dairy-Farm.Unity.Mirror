@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
+
 public class InfoContainer<T> //: MonoBehaviour
-	//where T : InfoObject
+	//where T : class
     
 {
+    [SerializeField]
 	protected T currentObject;
 
     public InfoContainer()
