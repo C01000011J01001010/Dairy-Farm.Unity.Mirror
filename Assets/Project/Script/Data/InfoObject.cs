@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// 게임 내에서 혼자서 형태를 갖지 않는 정보객체
 public abstract class InfoObject : DataObject
 {
     [TextArea(3, 5)]

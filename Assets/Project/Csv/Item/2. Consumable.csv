@@ -1,0 +1,5 @@
+index,nameTag, description,maxStack,sellPrice,consumableType,effectValue
+101,쌀, 씨앗을 심어 쌀를 수확 할 수 있다.,99,0,,
+201,토마토 씨, 씨앗을 심어 토마토을 수확 할 수 있다.,99,0,,
+301,호박 씨, 씨앗을 심어 호박을 수확 할 수 있다.,99,0,,
+401, 딸기 씨, 씨앗을 심어 딸기을 수확 할 수 있다.,99,0,,

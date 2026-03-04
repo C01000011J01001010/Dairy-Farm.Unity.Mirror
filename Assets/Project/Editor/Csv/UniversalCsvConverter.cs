@@ -90,7 +90,8 @@ public class UniversalCsvConverter : BaseCsvConverter
     {
         // 리플렉션을 통한 데이터 자동 매칭 및 할당
         // id와 name은 BaseCsvConverter에서 해결
-        for (int j = 2; j < attributeCount; j++)
+        int count = Math.Min(headers.Length, attributeCount);
+        for (int j = 2; j < count; j++)
         {
             if (j >= cols.Length || Empty(rowNum, j, cols)) continue;
 

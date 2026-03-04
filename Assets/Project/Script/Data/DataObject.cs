@@ -1,5 +1,7 @@
 using UnityEngine;
 
+
+// 모든 csv 데이터의 기초형태
 public abstract class DataObject : ScriptableObject
 {
     public int index;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InfoItemShower : DataShower<ItemObject, InfoItemContainer>
+public class InfoItemShower : DataShower<BaseItem, InfoItemContainer>
 {
 
 }

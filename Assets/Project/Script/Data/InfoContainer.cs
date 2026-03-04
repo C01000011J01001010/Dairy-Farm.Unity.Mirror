@@ -19,8 +19,8 @@ public class InfoContainer<T> //: MonoBehaviour
         Set(InitialObject);
     }
 
-    public T Get() => currentObject;
-	public T Set(T newObject)
+    public virtual T Get() => currentObject;
+	public virtual T Set(T newObject)
 	{
 		return currentObject = newObject;
 	}

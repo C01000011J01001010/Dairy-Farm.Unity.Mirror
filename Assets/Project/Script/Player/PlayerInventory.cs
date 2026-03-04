@@ -28,9 +28,12 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
 #if UNITY_EDITOR
         Debug.LogWarning("테스트 구문");
         AcquireItem(1, 1);
-        AcquireItem(101, 2);
-        AcquireItem(201, 10);
-        AcquireItem(301, 40);
+        AcquireItem(1, 2);
+        AcquireItem(3, 3);
+        AcquireItem(101, 99);
+        AcquireItem(201, 99);
+        AcquireItem(301, 99);
+        AcquireItem(401, 99);
 #endif
         yield break;
     }
@@ -49,7 +52,7 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
         if (curCount < 0) return;
 
         // ItemManager를 통해 ID에 해당하는 원본 데이터를 가져옴
-        ItemObject newItem = itemManager.GetItem(itemID);
+        BaseItem newItem = itemManager.GetItem(itemID);
 
         if (newItem == null)
         {
@@ -72,9 +75,9 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
         // 같은 아이템이 없다면, 비어있는 슬롯 찾아서 새로 등록
         foreach (var container in itemContainer)
         {
-            if (container.IsEmpty())
+            // 비었다면 설정후 개수 변화
+            if (container.IsEmpty() && container.Set(newItem))
             {
-                container.Set(newItem);
                 ChangeInPossessionAmount(container, newItem, curCount, out curCount);
                 return;
             }
@@ -87,7 +90,10 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
         }
     }
 
-    private void ChangeInPossessionAmount(InfoItemContainer container, ItemObject newItem, int count, out int remain)
+    /// <summary>
+    /// 아이템 개수 변경
+    /// </summary>
+    private void ChangeInPossessionAmount(InfoItemContainer container, BaseItem newItem, int count, out int remain)
     {
         container.Push(count, out remain);
         Debug.Log($"[획득] {newItem.nameTag} {count - remain}개 획득! (현재 슬롯에 총 {container.amount}개)");
@@ -101,7 +107,7 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
     /// <summary>
     /// 특정 슬롯의 아이템을 사용 (0번, 1번, 2번 슬롯)
     /// </summary>
-    public void UseItem(int slotIndex, int count = 1)
+    public void UseItem(BaseCharacter user, int slotIndex, int count = 1)
     {
         if (slotIndex < 0 || slotIndex >= itemContainer.Length)
         {
@@ -116,39 +122,29 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
             return;
         }
 
-        ItemObject cur = container.Get();
-
-        int remain;
-
-        // 아이템 타입에 따른 사용 분기
-        if (cur.itemType == ItemType.Consumable)
+        // 아이템 타입에 따른 사용
+        BaseItem cur = container.Get();
+        bool isSuccess = container.TryUse(user, count);
+        // 2. 사용 결과에 따른 처리
+        if (isSuccess)
         {
-            container.Pop(count, out remain);
-            Debug.Log($"[사용] {cur.nameTag} {count - remain}개 사용! (현재 슬롯에 총 {container.amount}개)");
-
-            // TODO 아이템 사용 이벤트
-
-            if (remain > 0)
+            // 성공했으니 종류에 따라 내구도를 깎거나 개수를 줄임!
+            if (cur is Item_Equipment)
             {
-                Debug.Log($"아이템({cur.nameTag}) 재고 없음 -> {remain}개 사용 불가");
-                container.Clear();
-                // TODO 아이템을 다 사용한 경우 이벤트 추가
-            }
-
-        }
-        else if (cur.itemType == ItemType.Equipment)
-        {
-            bool result = container.TryReduceDurability();
-            if(result)
-            {
-                //TODO 아이템 사용 이벤트
+                container.ReduceDurability(count);
             }
             else
             {
-                //TODO 아이템 사용 못한다고 알리는 이벤트
+                container.Pop(count, out _);
             }
         }
+        else
+        {
+            Debug.LogWarning("사용 실패시 효과음 출력 바람");
+        }
     }
+
+
 
     
 }

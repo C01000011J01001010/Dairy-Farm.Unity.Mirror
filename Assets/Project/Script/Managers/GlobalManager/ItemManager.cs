@@ -5,7 +5,7 @@ using UnityEngine;
 public class ItemManager : MonoBehaviour, IGlobalManager
 {
     // 아이템 ID를 키(Key)로 사용하여 빠르게 검색하기 위한 딕셔너리
-    private Dictionary<int, ItemObject> itemDatabase = new Dictionary<int/*id*/, ItemObject>();
+    private Dictionary<int, BaseItem> itemDatabase = new Dictionary<int/*id*/, BaseItem>();
 
     public void Exit()
     {
@@ -22,7 +22,7 @@ public class ItemManager : MonoBehaviour, IGlobalManager
     {
         // Resources/Items 경로 안에 ScriptableObject들을 모아두었다고 가정
         FileManager fileManager = GameManager.GetManager<FileManager>();
-        itemDatabase = fileManager.LoadAllGameData<ItemObject>("ScriptableObject/Items");
+        itemDatabase = fileManager.LoadAllGameData<BaseItem>("ScriptableObject/Items");
 
         if(itemDatabase.IsNullOrEmpty())
         {
@@ -35,9 +35,9 @@ public class ItemManager : MonoBehaviour, IGlobalManager
     /// <summary>
     /// ID를 통해 특정 아이템 데이터를 가져옵니다.
     /// </summary>
-    public ItemObject GetItem(int id)
+    public BaseItem GetItem(int id)
     {
-        if (itemDatabase.TryGetValue(id, out ItemObject item))
+        if (itemDatabase.TryGetValue(id, out BaseItem item))
         {
             return item;
         }
