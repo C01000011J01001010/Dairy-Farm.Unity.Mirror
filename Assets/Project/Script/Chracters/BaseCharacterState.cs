@@ -11,8 +11,7 @@ public enum CharacterState
 public abstract class BaseCharacterState : BaseState<CharacterState>
 {
     protected BaseCharacter owner;
-
-    public BaseCharacterState(BaseCharacter owner)
+    public virtual void Initialize(BaseCharacter owner)
     {
         this.owner = owner;
     }

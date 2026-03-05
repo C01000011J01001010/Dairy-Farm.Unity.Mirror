@@ -8,7 +8,7 @@ public class TileHoverHandler : MonoBehaviour
     [SerializeField] private Tilemap targetTilemap;   // 현재 사용 중인 타일맵
     [SerializeField] private GameObject highlight;   // 마우스를 따라다닐 단 하나의 오브젝트
 
-    void Update()
+    public void CALLBACK_Update()
     {
         // 1. 마우스 위치를 월드 좌표로 변환
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();

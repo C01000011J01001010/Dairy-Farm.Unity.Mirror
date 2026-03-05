@@ -85,7 +85,7 @@ public class PoolManager : MonoBehaviour, IScenedManager
         yield return null;
     }
 
-    public IEnumerator LateInitialize()
+    public IEnumerator PostInitialize()
     {
         yield break;
     }

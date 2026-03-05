@@ -4,8 +4,9 @@ public class State_Sprint : BaseCharacterState
 {
     baseCharacterAnim anim;
 
-    public State_Sprint(BaseCharacter owner) : base(owner) 
+    public override void Initialize(BaseCharacter owner)
     {
+        base.Initialize(owner);
         anim = owner.anim;
     }
 
@@ -28,7 +29,7 @@ public class State_Sprint : BaseCharacterState
 
     }
 
-    public override void Update()
+    public override void Update(float deltaTime)
     {
         anim.SetInputMove(owner.inputMove);
     }

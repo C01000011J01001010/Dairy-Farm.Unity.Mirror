@@ -10,9 +10,9 @@ public interface IInitialize : IBaseInitializable
     IEnumerator Initialize();
 }
 
-public interface ILateInitialize : IBaseInitializable
+public interface IPostInitialize : IBaseInitializable
 {
-    IEnumerator LateInitialize();
+    IEnumerator PostInitialize();
 }
 
-public interface IScenedInitialize : IInitialize, ILateInitialize, IPriority { }
+public interface IScenedInitialize : IInitialize, IPostInitialize, IPriority { }

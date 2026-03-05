@@ -47,7 +47,7 @@ public class UiController : MonoBehaviour, IScenedInitialize
         yield return null;
     }
 
-    public IEnumerator LateInitialize()
+    public IEnumerator PostInitialize()
     {
         yield break;
     }

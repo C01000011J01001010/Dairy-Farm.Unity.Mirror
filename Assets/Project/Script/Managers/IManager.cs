@@ -5,6 +5,6 @@ public interface IManager : IInitialize { }
 
 public interface IGlobalManager : IManager { }
 
-public interface IScenedManager : IManager, ILateInitialize, IPriority { }
+public interface IScenedManager : IManager, IPostInitialize, IPriority { }
 
 

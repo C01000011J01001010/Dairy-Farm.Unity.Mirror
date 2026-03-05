@@ -34,7 +34,7 @@ public class PlayerCotroller : MonoBehaviour, IScenedInitialize
         inputManager = GameManager.GetManager<UserInputManager>();
         yield return null;
     }
-    public IEnumerator LateInitialize() 
+    public IEnumerator PostInitialize() 
     { 
         yield break; 
     }

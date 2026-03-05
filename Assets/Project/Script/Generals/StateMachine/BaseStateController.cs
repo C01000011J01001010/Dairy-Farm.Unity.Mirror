@@ -5,11 +5,17 @@ using UnityEngine;
 
 public abstract class BaseStateController<TState> : MonoBehaviour where TState : struct, Enum
 {
-    [SerializeField]protected TState currentStateType;
+    [SerializeField]protected TState defaultStateType;
+    protected TState currentStateType;
     protected BaseState<TState> CurrentState;
     protected Dictionary<TState, BaseState<TState>> stateDict;
 
     public TState CurrentStateType => currentStateType;
+
+    protected virtual void OnDestroy()
+    {
+        
+    }
 
     public virtual void Exit()
     {
@@ -17,16 +23,26 @@ public abstract class BaseStateController<TState> : MonoBehaviour where TState :
         CurrentState?.Exit(null);
     }
 
-    public virtual void Initialize(TState defaultState)
+    public virtual void Initialize()
     {
         stateDict = ProductState();
-        currentStateType = defaultState;
-        CurrentState = GetState(defaultState);
+    }
+
+    public virtual void PostInitialize()
+    {
+        StartState();
+    }
+
+    protected void StartState()
+    {
+        currentStateType = defaultStateType;
+        CurrentState = GetState(defaultStateType);
         CurrentState.Enter();
     }
+
     protected abstract Dictionary<TState, BaseState<TState>> ProductState();
 
-    public virtual void UpdateFromOwner()
+    public virtual void OnTick(float deltaTime)
     {
         TState? nextState = CurrentState.CheckTransitions();
 
@@ -35,11 +51,18 @@ public abstract class BaseStateController<TState> : MonoBehaviour where TState :
             TransitionTo(nextState.Value);
             return;
         }
-        CurrentState?.Update();
+        CurrentState?.Update(deltaTime);
+    }
+
+    public virtual void OnFixedTick(float FixedDeltaTime)
+    {
+        CurrentState?.FixedUpdate(FixedDeltaTime);
     }
 
     protected virtual void TransitionTo(TState nextState)
     {
+        if (currentStateType.Equals(nextState)) return;
+
         CurrentState.Exit(nextState);
 
         currentStateType = nextState;

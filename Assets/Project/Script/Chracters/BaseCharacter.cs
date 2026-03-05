@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -13,7 +14,6 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
 
     public baseCharacterAnim anim {  get; protected set; }
-    protected CharacterStateController stateController;
     protected Rigidbody2D rigidBody;
 
     public Vector2 inputMove;
@@ -24,15 +24,22 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     protected bool isReady;
 
+    protected List<ICharacterModule> modules = new();
 
     private void OnDisable()
     {
-        if (isReady) Unsubscribe();
+        if (isReady)
+        {
+            Unsubscribe();
+        }
     }
 
     private void OnEnable()
     {
-        if (isReady) Subscribe();
+        if (isReady)
+        {
+            Subscribe();
+        }
     }
 
     public virtual void Exit()
@@ -50,15 +57,38 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
     {
         rigidBody = GetComponent<Rigidbody2D>();
         anim = GetComponent<baseCharacterAnim>();
-        stateController = GetComponent<CharacterStateController>();
+        TryAddCharacterModule<CharacterStateController>();
+
+        
+        foreach(ICharacterModule module in modules)
+        {
+            module.Initialize(this);
+        }
         yield return null;
     }
-    public IEnumerator LateInitialize()
+    public IEnumerator PostInitialize()
     {
-        stateController.Initialize(CharacterState.Idle);
+        foreach (ICharacterModule module in modules)
+        {
+            module.PostInitialize();
+            module.SetActive(true);
+        }
         yield return null;
         isReady = true;
         Subscribe();
+    }
+
+    protected void TryAddCharacterModule<Module>() where Module : ICharacterModule
+    {
+        ICharacterModule module = GetComponent<Module>();
+        if(module != null)
+        {
+            modules.Add(module);
+        }
+        else
+        {
+            Debug.LogError($"{typeof(Module).Name}을 캐릭터에 준비하지 않았음");
+        }
     }
 
     protected void Subscribe()
@@ -98,10 +128,27 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     //public void SprintToggle() => isRun = !isRun;
 
-    public virtual void Tick() { }
+    public virtual void Tick() 
+    {
+        foreach(ICharacterModule module in modules)
+        {
+            if (module.IsActive)
+            {
+                module.OnTick(Time.deltaTime);
+            }
+        }
+    }
 
     public virtual void FixedTick()
     {
+        foreach (ICharacterModule module in modules)
+        {
+            if (module.IsActive)
+            {
+                module.OnFixedTick(Time.fixedDeltaTime);
+            }
+        }
+
         if(isMove)
         {
             Physics_Move();

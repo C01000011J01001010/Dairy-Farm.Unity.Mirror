@@ -82,7 +82,7 @@ public sealed class WorldManager : MonoBehaviour, IManager
     }
 
     private List<T> AddToDict<T>(MonoBehaviour[] allMonoBehaviours, Action<T> Add) 
-        where T : IInitialize, ILateInitialize, IPriority
+        where T : IInitialize, IPostInitialize, IPriority
     {
         // 같은 오브젝트에 붙은것 체크 하고
         // 전체 오브젝트
@@ -129,7 +129,7 @@ public sealed class WorldManager : MonoBehaviour, IManager
         objectsDict[objType].Add(obj);
     }
 
-    private IEnumerator Initialize<T>(List<T> InitList) where T : IInitialize, ILateInitialize, IPriority
+    private IEnumerator Initialize<T>(List<T> InitList) where T : IInitialize, IPostInitialize, IPriority
     {
         // 우선순위로 정렬
         InitList.Sort((x, y) => x.Priority - y.Priority);
@@ -143,13 +143,13 @@ public sealed class WorldManager : MonoBehaviour, IManager
         }
     }
 
-    private IEnumerator LateInitialize<T>(List<T> InitList) where T : IInitialize, ILateInitialize, IPriority
+    private IEnumerator LateInitialize<T>(List<T> InitList) where T : IInitialize, IPostInitialize, IPriority
     {
         // 2단계 초기화 진행
         foreach (var obj in InitList)
         {
             VisualizeNextLoading();
-            yield return obj.LateInitialize();
+            yield return obj.PostInitialize();
             yield return null;
         }
     }

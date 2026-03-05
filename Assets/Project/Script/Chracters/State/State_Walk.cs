@@ -4,8 +4,9 @@ public class State_Walk : BaseCharacterState
 {
     baseCharacterAnim anim;
 
-    public State_Walk(BaseCharacter owner) : base(owner) 
+    public override void Initialize(BaseCharacter owner)
     {
+        base.Initialize(owner);
         anim = owner.anim;
     }
 
@@ -27,7 +28,7 @@ public class State_Walk : BaseCharacterState
 
     }
 
-    public override void Update()
+    public override void Update(float deltaTime)
     {
         anim.SetInputMove(owner.inputMove);
     }

@@ -3,9 +3,11 @@ using UnityEngine.TextCore.Text;
 public class State_Idle : BaseCharacterState
 {
     baseCharacterAnim anim;
-    public State_Idle(BaseCharacter owner) : base(owner)
+
+    public override void Initialize(BaseCharacter owner)
     {
         anim = owner.anim;
+        base.Initialize(owner);
     }
 
     public override CharacterState? CheckTransitions()
@@ -24,11 +26,6 @@ public class State_Idle : BaseCharacterState
     }
 
     public override void Exit(CharacterState? nextState)
-    {
-        
-    }
-
-    public override void Update()
     {
         
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
-public class PlayerInventory : MonoBehaviour, IScenedInitialize
+public class CharacterInventory : BaseCharacterModule, ICharacterModule
 {
     [SerializeField] private int priority = 1;
     [Header("Quick Slots")]
@@ -12,7 +12,7 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
 
     public int Priority => priority;
 
-    public IEnumerator Initialize()
+    public override void Initialize(BaseCharacter owner)
     {
         // 게임 시작 시 빈 슬롯으로 깔끔하게 초기화
         for (int i = 0; i < itemContainer.Length; i++)
@@ -20,10 +20,10 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
             itemContainer[i] = new InfoItemContainer();
         }
         itemManager = GameManager.GetManager<ItemManager>();
-        yield return null;
+        base.Initialize(owner);
     }
 
-    public IEnumerator LateInitialize()
+    public override void PostInitialize()
     {
 #if UNITY_EDITOR
         Debug.LogWarning("테스트 구문");
@@ -35,12 +35,6 @@ public class PlayerInventory : MonoBehaviour, IScenedInitialize
         AcquireItem(301, 99);
         AcquireItem(401, 99);
 #endif
-        yield break;
-    }
-
-    public void Exit()
-    {
-
     }
 
     /// <summary>
