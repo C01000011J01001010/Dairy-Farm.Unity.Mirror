@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -211,7 +212,12 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
         int successCount = 0;
 
         // reflection에 사용
-        headers = rows[0].Split(',');//[0..attributeCount];
+        string[] rawHeaders = rows[0].Split(',');//[0..attributeCount];
+
+        // 값이 비어있지 않거나 공백이 아닌 동안만 가져와서 배열로 만
+        // 중간에 빈 값("")을 만나면 그 즉시 멈추고 이전까지만 반환
+        // TakeWhile : 결과가 true인 경우 데이터를 취하고 false이면 멈춤
+        headers = rawHeaders.TakeWhile(h => !string.IsNullOrWhiteSpace(h)).ToArray();
 
         for (int i = 1; i < rows.Length; i++)
         {
