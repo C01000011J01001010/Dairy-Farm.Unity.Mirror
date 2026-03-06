@@ -66,7 +66,7 @@ public class UiController : MonoBehaviour, IScenedInitialize
         return false;
     }
 
-    protected virtual BaseUi GetClaimedUi(MyUi type)
+    public virtual BaseUi GetUi(MyUi type)
     {
         BaseUi ui = null;
         // 씬에 종속된 Ui인지 먼저 확인 후
@@ -79,38 +79,20 @@ public class UiController : MonoBehaviour, IScenedInitialize
         }
         return ui;
     }
-    public void ClaimUiOpen(MyUi type)
+    public BaseUi ClaimUiOpen(MyUi type)
     {
-        BaseUi ui = GetClaimedUi(type);
-        if (ui is null) return;
+        BaseUi ui = GetUi(type);
+        if (ui is null) return null;
 
-        if (ui.TryGetComponent(out BaseUi userInterface))
-        {
-            // UserInterface 클래스가 있으면 개별적으로 정의된 프로시저를 호출
-            userInterface.ClaimOpen();
-        }
-        else
-        {
-            // 없으면 활성화 직접
-            ui.gameObject.SetActive(true);
-        }
+        ui.ClaimOpen();
+        return ui;
     }
-
-
     public void ClaimUiClose(MyUi type)
     {
-        BaseUi ui = GetClaimedUi(type);
+        BaseUi ui = GetUi(type);
         if (ui is null) return;
 
-        
-        if (ui.TryGetComponent(out BaseUi userInterface))
-        {
-            userInterface.ClaimClose();
-        }
-        else
-        {
-            ui.gameObject.SetActive(false);
-        }
+        ui.ClaimClose();
     }
 
     

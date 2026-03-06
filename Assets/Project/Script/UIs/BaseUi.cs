@@ -9,8 +9,6 @@ public abstract class BaseUi : MonoBehaviour, IInitialize
 
     public abstract IEnumerator Initialize();
 
-    public virtual IEnumerator LateInitialize() { yield break; }
-
     public virtual void ClaimOpen()
     {
         // 활성화 후 가장 앞으로
