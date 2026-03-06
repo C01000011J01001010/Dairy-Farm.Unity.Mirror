@@ -17,8 +17,8 @@ public interface ICharacterModule
     void PostInitialize();
 
     // 업데이트 루프
-    void OnTick(float deltaTime);
-    void OnFixedTick(float fixedDeltaTime);
+    void Tick(float deltaTime);
+    void FixedTick(float fixedDeltaTime);
 
     // 종료 및 메모리 정리
     void Exit();

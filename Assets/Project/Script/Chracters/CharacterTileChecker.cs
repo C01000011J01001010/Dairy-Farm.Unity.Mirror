@@ -20,7 +20,7 @@ public class CharacterTileChecker : BaseCharacterModule, ICharacterModule
 
     
 
-    public override void OnTick(float deltaTime)
+    public override void Tick(float deltaTime)
     {
         TileCheck();
     }

@@ -42,7 +42,7 @@ public abstract class BaseStateController<TState> : MonoBehaviour where TState :
 
     protected abstract Dictionary<TState, BaseState<TState>> ProductState();
 
-    public virtual void OnTick(float deltaTime)
+    public virtual void Tick(float deltaTime)
     {
         TState? nextState = CurrentState.CheckTransitions();
 
@@ -54,7 +54,7 @@ public abstract class BaseStateController<TState> : MonoBehaviour where TState :
         CurrentState?.Update(deltaTime);
     }
 
-    public virtual void OnFixedTick(float FixedDeltaTime)
+    public virtual void FixedTick(float FixedDeltaTime)
     {
         CurrentState?.FixedUpdate(FixedDeltaTime);
     }

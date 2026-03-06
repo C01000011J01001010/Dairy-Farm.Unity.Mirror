@@ -29,7 +29,7 @@ public class BaseCharacterModule : MonoBehaviour, ICharacterModule
 
     public virtual void PostInitialize() { }
 
-    public virtual void OnFixedTick(float fixedDeltaTime) { }
+    public virtual void FixedTick(float fixedDeltaTime) { }
 
-    public virtual void OnTick(float deltaTime) { }
+    public virtual void Tick(float deltaTime) { }
 }

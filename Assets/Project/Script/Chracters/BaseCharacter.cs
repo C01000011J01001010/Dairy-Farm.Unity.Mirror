@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,9 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     protected bool isReady;
 
-    protected List<ICharacterModule> modules = new();
+    private List<ICharacterModule> modules = new(); // 모듈 초기화, 업데이트 순서용
+    private Dictionary<Type, ICharacterModule> moduleDict = new();// 중복방지, Get용
+
 
     private void OnDisable()
     {
@@ -58,6 +61,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         rigidBody = GetComponent<Rigidbody2D>();
         anim = GetComponent<baseCharacterAnim>();
         TryAddCharacterModule<CharacterStateController>();
+        TryAddCharacterModule<CharacterInventory>();
 
         
         foreach(ICharacterModule module in modules)
@@ -66,11 +70,13 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         }
         yield return null;
     }
-    public IEnumerator PostInitialize()
+    public virtual IEnumerator PostInitialize()
     {
         foreach (ICharacterModule module in modules)
         {
             module.PostInitialize();
+
+            // 후처리까지 끝났으니 Tick 시작
             module.SetActive(true);
         }
         yield return null;
@@ -81,14 +87,30 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
     protected void TryAddCharacterModule<Module>() where Module : ICharacterModule
     {
         ICharacterModule module = GetComponent<Module>();
-        if(module != null)
+        Type moduleType = module.GetType();
+
+        // 모듈 중복 방지
+        if(module != null && !moduleDict.ContainsKey(moduleType))
         {
             modules.Add(module);
+            moduleDict.Add(moduleType, module);
         }
         else
         {
             Debug.LogError($"{typeof(Module).Name}을 캐릭터에 준비하지 않았음");
         }
+    }
+
+    public T GetModule<T>() where T : class, ICharacterModule
+    {
+        Type moduleType = typeof(T);
+        if (moduleDict.TryGetValue(moduleType, out ICharacterModule manager))
+        {
+            return (T)manager;
+        }
+
+        Debug.LogError($"Object({moduleType.Name}) is not in moduleDict");
+        return null;
     }
 
     protected void Subscribe()
@@ -134,7 +156,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         {
             if (module.IsActive)
             {
-                module.OnTick(Time.deltaTime);
+                module.Tick(Time.deltaTime);
             }
         }
     }
@@ -145,7 +167,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         {
             if (module.IsActive)
             {
-                module.OnFixedTick(Time.fixedDeltaTime);
+                module.FixedTick(Time.fixedDeltaTime);
             }
         }
 
