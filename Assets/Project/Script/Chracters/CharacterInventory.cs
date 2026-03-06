@@ -1,25 +1,31 @@
+using System;
 using System.Collections;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class CharacterInventory : BaseCharacterModule, ICharacterModule
 {
-    [SerializeField] private int priority = 1;
-    [Header("Quick Slots")]
-    public InfoItemContainer[] itemContainer = new InfoItemContainer[9];
+    [SerializeField] protected int priority = 1;
 
-    private ItemManager itemManager;
+    protected int curSlotIndex;
+    protected InfoItemContainer[] itemSlot = new InfoItemContainer[9];
+
+    protected ItemManager itemManager;
 
     public int Priority => priority;
+
+    public event Action<int/*slotIndex*/> OnSelectedSlotChanged;
 
     public override void Initialize(BaseCharacter owner)
     {
         // 게임 시작 시 빈 슬롯으로 깔끔하게 초기화
-        for (int i = 0; i < itemContainer.Length; i++)
+        for (int i = 0; i < itemSlot.Length; i++)
         {
-            itemContainer[i] = new InfoItemContainer();
+            itemSlot[i] = new InfoItemContainer();
         }
         itemManager = GameManager.GetManager<ItemManager>();
+        // 초기 슬롯 인덱스 설정
+        curSlotIndex = 0;
         base.Initialize(owner);
     }
 
@@ -35,6 +41,31 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
         AcquireItem(301, 99);
         AcquireItem(401, 99);
 #endif
+    }
+
+    // 컨트롤러(마우스 휠)에서 호출할 스크롤 처리 로직
+    public void ScrollSlot(float scrollDelta)
+    {
+        if (scrollDelta == 0) return;
+
+        // UI에 있던 인덱스 순환 로직을 Model(인벤토리)로 가져옴
+        if (scrollDelta > 0) curSlotIndex--;
+        else curSlotIndex++;
+
+        if (curSlotIndex < 0) curSlotIndex = itemSlot.Length - 1;
+        else if (curSlotIndex >= itemSlot.Length) curSlotIndex = 0;
+
+        // 상태가 변했으므로 이벤트 발생 -> 구독 중인 UI가 화면을 갱신함
+        OnSelectedSlotChanged?.Invoke(curSlotIndex);
+    }
+
+    // 마우스 클릭이나 숫자키 등으로 특정 슬롯을 직접 지정할 때 사용
+    public void SetSelectedSlot(int index)
+    {
+        if (index < 0 || index >= itemSlot.Length) return;
+
+        curSlotIndex = index;
+        OnSelectedSlotChanged?.Invoke(curSlotIndex);
     }
 
     /// <summary>
@@ -55,7 +86,7 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
         }
 
         // 이미 같은 아이템이 있는 공간 찾기
-        foreach (var container in itemContainer)
+        foreach (var container in itemSlot)
         {
             if (!container.IsEmpty() && container.Get() == newItem)
             {
@@ -67,7 +98,7 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
         if (curCount < 0) return;
 
         // 같은 아이템이 없다면, 비어있는 슬롯 찾아서 새로 등록
-        foreach (var container in itemContainer)
+        foreach (var container in itemSlot)
         {
             // 비었다면 설정후 개수 변화
             if (container.IsEmpty() && container.Set(newItem))
@@ -103,13 +134,13 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
     /// </summary>
     public void UseItem(BaseCharacter user, int slotIndex, int count = 1)
     {
-        if (slotIndex < 0 || slotIndex >= itemContainer.Length)
+        if (slotIndex < 0 || slotIndex >= itemSlot.Length)
         {
             Debug.LogError($"슬롯번호 {slotIndex}는 슬롯 범위를 벗어남");
             return;
         }
 
-        InfoItemContainer container = itemContainer[slotIndex];
+        InfoItemContainer container = itemSlot[slotIndex];
         if (container.IsEmpty())
         {
             Debug.Log("빈 슬롯입니다.");

@@ -1,114 +1,99 @@
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
-
-public delegate void OnSelected(int index);
 
 public class QuickSlot : BaseUi
 {
-    [Header("Input Settings")]
-    [SerializeField] private InputActionProperty scrollAction; // 마우스 휠 액션 연결
+    private BaseButton[] slots;
+    private PlayerCotroller controller; // (참고: Controller 오타가 있지만 기존 코드 유지)
 
-    public event OnSelected OnSlotSelected;
-
-    private int currentIndex = 0;
-
-    private BaseButton[] slots; // 슬롯 버튼들을 순서대로 할당
+    // [추가] UI에서 현재 선택된 슬롯 번호를 기억하기 위한 변수
+    private int currentIndex = -1;
 
     public override MyUi UiType => MyUi.QuickSlot;
 
     public override void Exit()
     {
+        // 이벤트 정리
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i].ClearCallback();
+        }
 
+        if (controller != null)
+        {
+            controller.OnControllTargetSet -= OnControllTargetSet;
+            controller.OnControllTargetRemoved -= OnControllTargetRemoved;
+        }
     }
 
     public override IEnumerator Initialize()
     {
+        controller = WorldManager.GetObject<PlayerCotroller>();
         slots = GetComponentsInChildren<BaseButton>();
 
-
-        // [추가] 모든 슬롯 버튼에 클릭 이벤트 리스너를 자동으로 등록합니다.
         for (int i = 0; i < slots.Length; i++)
         {
-            int index = i; // 클로저(Closure) 문제를 피하기 위해 지역 변수 복사
+            int index = i;
             yield return slots[i].Initialize();
-            slots[i].AddCallback(() => CALLBACK_SlotClicked(index));
+            // 버튼 클릭 시 로컬 함수 호출
+            slots[i].AddCallback(() => OnSlotClicked(index));
         }
 
-        // 처음 시작할 때 0번 슬롯 선택
-        SelectSlot(0);
+        controller.OnControllTargetSet += OnControllTargetSet;
+        controller.OnControllTargetRemoved += OnControllTargetRemoved;
         yield return null;
     }
 
-    private void OnEnable()
+    // Model에서 데이터가 변경되었을 때 화면만 그리는 역할
+    public void OnSelectedSlotChanged(int newIndex)
     {
-        // 액션 활성화
-        scrollAction.action.Enable();
-        // 입력이 발생했을 때 실행될 함수 등록
-        scrollAction.action.performed += CALLBACK_OnScroll;
-    }
+        if (slots == null || slots.Length == 0) return;
 
-    private void OnDisable()
-    {
-        scrollAction.action.performed -= CALLBACK_OnScroll;
-        scrollAction.action.Disable();
-    }
-
-    // 기존 스크립트의 Update 문에 추가하거나 별도 스크립트로 작성
-    void Update()
-    {
-        // 현재 선택된 오브젝트가 없는데(null), 마우스 클릭 등으로 해제되었다면
-        if (EventSystem.current?.currentSelectedGameObject == null &&
-            slots != null && slots.Length > 0)
+        
+        if(0 <= currentIndex && currentIndex < slots.Length)
         {
-            // 마지막으로 선택했던 슬롯(currentIndex)을 다시 강제로 선택
-            EventSystem.current?.SetSelectedGameObject(slots[currentIndex]?.gameObject);
+            slots[currentIndex].SetInteractable(true);
         }
+        // 새로 변경된 인덱스를 UI 캐시 변수에 저장
+        currentIndex = newIndex;
+
+        GameObject targetSlot = slots[currentIndex].gameObject;
+        slots[currentIndex].SetInteractable(false);
+        EventSystem.current.SetSelectedGameObject(targetSlot);
+
+        Debug.Log($"UI 갱신됨: {currentIndex + 1}번 슬롯 선택됨");
     }
 
-    private void SelectSlot(int index)
+    private void OnSlotClicked(int index)
     {
-        if (slots is null || slots.Length == 0)
+        // [추가] 이미 선택된 버튼을 또 눌렀다면 아무 작업도 하지 않고 무시
+        if (index == currentIndex)
         {
-            Debug.LogWarning("slot bug");
             return;
         }
 
-
-        GameObject targetSlot = slots[index].gameObject;
-        EventSystem.current.SetSelectedGameObject(targetSlot);
-
-        OnSlotSelected?.Invoke(index);
+        // V -> C [O]
+        controller.HandleUI_QuickSlotClicked(index);
     }
 
-    private void CALLBACK_OnScroll(InputAction.CallbackContext context)
+    // 컨트롤 타겟이 바뀔때마다 이벤트가 연결되는 대상 교체
+    private void OnControllTargetSet(PlayableCharacter newCharacter)
     {
-        // 마우스 휠의 Vector2 값 읽기 (y값이 휠 회전량)
-        Vector2 scrollValue = context.ReadValue<Vector2>();
-
-        if (scrollValue.y != 0)
+        CharacterInventory inventory = newCharacter.GetModule<CharacterInventory>();
+        if (inventory != null)
         {
-            // 휠 방향에 따라 인덱스 변경 (y가 양수면 위/이전, 음수면 아래/다음)
-            if (scrollValue.y > 0) currentIndex--;
-            else currentIndex++;
-
-            // 인덱스가 슬롯 범위를 넘지 않게 순환(Wrap) 처리
-            if (currentIndex < 0) currentIndex = slots.Length - 1;
-            else if (currentIndex >= slots.Length) currentIndex = 0;
-
-            // UI 선택 상태 업데이트
-            SelectSlot(currentIndex);
+            inventory.OnSelectedSlotChanged += OnSelectedSlotChanged;
         }
     }
 
-    private void CALLBACK_SlotClicked(int index)
+    private void OnControllTargetRemoved(PlayableCharacter oldCharacter)
     {
-        currentIndex = index; // 클릭한 버튼의 인덱스로 동기화
-        SelectSlot(currentIndex);
-        Debug.Log($"Clicked Slot: {index + 1}");
+        CharacterInventory inventory = oldCharacter.GetModule<CharacterInventory>();
+        if (inventory != null)
+        {
+            inventory.OnSelectedSlotChanged -= OnSelectedSlotChanged;
+        }
     }
-
-
 }

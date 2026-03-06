@@ -5,16 +5,16 @@ using UnityEngine.InputSystem;
 
 public class UserInputManager : MonoBehaviour, IGlobalManager
 {
-    public static UserInputManager tempInst { get; private set; }
     private  UserInputActions input;
 
     public Vector2 Move => input.Player.Move.ReadValue<Vector2>();
     public bool Sprint => input.Player.Sprint.IsPressed();
 
+    public float ScrollY => input.Player.Scroll.ReadValue<Vector2>().y;
+
     private void OnEnable()
     {
         input?.Enable();
-
     }
 
     private void OnDisable()
