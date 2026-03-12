@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 농작물에 대한 정적 데이터를 저장하는 SO 스크립트
+/// </summary>
 public class CropObject : DataObject
 {
     public int season; // 제철인 계절
@@ -8,4 +11,6 @@ public class CropObject : DataObject
 
     [SerializeField]
     Sprite[] _growth; // 식물 성장 구간 이미지
+
+    public Sprite[] GetSprites() => _growth;
 }

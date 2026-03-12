@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 //public enum ItemType
@@ -19,6 +20,8 @@ public abstract class BaseItem : InfoObject
     /// <param name="user">이 아이템의 사용자</param>
     /// <returns></returns>
     public virtual bool TryUse(BaseCharacter user) => true;
+
+    public List<ItemEffectSO> effects;
 }
 
 

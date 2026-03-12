@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class QuickSlot : BaseUi
 {
@@ -23,8 +24,8 @@ public class QuickSlot : BaseUi
 
         if (controller != null)
         {
-            controller.OnControllTargetSet -= OnControllTargetSet;
-            controller.OnControllTargetRemoved -= OnControllTargetRemoved;
+            controller.Event_OnControllTargetSet -= OnControllTargetSet;
+            controller.Event_OnControllTargetRemoved -= OnControllTargetRemoved;
         }
     }
 
@@ -41,8 +42,8 @@ public class QuickSlot : BaseUi
             slots[i].AddCallback(() => OnSlotClicked(index));
         }
 
-        controller.OnControllTargetSet += OnControllTargetSet;
-        controller.OnControllTargetRemoved += OnControllTargetRemoved;
+        controller.Event_OnControllTargetSet += OnControllTargetSet;
+        controller.Event_OnControllTargetRemoved += OnControllTargetRemoved;
         yield return null;
     }
 
@@ -62,8 +63,6 @@ public class QuickSlot : BaseUi
         GameObject targetSlot = slots[currentIndex].gameObject;
         slots[currentIndex].SetInteractable(false);
         EventSystem.current.SetSelectedGameObject(targetSlot);
-
-        Debug.Log($"UI 갱신됨: {currentIndex + 1}번 슬롯 선택됨");
     }
 
     private void OnSlotClicked(int index)
@@ -85,6 +84,7 @@ public class QuickSlot : BaseUi
         if (inventory != null)
         {
             inventory.OnSelectedSlotChanged += OnSelectedSlotChanged;
+            OnSlotClicked(0); // 기본 선택
         }
     }
 

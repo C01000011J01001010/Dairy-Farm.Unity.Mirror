@@ -183,6 +183,7 @@ public sealed class GameManager : MonoBehaviour, IManager
 
         yield return ProcessManagerLoading<ItemManager>();
         yield return ProcessManagerLoading<SceneLoadManager>();
+        yield return ProcessManagerLoading<TimeManager>();
     }
 
     private IEnumerator ProcessManagerLoading<T>() where T : MonoBehaviour, IGlobalManager

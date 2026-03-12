@@ -18,6 +18,7 @@ MonoBehaviour:
   days_ToMaturity: 13
   result_ItemIndex: 1201
   _growth:
+  - {fileID: -3545189308076068758, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
   - {fileID: 1784775628, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
   - {fileID: 4907745874458294902, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
   - {fileID: -7487728316265015285, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}

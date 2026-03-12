@@ -15,8 +15,8 @@ MonoBehaviour:
   index: 2
   nameTag: "\uBB3C\uBFCC\uB9AC\uAC8C"
   description: "\uC544\uBB34"
-  icon: {fileID: 0}
-  itemType: 0
+  icon: {fileID: -1786065944184056463, guid: ab3bc8a5727363e41ae03a2b074037e8, type: 3}
   maxStack: 1
   sellPrice: 100
+  effects: []
   maxDurability: 100

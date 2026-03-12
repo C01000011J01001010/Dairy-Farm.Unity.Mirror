@@ -15,8 +15,8 @@ MonoBehaviour:
   index: 3
   nameTag: "\uB0AB"
   description: "\uC124\uBA85"
-  icon: {fileID: 0}
-  itemType: 0
+  icon: {fileID: -6470460504253458178, guid: 54db6fad80422a5429a464eb47ad0add, type: 3}
   maxStack: 1
   sellPrice: 100
+  effectSetups: []
   maxDurability: 100

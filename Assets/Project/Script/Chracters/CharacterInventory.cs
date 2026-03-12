@@ -5,14 +5,11 @@ using UnityEngine;
 
 public class CharacterInventory : BaseCharacterModule, ICharacterModule
 {
-    [SerializeField] protected int priority = 1;
-
     protected int curSlotIndex;
+    //protected InfoItemContainer curItemSlot;
     protected InfoItemContainer[] itemSlot = new InfoItemContainer[9];
 
     protected ItemManager itemManager;
-
-    public int Priority => priority;
 
     public event Action<int/*slotIndex*/> OnSelectedSlotChanged;
 
@@ -34,13 +31,14 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
 #if UNITY_EDITOR
         Debug.LogWarning("테스트 구문");
         AcquireItem(1, 1);
-        AcquireItem(1, 2);
+        AcquireItem(2, 2);
         AcquireItem(3, 3);
         AcquireItem(101, 99);
         AcquireItem(201, 99);
         AcquireItem(301, 99);
         AcquireItem(401, 99);
 #endif
+        // 최소 한개의 아이템이 선택되도록
     }
 
     // 컨트롤러(마우스 휠)에서 호출할 스크롤 처리 로직
@@ -55,17 +53,23 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
         if (curSlotIndex < 0) curSlotIndex = itemSlot.Length - 1;
         else if (curSlotIndex >= itemSlot.Length) curSlotIndex = 0;
 
-        // 상태가 변했으므로 이벤트 발생 -> 구독 중인 UI가 화면을 갱신함
+        // 상태가 변했으므로 이벤트 발생
+        // -> 구독 중인 UI가 화면을 갱신함
         OnSelectedSlotChanged?.Invoke(curSlotIndex);
     }
 
     // 마우스 클릭이나 숫자키 등으로 특정 슬롯을 직접 지정할 때 사용
     public void SetSelectedSlot(int index)
     {
-        if (index < 0 || index >= itemSlot.Length) return;
-
-        curSlotIndex = index;
-        OnSelectedSlotChanged?.Invoke(curSlotIndex);
+        if(0 <= index && index < itemSlot.Length)
+        {
+            curSlotIndex = index;
+            OnSelectedSlotChanged?.Invoke(curSlotIndex);
+        }
+        else
+        {
+            Debug.LogWarning($"Selected slot {index}");
+        }
     }
 
     /// <summary>
@@ -129,18 +133,21 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
         }
     }
 
+
     /// <summary>
     /// 특정 슬롯의 아이템을 사용 (0번, 1번, 2번 슬롯)
     /// </summary>
-    public void UseItem(BaseCharacter user, int slotIndex, int count = 1)
+    public void UseItem(int count = 1)
     {
-        if (slotIndex < 0 || slotIndex >= itemSlot.Length)
+#if UNITY_EDITOR
+        if (curSlotIndex < 0 || curSlotIndex >= itemSlot.Length)
         {
-            Debug.LogError($"슬롯번호 {slotIndex}는 슬롯 범위를 벗어남");
+            Debug.LogError($"슬롯번호 {curSlotIndex}는 슬롯 범위를 벗어남");
             return;
         }
+#endif
 
-        InfoItemContainer container = itemSlot[slotIndex];
+        InfoItemContainer container = itemSlot[curSlotIndex];
         if (container.IsEmpty())
         {
             Debug.Log("빈 슬롯입니다.");
@@ -149,16 +156,17 @@ public class CharacterInventory : BaseCharacterModule, ICharacterModule
 
         // 아이템 타입에 따른 사용
         BaseItem cur = container.Get();
-        bool isSuccess = container.TryUse(user, count);
+        bool isSuccess = container.TryUse(Owner, count);
         // 2. 사용 결과에 따른 처리
         if (isSuccess)
         {
+            Debug.Log($"{cur.nameTag} 아이템 사용 성공");
             // 성공했으니 종류에 따라 내구도를 깎거나 개수를 줄임!
             if (cur is Item_Equipment)
             {
                 container.ReduceDurability(count);
             }
-            else
+            else if (cur is Item_Consumable)
             {
                 container.Pop(count, out _);
             }
