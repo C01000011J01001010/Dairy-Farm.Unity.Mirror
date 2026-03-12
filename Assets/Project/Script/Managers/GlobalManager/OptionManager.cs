@@ -60,9 +60,8 @@ public struct GraphicOptionValues
 
 public delegate void DelegateGraphicOptionChanged(GraphicOptionValues value);
 
-public class OptionManager : MonoBehaviour, IGlobalManager
+public class OptionManager : BaseGlobalManager, IGlobalManager
 {
-    public bool IsInit { get; set; }
     public static event DelegateGraphicOptionChanged OnGraphicOptionChanged;
     public static GraphicOptionValues appliedGraphicOption; // 현재 적용중인 그래픽 세팅을 저장
 

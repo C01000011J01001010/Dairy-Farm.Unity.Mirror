@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class UserInputManager : MonoBehaviour, IGlobalManager
+public class UserInputManager : BaseGlobalManager, IGlobalManager
 {
     private  UserInputActions input;
 
     public Vector2 Move => input.Player.Move.ReadValue<Vector2>();
     public bool Sprint => input.Player.Sprint.IsPressed();
-
     public float ScrollY => input.Player.Scroll.ReadValue<Vector2>().y;
+
+    public event System.Action Event_OnUseItemInput;
 
     private void OnEnable()
     {
@@ -24,14 +25,31 @@ public class UserInputManager : MonoBehaviour, IGlobalManager
 
     public void Exit()
     {
-        input?.Disable();
+        if(input != null)
+        {
+            input.Disable();
+
+            input.Player.UseItem.performed -= OnUseItemInput;
+        }
+        
     }
 
     public IEnumerator Initialize()
     {
         input ??= new UserInputActions();
-        input?.Enable();
+
+        if(input != null )
+        {
+            input.Enable();
+
+            input.Player.UseItem.performed += OnUseItemInput;
+        }
         yield return null;
+    }
+
+    private void OnUseItemInput(InputAction.CallbackContext context)
+    {
+        Event_OnUseItemInput?.Invoke();
     }
 
     public void OnOpenUi()

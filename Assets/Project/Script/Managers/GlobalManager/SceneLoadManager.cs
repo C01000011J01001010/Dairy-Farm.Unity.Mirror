@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// 씬 전환 담당
 /// </summary>
-public sealed class SceneLoadManager : MonoBehaviour, IGlobalManager
+public sealed class SceneLoadManager : BaseGlobalManager, IGlobalManager
 {
     // 현재 씬 -> UnloadScene에서 사용
     private static Scene currentScene;
@@ -17,8 +17,6 @@ public sealed class SceneLoadManager : MonoBehaviour, IGlobalManager
     // 씬 로드 후 해당 씬의 오브젝트를 관리하는 매니저
     // 씬 넘어갈때마다 파괴될거고 여기서는 한번만 접근할거니 굳이 캐싱하지 않음
     private WorldManager worldManager => WorldManager.Inst; 
-
-    public bool IsInit => throw new System.NotImplementedException();
 
     public void Exit()
     {

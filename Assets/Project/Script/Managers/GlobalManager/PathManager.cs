@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PathManager : MonoBehaviour, IGlobalManager
+public class PathManager : BaseGlobalManager, IGlobalManager
 {
     public class Directory
     {
@@ -32,9 +32,6 @@ public class PathManager : MonoBehaviour, IGlobalManager
     // 디렉터리
     public Directory directory { get; private set; }
     public FileName fileName { get; private set; }
-
-
-    public bool IsInit { get; set; }
 
     public void Exit()
     {

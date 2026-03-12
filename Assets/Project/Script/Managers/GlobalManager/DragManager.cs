@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public sealed class DragManager : MonoBehaviour, IGlobalManager
+public sealed class DragManager : BaseGlobalManager, IGlobalManager
 {
     private Canvas canvas;
     private RectTransform currentRect;
@@ -10,7 +10,6 @@ public sealed class DragManager : MonoBehaviour, IGlobalManager
 
     public bool IsDragging => currentRect != null;
 
-    public bool IsInit {  get; private set; }
 
     public IEnumerator Initialize()
     {

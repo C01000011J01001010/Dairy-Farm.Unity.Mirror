@@ -5,6 +5,12 @@ public interface IBaseInitializable
     void Exit();
 }
 
+public interface ISetState
+{
+    public bool IsInit { get; }
+    public bool EndInit();
+}
+
 public interface IInitialize : IBaseInitializable
 {
     IEnumerator Initialize();

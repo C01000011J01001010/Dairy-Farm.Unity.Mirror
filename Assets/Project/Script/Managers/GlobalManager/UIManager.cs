@@ -41,7 +41,7 @@ public delegate void DelegateLoading_End();
 
 
 
-public class UIManager : MonoBehaviour, IGlobalManager
+public class UIManager : BaseGlobalManager, IGlobalManager
 {
     private const string canvasFileName = "CanvasPreset";
 
@@ -65,8 +65,6 @@ public class UIManager : MonoBehaviour, IGlobalManager
 
     // HUD를 제외한 활성화된 ui 관리
     Stack<BaseUi> UI_Stack = new();
-
-    public bool IsInit { get; protected set; }
 
     public void Exit()
     {

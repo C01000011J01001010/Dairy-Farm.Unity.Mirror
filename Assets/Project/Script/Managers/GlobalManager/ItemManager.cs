@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemManager : MonoBehaviour, IGlobalManager
+public class ItemManager : BaseGlobalManager, IGlobalManager
 {
     // 아이템 ID를 키(Key)로 사용하여 빠르게 검색하기 위한 딕셔너리
     private Dictionary<int, BaseItem> itemDatabase = new Dictionary<int/*id*/, BaseItem>();

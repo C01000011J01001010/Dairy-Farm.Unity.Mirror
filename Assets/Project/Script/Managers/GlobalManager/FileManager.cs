@@ -7,7 +7,7 @@ using System.Reflection;
 using UnityEngine;
 
 
-public class FileManager : MonoBehaviour, IGlobalManager
+public class FileManager : BaseGlobalManager, IGlobalManager
 {
     public static GraphicOptionValues savedGraphicOption { get; protected set; }
 
@@ -17,8 +17,6 @@ public class FileManager : MonoBehaviour, IGlobalManager
     //private static Dictionary<Type_Weapon, GameObject> WeaponPrefabs = new();
 
     private PathManager Path;
-
-    public bool IsInit { get; set; }
 
     public void Exit()
     {
@@ -257,6 +255,8 @@ public class FileManager : MonoBehaviour, IGlobalManager
 
     public static GameObject GetCharacterPrefab(Type_Character type) 
         => CharacterPrefabs.TryGetValue(type, out var result) ? result : null;
+
+    
     //public static GameObject GetEffactPrefab(Type_Effect type)
     //    => EffectPrefabs.TryGetValue(type, out var result) ? result : null;
     //public static GameObject GetWeaponPrefab(Type_Weapon type)
