@@ -64,9 +64,12 @@ public sealed class GameManager : MonoBehaviour, IManager
 
         for (int i = managerList.Count - 1; i >= 0; i--)
         {
-            managerList[i]?.Exit();
+            IGlobalManager manager = managerList[i];
+            if(manager != null && manager.IsInit)
+            {
+                managerList[i].Exit();
+            }
         }
-
         _instance = null;
     }
 
@@ -87,7 +90,9 @@ public sealed class GameManager : MonoBehaviour, IManager
     {
         // UiManager를 먼저 추가하여 로딩 화면을 보여줌
         TryGetOrAddManager<UIManager>();
-        yield return GetManager<UIManager>()?.Initialize();
+        IGlobalManager uiManager = GetManager<UIManager>();
+        yield return uiManager?.Initialize();
+        uiManager.EndInit();
 
         // 모든 매니저 초기화 실행
         yield return ProcessManagerLoading();
@@ -190,6 +195,7 @@ public sealed class GameManager : MonoBehaviour, IManager
             string loadingMessage = GetManagerLoadingMessage(manager);
             UIManager.ClaimLoading_Next(loadingMessage);
             yield return manager.Initialize();
+            manager.EndInit();
         }
         yield return null;
     }
