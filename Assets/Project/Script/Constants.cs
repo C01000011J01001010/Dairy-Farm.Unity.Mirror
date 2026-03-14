@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class Constants
 {
+    // 현실 1초 = 게임 1분 / 현실 60초 = 게임 1시간
+    public const int REAL_SECONDS_PER_GAME_MINUTE = 1;
+    public const int REAL_SECONDS_PER_GAME_HOUR = 60;
+
     #region Resources 디렉터리
     public const string DIRECTORY_Prefabs_Characters = "Prefabs/Characters";
     public const string DIRECTORY_Prefabs_Controllers = "Prefabs/Controllers";

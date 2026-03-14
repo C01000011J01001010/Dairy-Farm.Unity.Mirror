@@ -7,17 +7,17 @@ public class BaseCharacterModule : MonoBehaviour, ICharacterModule
 
     public bool IsActive { get; protected set; }
 
-    public event Action<bool> OnSetActive;
+    public event Action<bool> Evnet_OnSetActive;
 
     public void SetActive(bool active)
     {
         IsActive = active;
-        OnSetActive?.Invoke(active);
+        Evnet_OnSetActive?.Invoke(active);
     }
 
     private void OnDestroy()
     {
-        OnSetActive = null;
+        Evnet_OnSetActive = null;
     }
 
     public virtual void Exit()
@@ -25,7 +25,7 @@ public class BaseCharacterModule : MonoBehaviour, ICharacterModule
         SetActive(false);
     }
 
-    public virtual void Initialize(BaseCharacter owner) { }
+    public virtual void Initialize(BaseCharacter owner) { Owner = owner; }
 
     public virtual void PostInitialize() { }
 

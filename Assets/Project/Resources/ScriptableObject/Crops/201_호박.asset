@@ -9,17 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d081f123abd166246ae1d0ffba9f025c, type: 3}
+  m_Script: {fileID: 11500000, guid: c9f8b39a8e9f3a24d9a8b5735a55a6c3, type: 3}
   m_Name: "201_\uD638\uBC15"
-  m_EditorClassIdentifier: Assembly-CSharp::CropObject
+  m_EditorClassIdentifier: Assembly-CSharp::CropData
   index: 201
   nameTag: "\uD638\uBC15"
   season: 2
-  days_ToMaturity: 13
-  result_ItemIndex: 1201
+  days_ToMaturity: 1
+  result_ItemIndex: 10201
   _growth:
-  - {fileID: -3545189308076068758, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
-  - {fileID: 1784775628, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
-  - {fileID: 4907745874458294902, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
-  - {fileID: -7487728316265015285, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
-  - {fileID: -25557983830139815, guid: 0b74f1eddc4c23d40af62d4a76b40517, type: 3}
+  - {fileID: -3545189308076068758, guid: 764e47cc02f750f489d76ff02e37b36c, type: 3}
+  - {fileID: 1784775628, guid: 764e47cc02f750f489d76ff02e37b36c, type: 3}
+  - {fileID: 4907745874458294902, guid: 764e47cc02f750f489d76ff02e37b36c, type: 3}
+  - {fileID: -7487728316265015285, guid: 764e47cc02f750f489d76ff02e37b36c, type: 3}
+  - {fileID: -25557983830139815, guid: 764e47cc02f750f489d76ff02e37b36c, type: 3}

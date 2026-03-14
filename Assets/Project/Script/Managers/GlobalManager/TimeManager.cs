@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using static Constants;
 
 // 매니저 클래스중 가장 마지막에 초기화
 public class TimeManager : BaseGlobalManager, IGlobalManager
@@ -24,9 +25,7 @@ public class TimeManager : BaseGlobalManager, IGlobalManager
     private float timerForMinute = 0f;
     private float timerForHour = 0f;
 
-    // 현실 1초 = 게임 1분 / 현실 60초 = 게임 1시간
-    private const int REAL_SECONDS_PER_GAME_MINUTE = 1;
-    private const int REAL_SECONDS_PER_GAME_HOUR = 60;
+    
 
     public void Exit()
     {
@@ -36,17 +35,41 @@ public class TimeManager : BaseGlobalManager, IGlobalManager
     public IEnumerator Initialize()
     {
         GameManager.UPDATE_Initial += OnUpdate;
+        yield break;
+    }
 
-        // TODO: 세이브 파일 로드 로직 (lastSaveTime 가져오기)
-        DateTime lastSaveTime = DateTime.UtcNow; // 임시: 세이브 데이터에서 가져와야 함
+    /// <summary>
+    /// 타이틀 씬에서 플레이어 선택후 씬 전환시 실행
+    /// </summary>
+    public void OnPlayerGameStart()
+    {
+        TotalGameSeconds = LoadPlayerLastTotalTime();
+        DateTime lastSaveTime = LoadPlayerLastPlayDataTime();
         TimeSpan offlineDelta = DateTime.UtcNow - lastSaveTime;
         UpdateTime((float)offlineDelta.TotalSeconds);
-        yield break;
+    }
+
+    public double LoadPlayerLastTotalTime()
+    {
+        // TODO: 세이브된 최종 플레이 타임 로드
+        return 0;
+    }
+
+    public DateTime LoadPlayerLastPlayDataTime()
+    {
+        // TODO: 마지막 플레이 했던 날짜, 시간 데이터 로드
+        return DateTime.UtcNow;
     }
 
     private void OnUpdate()
     {
-        UpdateTime(Time.deltaTime);
+        UpdateTime(Time.unscaledDeltaTime);
+    }
+
+    private void OnPlayerSleep()
+    {
+        // 8시간 처리
+        UpdateTime(8 * REAL_SECONDS_PER_GAME_HOUR);
     }
 
     private void UpdateTime(float deltaTime)
@@ -57,16 +80,16 @@ public class TimeManager : BaseGlobalManager, IGlobalManager
 
         if (timerForMinute >= REAL_SECONDS_PER_GAME_MINUTE)
         {
-            int deltaMinutes = ((int)timerForMinute) / REAL_SECONDS_PER_GAME_MINUTE;
-            timerForMinute -= (deltaMinutes * REAL_SECONDS_PER_GAME_MINUTE);
-            Event_OnGameMinutesPassed?.Invoke(deltaMinutes);
+            int deltaGameMinutes = ((int)timerForMinute) / REAL_SECONDS_PER_GAME_MINUTE;
+            timerForMinute -= (deltaGameMinutes * REAL_SECONDS_PER_GAME_MINUTE);
+            Event_OnGameMinutesPassed?.Invoke(deltaGameMinutes);
         }
 
         if (timerForHour >= REAL_SECONDS_PER_GAME_HOUR)
         {
-            int deltaHours = ((int)timerForHour) / REAL_SECONDS_PER_GAME_HOUR;
-            timerForHour -= (deltaHours * REAL_SECONDS_PER_GAME_HOUR);
-            Event_OnGameHoursPassed?.Invoke(deltaHours);
+            int deltaGameHours = ((int)timerForHour) / REAL_SECONDS_PER_GAME_HOUR;
+            timerForHour -= (deltaGameHours * REAL_SECONDS_PER_GAME_HOUR);
+            Event_OnGameHoursPassed?.Invoke(deltaGameHours);
         }
     }
 

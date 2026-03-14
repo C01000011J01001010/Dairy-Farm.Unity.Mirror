@@ -254,7 +254,7 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
         ScriptableObject asset = GetAsset(targetAssetPath, TargetType);
 
         // 메모리에 있는 인스턴스의 데이터를 바꾸고
-        if(asset is DataObject asDataObject)
+        if(asset is BaseData asDataObject)
         {
             asDataObject.index = id;
             asDataObject.nameTag = nameTag;

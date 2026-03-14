@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class FieldShower : ObjectShower<ProductField>
+public class FieldShower : BaseObjectViewer<ProductField>
 {
     [SerializeField] GameObject toggleWindow;
     [SerializeField] Slider slider_Time;
@@ -15,28 +15,28 @@ public class FieldShower : ObjectShower<ProductField>
     {
         FieldManager.OnFieldFocusChanged -= SetConnect;
         FieldManager.OnFieldFocusChanged += SetConnect;
-        //º¸°í ÀÖ´Â ÇÊµå°¡ ¹Ù²î¸é ±× ´ë»ó°ú ¿¬°áÇÏµµ·Ï!
+        //ë³´ê³  ìˆëŠ” í•„ë“œê°€ ë°”ë€Œë©´ ê·¸ ëŒ€ìƒê³¼ ì—°ê²°í•˜ë„ë¡!
     }
 
     void Update()
     {
-        if(IsConnected) UpdateNextTime(receivedNextTime, receivedInterval);
+        if(ConnectObject) UpdateNextTime(receivedNextTime, receivedInterval);
     }
 
     public void SetConnect(ProductField target) => Connect(target);
 
     public virtual void UpdateNextTime(float nextTime)
     {
-        receivedNextTime = nextTime; //¾ê³×µéÀº ±×³É º¸´Â ¿ëµµ! ¸¶Áö¸·À¸·Î µé¾î¿Â Á¤º¸!
+        receivedNextTime = nextTime; //ì–˜ë„¤ë“¤ì€ ê·¸ëƒ¥ ë³´ëŠ” ìš©ë„! ë§ˆì§€ë§‰ìœ¼ë¡œ ë“¤ì–´ì˜¨ ì •ë³´!
     }
 
     public virtual void UpdateInterval(float interval)
     {
-        receivedInterval = interval; //¾ê³×µéÀº ±×³É º¸´Â ¿ëµµ! ¸¶Áö¸·À¸·Î µé¾î¿Â Á¤º¸!
+        receivedInterval = interval; //ì–˜ë„¤ë“¤ì€ ê·¸ëƒ¥ ë³´ëŠ” ìš©ë„! ë§ˆì§€ë§‰ìœ¼ë¡œ ë“¤ì–´ì˜¨ ì •ë³´!
     }
 
     public virtual void UpdateCount(int current, int max) 
-        => text_Count.SetText($"°³¼ö : ({current}/{max})");
+        => text_Count.SetText($"ê°œìˆ˜ : ({current}/{max})");
 
     public virtual string GetTimeText(float wantTime)
     {
@@ -56,39 +56,38 @@ public class FieldShower : ObjectShower<ProductField>
 
     public virtual void UpdateNextTime(float nextTime, float maxTime)
     {
-        float leftTime = nextTime - Time.time; //³²Àº ½Ã°£ È®ÀÎ!
-        string leftText = GetTimeText(leftTime); // ³²Àº ½Ã°£À» ÅØ½ºÆ®·Î º¯È¯!
-        //º¯È¯ ÇØºÃ´õ´Ï ¾ø´øµ¥?!              ±×·³ ±ÛÀÚ ºñ¿ì°í!
+        float leftTime = nextTime - Time.time; //ë‚¨ì€ ì‹œê°„ í™•ì¸!
+        string leftText = GetTimeText(leftTime); // ë‚¨ì€ ì‹œê°„ì„ í…ìŠ¤íŠ¸ë¡œ ë³€í™˜!
+        //ë³€í™˜ í•´ë´¤ë”ë‹ˆ ì—†ë˜ë°?!              ê·¸ëŸ¼ ê¸€ì ë¹„ìš°ê³ !
         if (string.IsNullOrEmpty(leftText)) text_NextTime.SetText("");
-        //ÀÖ³×?  ³²Àº ½Ã°£ÀÌ ÀÖ´Â °Å´Ï±î  ³²Àº½Ã°£ / ÃÖ´ë½Ã°£ ÅØ½ºÆ®
+        //ìˆë„¤?  ë‚¨ì€ ì‹œê°„ì´ ìˆëŠ” ê±°ë‹ˆê¹Œ  ë‚¨ì€ì‹œê°„ / ìµœëŒ€ì‹œê°„ í…ìŠ¤íŠ¸
         else text_NextTime.SetText($"{leftText:f1} / {GetTimeText(maxTime):f1}");
-        //½½¶óÀÌ´õ µ¹·ÈÀ½ ¤¾
+        //ìŠ¬ë¼ì´ë” ëŒë ¸ìŒ ã…
         slider_Time.value = maxTime > 0 ? 1 - (leftTime / maxTime) : 1;
     }
 
-    public override void Visualize(ProductField target)
+    public override void UpdateView()
     {
-        transform.position = target.transform.position;
-        UpdateCount(target.GetCountCurrent(), target.GetCountMax());
-        float newInterval = target.GetProductInterval();
-        float newNextTime = target.GetProductNextTime();
+        transform.position = ConnectObject.transform.position;
+        UpdateCount(ConnectObject.GetCountCurrent(), ConnectObject.GetCountMax());
+        float newInterval = ConnectObject.GetProductInterval();
+        float newNextTime = ConnectObject.GetProductNextTime();
         UpdateInterval(newInterval);
         UpdateNextTime(newNextTime);
     }
 
-    protected override bool OnConnected(ProductField target)
+    protected override void OnConnected()
     {
-        if(target)
+        if(!IsEmpty())
         {
             toggleWindow.SetActive(true);
-            target.OnCountChanged -= UpdateCount;
-            target.OnCountChanged += UpdateCount; //Ä«¿îÆ® ¹Ù²î¾úÀ¸´Ï±î ¾÷µ¥ÀÌÆ® ÇÒ·¡!
-            target.OnIntervalChanged -= UpdateInterval;
-            target.OnIntervalChanged += UpdateInterval; //»ı»ê °£°İÀÌ ¹Ù²î¾ú¾î? ¾÷µ¥ÀÌÆ®!
-            target.OnNextTimeChanged -= UpdateNextTime;
-            target.OnNextTimeChanged += UpdateNextTime; //»ı»ê ½Ã°£ ¾î¶»°Ô µÇ¾ú¾î? ¾÷µ¥ÀÌÆ®!
+            ConnectObject.OnCountChanged -= UpdateCount;
+            ConnectObject.OnCountChanged += UpdateCount; //ì¹´ìš´íŠ¸ ë°”ë€Œì—ˆìœ¼ë‹ˆê¹Œ ì—…ë°ì´íŠ¸ í• ë˜!
+            ConnectObject.OnIntervalChanged -= UpdateInterval;
+            ConnectObject.OnIntervalChanged += UpdateInterval; //ìƒì‚° ê°„ê²©ì´ ë°”ë€Œì—ˆì–´? ì—…ë°ì´íŠ¸!
+            ConnectObject.OnNextTimeChanged -= UpdateNextTime;
+            ConnectObject.OnNextTimeChanged += UpdateNextTime; //ìƒì‚° ì‹œê°„ ì–´ë–»ê²Œ ë˜ì—ˆì–´? ì—…ë°ì´íŠ¸!
         }
-        return base.OnConnected(target);
     }
     protected override void OnDisconnected(ProductField target)
     {

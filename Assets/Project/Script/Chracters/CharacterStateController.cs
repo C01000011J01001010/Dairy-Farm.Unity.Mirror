@@ -12,12 +12,12 @@ public class CharacterStateController : BaseStateController<CharacterState>, ICh
 
     public bool IsActive { get; private set; }
 
-    public event Action<bool> OnSetActive;
+    public event Action<bool> Evnet_OnSetActive;
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
-        OnSetActive = null;
+        Evnet_OnSetActive = null;
     }
 
     public override void Exit()
@@ -47,7 +47,7 @@ public class CharacterStateController : BaseStateController<CharacterState>, ICh
     public void SetActive(bool active)
     {
         IsActive = active;
-        OnSetActive?.Invoke(active);
+        Evnet_OnSetActive?.Invoke(active);
     }
 
     protected override Dictionary<CharacterState, BaseState<CharacterState>> ProductState()

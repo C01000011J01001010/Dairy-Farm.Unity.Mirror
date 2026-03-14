@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14deffd380d815d4b9d0f9551dce6650, type: 3}
+  m_Script: {fileID: 11500000, guid: 74a2d8dc53726884aa1eb714915c6bdf, type: 3}
   m_Name: "3_\uB0AB"
-  m_EditorClassIdentifier: Assembly-CSharp::Item_Equipment
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData_Equipment
   index: 3
   nameTag: "\uB0AB"
   description: "\uC124\uBA85"
-  icon: {fileID: -6470460504253458178, guid: 54db6fad80422a5429a464eb47ad0add, type: 3}
+  icon: {fileID: 0}
   maxStack: 1
   sellPrice: 100
-  effectSetups: []
+  effects: []
   maxDurability: 100

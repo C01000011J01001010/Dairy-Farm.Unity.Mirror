@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WorkerSelectButton : ObjectShower<Worker>
+public class WorkerSelectButton : BaseObjectViewer<Worker>
 {
     [SerializeField] TextMeshProUGUI text_Name;
     Button selectbutton;
@@ -11,27 +11,27 @@ public class WorkerSelectButton : ObjectShower<Worker>
     {
         selectbutton = GetComponentInChildren<Button>();
         selectbutton.onClick.AddListener(Select);
-        //³ªÁß¿¡ ¹Ù²î¸é ¾Ë·ÁÁÖ¼¼¿ä!
+        //ë‚˜ì¤‘ì— ë°”ë€Œë©´ ì•Œë ¤ì£¼ì„¸ìš”!
         WorkController.OnWorkerChanged += OnWorkerChanged;
-        //Áö±İÀº ¾î¶²µ¥¿ä?
+        //ì§€ê¸ˆì€ ì–´ë–¤ë°ìš”?
         OnWorkerChanged(WorkController.ClaimGetWorker());
     }
 
 
     public void Select()
     {
-        //±×³É ¿©±â¿¡ ¿¬°áµÈ ¿ÀºêÁ§Æ®¸¦ ÀÏ²ÛÀ¸·Î ÁöÁ¤ÇÏ±â!
+        //ê·¸ëƒ¥ ì—¬ê¸°ì— ì—°ê²°ëœ ì˜¤ë¸Œì íŠ¸ë¥¼ ì¼ê¾¼ìœ¼ë¡œ ì§€ì •í•˜ê¸°!
         WorkController.ClaimSetWorker(GetConnectedObject());
     }
 
     public void OnWorkerChanged(Worker target)
     {
-        //¹öÆ° È°¼ºÈ­ ¿©ºÎ´Â         »õ·Î¿î ÀÏ²ÛÀÌ ³» °ÍÀÌ ¾Æ´Ò ¶§!
+        //ë²„íŠ¼ í™œì„±í™” ì—¬ë¶€ëŠ”         ìƒˆë¡œìš´ ì¼ê¾¼ì´ ë‚´ ê²ƒì´ ì•„ë‹ ë•Œ!
         selectbutton.interactable = target != GetConnectedObject();
     }
 
-    public override void Visualize(Worker target)
+    public override void UpdateView()
     {
-        if (target) text_Name.SetText(target.gameObject.name);
+        if (ConnectObject) text_Name.SetText(ConnectObject.gameObject.name);
     }
 }

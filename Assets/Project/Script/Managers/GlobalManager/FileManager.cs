@@ -177,7 +177,7 @@ public class FileManager : BaseGlobalManager, IGlobalManager
     }
 
     public Dictionary<int, DataType> LoadAllGameData<DataType>(string directory)
-        where DataType : DataObject
+        where DataType : BaseData
     {
         // Resources에서 쓸 수 있는 경로로 변환
         directory = GetDirectoryForResources(directory);

@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class QuickSlot : BaseUi
 {
-    private BaseButton[] slots;
+    private BaseButton[] itemSlots;
+    private ItemViewer[] itemViewers;
     private PlayerCotroller controller; // (참고: Controller 오타가 있지만 기존 코드 유지)
 
     // [추가] UI에서 현재 선택된 슬롯 번호를 기억하기 위한 변수
@@ -17,9 +18,9 @@ public class QuickSlot : BaseUi
     public override void Exit()
     {
         // 이벤트 정리
-        for (int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            slots[i].ClearCallback();
+            itemSlots[i].ClearCallback();
         }
 
         if (controller != null)
@@ -32,14 +33,20 @@ public class QuickSlot : BaseUi
     public override IEnumerator Initialize()
     {
         controller = WorldManager.GetObject<PlayerCotroller>();
-        slots = GetComponentsInChildren<BaseButton>();
+        itemSlots = GetComponentsInChildren<BaseButton>();
+        itemViewers = new ItemViewer[itemSlots.Length];
 
-        for (int i = 0; i < slots.Length; i++)
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            int index = i;
-            yield return slots[i].Initialize();
+            int index = i; // callback 등록을 위해 변수 생성
+            
+            // 같은 오브젝트에 붙은 뷰어 가져오기
+            itemViewers[i] = itemSlots[i].GetComponent<ItemViewer>();
+
+            yield return itemSlots[i].Initialize();
+
             // 버튼 클릭 시 로컬 함수 호출
-            slots[i].AddCallback(() => OnSlotClicked(index));
+            itemSlots[i].AddCallback(() => OnSlotClicked(index));
         }
 
         controller.Event_OnControllTargetSet += OnControllTargetSet;
@@ -50,18 +57,18 @@ public class QuickSlot : BaseUi
     // Model에서 데이터가 변경되었을 때 화면만 그리는 역할
     public void OnSelectedSlotChanged(int newIndex)
     {
-        if (slots == null || slots.Length == 0) return;
+        if (itemSlots == null || itemSlots.Length == 0) return;
 
         
-        if(0 <= currentIndex && currentIndex < slots.Length)
+        if(0 <= currentIndex && currentIndex < itemSlots.Length)
         {
-            slots[currentIndex].SetInteractable(true);
+            itemSlots[currentIndex].SetInteractable(true);
         }
         // 새로 변경된 인덱스를 UI 캐시 변수에 저장
         currentIndex = newIndex;
 
-        GameObject targetSlot = slots[currentIndex].gameObject;
-        slots[currentIndex].SetInteractable(false);
+        GameObject targetSlot = itemSlots[currentIndex].gameObject;
+        itemSlots[currentIndex].SetInteractable(false);
         EventSystem.current.SetSelectedGameObject(targetSlot);
     }
 
@@ -83,7 +90,17 @@ public class QuickSlot : BaseUi
         CharacterInventory inventory = newCharacter.GetModule<CharacterInventory>();
         if (inventory != null)
         {
-            inventory.OnSelectedSlotChanged += OnSelectedSlotChanged;
+            inventory.Event_OnSelectedSlotChanged += OnSelectedSlotChanged;
+            inventory.Event_OnItemSlotChanged += OnItemSlotChanged;
+            
+            // view에 model을 연결
+            for(int i = 0; i < itemViewers.Length; i++)
+            {
+                ItemViewer viewer = itemViewers[i];
+                viewer.Connect(inventory.Items[i]);
+                viewer.UpdateView();
+            }
+
             OnSlotClicked(0); // 기본 선택
         }
     }
@@ -93,7 +110,13 @@ public class QuickSlot : BaseUi
         CharacterInventory inventory = oldCharacter.GetModule<CharacterInventory>();
         if (inventory != null)
         {
-            inventory.OnSelectedSlotChanged -= OnSelectedSlotChanged;
+            inventory.Event_OnSelectedSlotChanged -= OnSelectedSlotChanged;
+            inventory.Event_OnItemSlotChanged -= OnItemSlotChanged;
         }
+    }
+
+    private void OnItemSlotChanged(int index)
+    {
+        itemViewers[index].UpdateView();
     }
 }

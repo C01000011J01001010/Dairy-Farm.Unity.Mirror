@@ -58,8 +58,6 @@ public class PlayerCotroller : MonoBehaviour, IScenedInitialize
 
     public void SetControllTarget(PlayableCharacter newCharacter)
     {
-        
-        
         if (newCharacter != null)
         {
             // 기존 캐릭터가 있으면 메모리 정리

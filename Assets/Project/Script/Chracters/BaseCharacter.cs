@@ -47,6 +47,12 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     public virtual void Exit()
     {
+        // 초기화 순서와 반대로 종료
+        for(int i = modules.Count-1; i >= 0 ; i--)
+        {
+            modules[i].Exit();
+        }
+
         if (isReady)
         {
             Unsubscribe();
@@ -62,6 +68,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         anim = GetComponent<baseCharacterAnim>();
         TryAddCharacterModule<CharacterStateController>();
         TryAddCharacterModule<CharacterInventory>();
+        TryAddCharacterModule<CharacterCropDataSheet>();
 
         
         foreach(ICharacterModule module in modules)
@@ -87,6 +94,10 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
     protected void TryAddCharacterModule<Module>() where Module : ICharacterModule
     {
         ICharacterModule module = GetComponent<Module>();
+        if(module == null)
+        {
+            Debug.LogError($"이 모듈({typeof(Module).Name})은 캐릭터에 준비되지 않음 모듈");
+        }
         Type moduleType = module.GetType();
 
         // 모듈 중복 방지

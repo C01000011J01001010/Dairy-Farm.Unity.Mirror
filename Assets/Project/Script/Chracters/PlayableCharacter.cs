@@ -17,6 +17,7 @@ public class PlayableCharacter : BaseCharacter, IScenedInitialize
     {
         
         TryAddCharacterModule<CharacterTileChecker>();
+        TryAddCharacterModule<CharacterActionController>();
 
         yield return base.Initialize();
         yield return null;

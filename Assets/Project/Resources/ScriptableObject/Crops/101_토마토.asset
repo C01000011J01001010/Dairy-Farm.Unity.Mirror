@@ -9,19 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d081f123abd166246ae1d0ffba9f025c, type: 3}
+  m_Script: {fileID: 11500000, guid: c9f8b39a8e9f3a24d9a8b5735a55a6c3, type: 3}
   m_Name: "101_\uD1A0\uB9C8\uD1A0"
-  m_EditorClassIdentifier: Assembly-CSharp::CropObject
+  m_EditorClassIdentifier: Assembly-CSharp::CropData
   index: 101
   nameTag: "\uD1A0\uB9C8\uD1A0"
   season: 1
-  days_ToMaturity: 11
-  result_ItemIndex: 1101
+  days_ToMaturity: 1
+  result_ItemIndex: 10101
   _growth:
-  - {fileID: -8113185096396602001, guid: cf6a5f150f5a41041a66e9046b74e065, type: 3}
-  - {fileID: -1257518098505440576, guid: cf6a5f150f5a41041a66e9046b74e065, type: 3}
-  - {fileID: 3336444044123149764, guid: cf6a5f150f5a41041a66e9046b74e065, type: 3}
-  - {fileID: -6966369517673316951, guid: cf6a5f150f5a41041a66e9046b74e065, type: 3}
-  - {fileID: -4667150655987312241, guid: cf6a5f150f5a41041a66e9046b74e065, type: 3}
-  - {fileID: -6770858775108089496, guid: cf6a5f150f5a41041a66e9046b74e065, type: 3}
-  - {fileID: -7506016618634473757, guid: cf6a5f150f5a41041a66e9046b74e065, type: 3}
+  - {fileID: -8113185096396602001, guid: 46692d9ba87ca904988e5cf0782c890e, type: 3}
+  - {fileID: -1257518098505440576, guid: 46692d9ba87ca904988e5cf0782c890e, type: 3}
+  - {fileID: 3336444044123149764, guid: 46692d9ba87ca904988e5cf0782c890e, type: 3}
+  - {fileID: -6966369517673316951, guid: 46692d9ba87ca904988e5cf0782c890e, type: 3}
+  - {fileID: -4667150655987312241, guid: 46692d9ba87ca904988e5cf0782c890e, type: 3}
+  - {fileID: -6770858775108089496, guid: 46692d9ba87ca904988e5cf0782c890e, type: 3}
+  - {fileID: -7506016618634473757, guid: 46692d9ba87ca904988e5cf0782c890e, type: 3}

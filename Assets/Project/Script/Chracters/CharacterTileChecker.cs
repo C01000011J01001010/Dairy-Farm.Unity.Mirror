@@ -8,14 +8,16 @@ using UnityEngine.InputSystem;
 public class CharacterTileChecker : BaseCharacterModule, ICharacterModule
 {
     [SerializeField] private Tilemap targetTilemap;   // 현재 사용 중인 타일맵
-    [SerializeField] private GameObject highlight;   // 마우스를 따라다닐 단 하나의 오브젝트
+    [SerializeField] private GameObject tileMarker;   // 타일을 표시할 view
     private Renderer[] highlightRenderers;
-
+    private BoxCollider2D tileMarkerCollider;
+    private Vector3 tileMarkerPos; // 타일마커의 현재 위치
 
     public override void Initialize(BaseCharacter owner)
     {
         Owner = owner;
-        highlightRenderers = highlight.GetComponentsInChildren<Renderer>();
+        highlightRenderers = tileMarker.GetComponentsInChildren<Renderer>();
+        tileMarkerCollider = tileMarker.GetComponent<BoxCollider2D>();
     }
 
     
@@ -43,7 +45,8 @@ public class CharacterTileChecker : BaseCharacterModule, ICharacterModule
             }
 
             // 셀 좌표의 중앙 월드 좌표를 가져와서 하이라이트 오브젝트 위치 수정
-            highlight.transform.position = targetTilemap.GetCellCenterWorld(cellPosition);
+            tileMarkerPos = targetTilemap.GetCellCenterWorld(cellPosition);
+            tileMarker.transform.position = tileMarkerPos;
         }
         else
         {
@@ -54,4 +57,10 @@ public class CharacterTileChecker : BaseCharacterModule, ICharacterModule
             }
         }
     }
+
+    // 실제 객체의 위치는 플레이어에 의해 바뀔 수 있으니 저장된 속성을 사용
+    public Vector3 GetTilePosition() => tileMarkerPos;
+
+    public BoxCollider2D GetTileMarkerBoxCollider() => tileMarkerCollider;
+
 }

@@ -690,18 +690,19 @@ public static class Extensions
 
     public static T Get<T>(this T[] target, int index)
     {
-        T result = default;
-
-        target.TryGet(index, ref result);
+        T result;
+        target.TryGet(index, out result);
         return result;
     }
 
     // 인덱스가 범위 내에 있을 경우에만 원소를 반환
-    public static bool TryGet<T>(this T[] target, int index, ref T result)
+    public static bool TryGet<T>(this T[] target, int index, out T result)
     {
-        if (index >= target.Length ||
-            index < 0)
+        if (index >= target.Length ||index < 0)
+        {
+            result = default;
             return false;
+        }
 
         result = target[index];
         return true;

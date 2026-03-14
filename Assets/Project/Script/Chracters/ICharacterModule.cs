@@ -10,7 +10,7 @@ public interface ICharacterModule
     bool IsActive { get; }
     void SetActive(bool active);
 
-    event Action<bool/*active*/> OnSetActive;
+    event Action<bool/*active*/> Evnet_OnSetActive;
 
     // 초기화 단계
     void Initialize(BaseCharacter owner);
