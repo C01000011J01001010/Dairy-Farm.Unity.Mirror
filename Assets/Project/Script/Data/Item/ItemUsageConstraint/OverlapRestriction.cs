@@ -3,9 +3,9 @@ using UnityEngine;
 
 // 이미 작물이 있는 곳에 중복되는거 금지
 [CreateAssetMenu(fileName = "OverlapRestriction", menuName = "Item/ItemConstraint/OverlapRestriction")]
-public class OverlapRestriction : BaseItemConstraint
+public class OverlapRestriction : BaseCondition
 {
-    public override bool IsViolated(BaseCharacter character)
+    public override bool IsSatisfied(BaseCharacter character)
     {
         CharacterTileChecker tileChecker = character.GetModule<CharacterTileChecker>();
         BoxCollider2D collider = tileChecker.GetTileMarkerBoxCollider();

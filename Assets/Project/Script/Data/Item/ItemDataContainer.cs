@@ -10,9 +10,9 @@ public class ItemDataContainer : BaseDataContainer<ItemData>
 
 
     // 새로운 아이템을 얻었을 때
-    public event Action OnAmountChanged;
-    public event Action OnDurabilityChanged;
-    public event Action OnClear; // ui 템칸 비우라고 알림
+    public event Action Event_OnAmountChanged;
+    public event Action Event_OnDurabilityChanged;
+    public event Action Event_OnClear; // ui 템칸 비우라고 알림
 
     // 슬롯이 비어있으면 0 반환
     public int maxStack => connectData?.maxStack ?? 0;
@@ -66,7 +66,7 @@ public class ItemDataContainer : BaseDataContainer<ItemData>
         }
 
         // ui에 변화 알림
-        OnAmountChanged?.Invoke();
+        Event_OnAmountChanged?.Invoke();
     }
 
     
@@ -95,7 +95,7 @@ public class ItemDataContainer : BaseDataContainer<ItemData>
         }
 
         // ui에 변화 알림
-        OnAmountChanged?.Invoke();
+        Event_OnAmountChanged?.Invoke();
     }
 
     public void ReduceDurability(int count = 1)
@@ -107,7 +107,7 @@ public class ItemDataContainer : BaseDataContainer<ItemData>
         //}
         //if (durability - count < 0) return false;
         durability -= count;
-        OnDurabilityChanged?.Invoke();
+        Event_OnDurabilityChanged?.Invoke();
         //return true;
     }
 
@@ -119,7 +119,7 @@ public class ItemDataContainer : BaseDataContainer<ItemData>
             return;
         }
         durability = maxDurability;
-        OnDurabilityChanged?.Invoke();
+        Event_OnDurabilityChanged?.Invoke();
     }
 
     public void RefillDurability(int fillAmount, out int remain)
@@ -138,7 +138,7 @@ public class ItemDataContainer : BaseDataContainer<ItemData>
         AddAndGetExcess(ref durability, fillAmount, maxDurability, out remain);
 
         // ui에 변화 알림
-        OnDurabilityChanged?.Invoke();
+        Event_OnDurabilityChanged?.Invoke();
     }
 
     private void AddAndGetExcess(ref int cur, int plus, int max, out int remain)
@@ -162,7 +162,7 @@ public class ItemDataContainer : BaseDataContainer<ItemData>
     {
         connectData = null;
         amount = 0;
-        OnClear?.Invoke();
+        Event_OnClear?.Invoke();
     }
 
     public override ItemData Set(ItemData newObject)

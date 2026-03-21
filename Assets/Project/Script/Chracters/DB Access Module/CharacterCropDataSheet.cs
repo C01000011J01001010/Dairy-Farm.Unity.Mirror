@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CharacterCropDataSheet : BaseDatabaseAccessModule<CropManager, CropData>
+public class CharacterCropDataSheet : BaseDatabaseAccessModule<CropStaticManager, CropData>
 {
+    #region 저장할 데이터
+    private Dictionary<int/*농작물 index*/, int /*농작물 채집횟수*/> _cropHarvestCounts;
+    #endregion
     TimeManager timeManager;
     private List<CropContainer> activeCropList;
+
+    public Dictionary<int/*농작물 index*/, int /*농작물 채집횟수*/> CropHarvestCounts => _cropHarvestCounts;
 
     public override void Exit()
     {

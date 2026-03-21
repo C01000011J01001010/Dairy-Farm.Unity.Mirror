@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
-public class CharacterInventory : BaseDatabaseAccessModule<ItemManager, ItemData>
+public class CharacterInventory : BaseDatabaseAccessModule<ItemStaticManager, ItemData>
 {
     protected int curItemIndex;
     //protected InfoItemContainer curItemSlot;
@@ -133,10 +133,10 @@ public class CharacterInventory : BaseDatabaseAccessModule<ItemManager, ItemData
     private void ChangeInPossessionAmount(ItemDataContainer container, ItemData newItem, int count, out int remain)
     {
         container.Push(count, out remain);
-        Debug.Log($"[획득] {newItem.nameTag} {count - remain}개 획득! (현재 슬롯에 총 {container.amount}개)");
+        Debug.Log($"[획득] {newItem.NameTag} {count - remain}개 획득! (현재 슬롯에 총 {container.amount}개)");
         if (remain > 0)
         {
-            Debug.Log($"아이템({newItem.nameTag}) 상한 도달 -> {remain}개 획득 불가");
+            Debug.Log($"아이템({newItem.NameTag}) 상한 도달 -> {remain}개 획득 불가");
             // TODO 아이템을 상한 이상으로 획득시 처리할 이벤트 넣을 곳
         }
     }
@@ -168,7 +168,7 @@ public class CharacterInventory : BaseDatabaseAccessModule<ItemManager, ItemData
         // 사용 결과에 따른 처리
         if (isSuccess)
         {
-            Debug.Log($"{staticData.nameTag} 아이템 사용 성공");
+            Debug.Log($"{staticData.NameTag} 아이템 사용 성공");
             // 성공했으니 종류에 따라 내구도를 깎거나 개수를 줄임!
             if (staticData is ItemData_Equipment)
             {

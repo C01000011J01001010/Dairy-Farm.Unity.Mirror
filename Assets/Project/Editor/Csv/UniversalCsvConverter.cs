@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection; // 리플렉션 사용을 위해 추가
@@ -34,12 +35,50 @@ public class UniversalCsvConverter : BaseCsvConverter
             if (type == typeof(string)) return value;
             if (type == typeof(bool)) return bool.Parse(value);
             if (type.IsEnum) return Enum.Parse(type, value, true);
+
+            if (type == typeof(int[])) return ArrayParse<int>(value);
+            if (type == typeof(float[])) return ArrayParse<float>(value);
+            if (type == typeof(string[])) return ArrayParse<string>(value);
+
         }
         catch
         {
             Debug.LogWarning($"값 변환 실패: '{value}'를 {type.Name} 타입으로 바꿀 수 없습니다.");
         }
         return null; // 지원하지 않는 타입이거나 실패하면 null 반환 (기존 값 유지)
+    }
+
+    private ValueType[] ArrayParse<ValueType>(string value)
+    {
+        // 1. 빈 문자열 처리
+        if (string.IsNullOrEmpty(value)) return null;
+
+        // 2. 앞뒤 중괄호 {} 가 있다면 제거
+        string trimmed = value.Trim('{', '}');
+
+        // 3. 세미콜론(;)으로 분리
+        string[] datas = trimmed.Split(';');
+
+        List<ValueType> result = new();
+
+        foreach (string data in datas)
+        {
+            string cleanItem = data.Trim(); // 공백 제거
+            if (string.IsNullOrEmpty(cleanItem)) continue;
+
+            try
+            {
+                // 4. 문자열을 T 타입으로 변환하여 리스트에 추가
+                ValueType convertedValue = (ValueType)ConvertValue(cleanItem, typeof(ValueType));
+                result.Add(convertedValue);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"파싱 실패: '{cleanItem}'을(를) {typeof(ValueType)}로 변환할 수 없음 / {e.Message}");
+            }
+        }
+
+        return result.ToArray();
     }
 
     protected override void CheckTypeNameForReflection()
@@ -98,12 +137,20 @@ public class UniversalCsvConverter : BaseCsvConverter
             string headerName = headers[j].Trim();
             string stringValue = cols[j].Trim();
 
+            FieldInfo field = targetType.GetAnyField(headerName);
+            if(field == null)
+            {
+                Debug.LogError($"이름이 {headerName}인 필드가 에셋({asset.name})에 없음");
+                continue;
+            }
+            object convertedValue = ConvertValue(stringValue, field.FieldType);
+            asset.SetFieldByReflection(headerName, convertedValue);
+
             // 해당 이름의 변수가 targetType에 존재하는지 검색
-            FieldInfo field = targetType.GetField(headerName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (field != null)
             {
-                object convertedValue = ConvertValue(stringValue, field.FieldType);
+                
                 if (convertedValue != null)
                 {
                     field.SetValue(asset, convertedValue);

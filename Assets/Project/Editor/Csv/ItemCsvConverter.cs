@@ -17,6 +17,6 @@ public class ItemCsvConverter : BaseCsvConverter
         ItemData asItemInfo = asset as ItemData;
         if (asItemInfo == null) WarningTypeError(asset);
 
-        asItemInfo.description = cols[2].Trim();
+        asItemInfo.SetFieldByReflection(headers[2], cols[2].Trim());
     }
 }

@@ -6,9 +6,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 public static class Extensions
 {
+    
+
     // 절대 주소를 유니티 상대주소로 변경
     public static string ToUnityPath(this string origin)
     {

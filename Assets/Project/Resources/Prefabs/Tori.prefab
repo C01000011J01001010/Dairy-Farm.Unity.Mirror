@@ -15,10 +15,11 @@ GameObject:
   - component: {fileID: 3619393631819319454}
   - component: {fileID: 6610297437446212156}
   - component: {fileID: 9056565362515375909}
+  - component: {fileID: 180094340486053446}
   - component: {fileID: 2099286995082754580}
   - component: {fileID: 4699891041495410141}
   - component: {fileID: 5125808627709199520}
-  - component: {fileID: 180094340486053446}
+  - component: {fileID: 2267313851403351372}
   m_Layer: 0
   m_Name: Tori
   m_TagString: Untagged
@@ -193,6 +194,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStateController
   defaultStateType: 1
+--- !u!114 &180094340486053446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2660491773962496629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8dd9f097672a1a4c9e9ae51f50e67f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterActionController
 --- !u!114 &2099286995082754580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,7 +244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c98670ebc6b65f4390092419a6f0a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterCropDataSheet
---- !u!114 &180094340486053446
+--- !u!114 &2267313851403351372
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -240,9 +253,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2660491773962496629}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8dd9f097672a1a4c9e9ae51f50e67f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 69950ca6fef0df84eae24604a7e4736d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterActionController
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterQuestBook
 --- !u!1001 &5196620928497695088
 PrefabInstance:
   m_ObjectHideFlags: 0

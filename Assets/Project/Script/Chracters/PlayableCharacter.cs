@@ -15,9 +15,9 @@ public class PlayableCharacter : BaseCharacter, IScenedInitialize
 
     public override IEnumerator Initialize()
     {
-        
         TryAddCharacterModule<CharacterTileChecker>();
         TryAddCharacterModule<CharacterActionController>();
+        TryAddCharacterModule<CharacterQuestBook>();
 
         yield return base.Initialize();
         yield return null;

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32aaad0a42d6c8145af7006bc0118d81, type: 3}
   m_Name: Universal(reflection)CsvConverter_SetData
   m_EditorClassIdentifier: Assembly-CSharp-Editor::CSVConverter_Setting
-  saveDirectory: Assets/Project/Resources/ScriptableObject/Items
-  typeName: ItemData_Consumable
-  attributeCount: 5
+  saveDirectory: Assets/Project/Resources/ScriptableObject/MagicalEgg
+  typeName: MagicalEggData
+  attributeCount: 4

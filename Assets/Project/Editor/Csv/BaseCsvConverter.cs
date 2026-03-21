@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -256,8 +257,10 @@ public abstract class BaseCsvConverter : BaseEditorWindow<CSVConverter_Setting>
         // 메모리에 있는 인스턴스의 데이터를 바꾸고
         if(asset is BaseData asDataObject)
         {
-            asDataObject.index = id;
-            asDataObject.nameTag = nameTag;
+            // 리플랙션으로 private 데이터 바꿔주기
+            Type type = typeof(BaseData);
+            asset.SetFieldByReflection("index", id);
+            asset.SetFieldByReflection("nameTag", nameTag);
             // 세부적인 내용은 개별 정리
             ConvertDetails(asset, rowNum, cols);
         }

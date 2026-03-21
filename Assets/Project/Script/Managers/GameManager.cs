@@ -181,8 +181,9 @@ public sealed class GameManager : MonoBehaviour, IManager
         yield return ProcessManagerLoading<UserInputManager>();
         yield return ProcessManagerLoading<DragManager>();
 
-        yield return ProcessManagerLoading<ItemManager>();
-        yield return ProcessManagerLoading<CropManager>();
+        yield return ProcessManagerLoading<ItemStaticManager>();
+        yield return ProcessManagerLoading<QuestStaticManager>();
+        yield return ProcessManagerLoading<CropStaticManager>();
         yield return ProcessManagerLoading<SceneLoadManager>();
         yield return ProcessManagerLoading<TimeManager>();
     }

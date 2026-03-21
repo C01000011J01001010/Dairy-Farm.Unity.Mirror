@@ -1,10 +1,43 @@
-
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
 public static class Extensions_Editor
 {
+    /// <summary>
+    /// 현재 타입의 부모 클래스 private까지 싹 다 뒤짐
+    /// </summary>
+    public static FieldInfo GetAnyField(this System.Type type, string name)
+    {
+        while (type != null)
+        {
+            // DeclaredOnly를 써서 현재 층의 public, private, protected를 다 뒤짐
+            var feild = type.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+            if (feild != null) return feild;
+            type = type.BaseType; // 부모 층으로 이동
+        }
+        return null;
+    }
+
+    public static void SetFieldByReflection<T>(this T targetObject, string fieldName, object SetData)
+        where T : class
+    {
+        // 리플랙션으로 private 데이터 바꿔주기
+        System.Type type = targetObject.GetType();
+        FieldInfo feildInfo = type.GetAnyField(fieldName);
+
+        // 3. 필드가 존재한다면 값을 설정(SetValue)합니다.
+        if (feildInfo != null)
+        {
+            feildInfo.SetValue(targetObject, SetData);
+        }
+        else
+        {
+            Debug.LogError($"필드({fieldName})를 객체({targetObject})에서 찾을 수 없음");
+        }
+    }
+
     public static EditorSetting LoadSavedEditorSetting<EditorSetting>(this EditorWindow target, string fileName = null)
         where EditorSetting : ScriptableObject
     {

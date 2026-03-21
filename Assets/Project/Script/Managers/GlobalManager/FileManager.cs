@@ -194,15 +194,15 @@ public class FileManager : BaseGlobalManager, IGlobalManager
 
         foreach (var data in loadedDatas)
         {
-            if(dataDict.ContainsKey(data.index))
+            if(dataDict.ContainsKey(data.Index))
             {
-                DataType old = dataDict[data.index];
-                Debug.LogError($"유일하지 않은 PK 발견!\n" +
+                DataType old = dataDict[data.Index];
+                Debug.LogError($"유일하지 않은 Index 발견!\n" +
                     $"기존 데이터 파일 이름 : {old.name}\n" +
                     $"겹친 데이터 파일 이름 : {data.name}");
                 continue;
             }
-            dataDict[data.index] = data;
+            dataDict[data.Index] = data;
         }
         return dataDict;
     }

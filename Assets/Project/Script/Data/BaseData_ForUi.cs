@@ -4,9 +4,9 @@ using UnityEngine;
 public abstract class BaseData_ForUi : BaseData
 {
     [TextArea(3, 5)]
-    public string description; // ui띄울 설명
+    [SerializeField] private string description; // ui띄울 설명
 
-	public Sprite icon; // ui에 띄울 아이콘
+    [SerializeField] private Sprite icon; // ui에 띄울 아이콘
 
     public virtual string GetDescription() => description.ToReflectionText(this);
     public virtual Sprite GetIcon() => icon;

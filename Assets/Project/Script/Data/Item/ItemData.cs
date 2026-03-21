@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,12 +25,12 @@ public class ItemData : BaseData_ForUi
     {
         // 사용 가능여부 확인
         // 배열이 비어있으면 true
-        bool able = conditions.All(condition => condition.IsSatisfied(user));
+        bool able = Array.TrueForAll(conditions, condition => condition.IsSatisfied(user));
         if (!able) return false;
 
         // 사용 불가능한지 확인
         // 배열이 비어있으면 false
-        bool disable = constraints.Any(constraints => constraints.IsViolated(user));
+        bool disable = Array.Exists(constraints, constraints => constraints.IsSatisfied(user));
         if (disable) return false;
 
         return true;
@@ -37,8 +38,18 @@ public class ItemData : BaseData_ForUi
 
     [SerializeField] BaseItemEffect[] effects_OnUse; // 사용즉시 적용할 효과
     [SerializeField] BaseItemEffect[] effects_OnAnimEvent; // 사용 후 애니메이션 이벤트로 적용할 효과
-    [SerializeField] BaseItemCondition[] conditions;
-    [SerializeField] BaseItemConstraint[] constraints;
+
+
+    /// <summary>
+    /// 만족해야 하는 조건
+    /// </summary>
+    [SerializeField] BaseCondition[] conditions;  
+
+
+    /// <summary>
+    /// 만족하면 안되는 조건(제약조건)
+    /// </summary>
+    [SerializeField] BaseCondition[] constraints;
 
     public BaseItemEffect[] GetEffect_OnUse() => effects_OnUse;
     public BaseItemEffect[] GetEffect_OnAnimEvent() => effects_OnAnimEvent;
