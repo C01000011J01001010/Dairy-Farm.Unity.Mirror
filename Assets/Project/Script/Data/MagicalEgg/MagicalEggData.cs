@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MagicalEggData : BaseData_ForUi
@@ -6,5 +7,5 @@ public class MagicalEggData : BaseData_ForUi
     // 알 상호작용으로 열리는 퀘스트창에 전달
     [SerializeField] protected int[] questIndexs;
 
-    [SerializeField] protected BaseReward reward;
+    [SerializeField] protected BaseReward[] reward;
 }
