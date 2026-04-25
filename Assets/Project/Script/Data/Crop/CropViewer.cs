@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 /// <summary>
 /// 게임에 등장하는 농작물 객체에 붙일 스크립트
 /// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
-public class CropViewer : BaseDataViewer<CropContainer, CropData>
+public class CropViewer : BaseDataViewer<CropContainer, CropData>, IPooledObject
 {
     private SpriteRenderer spriteRenderer;
     private static readonly Color32 rottenColor = new Color32(130, 70, 20, 255);
@@ -19,7 +20,7 @@ public class CropViewer : BaseDataViewer<CropContainer, CropData>
         base.OnDisconnected(target);
     }
 
-    // 농작물 처음 생성할때 / Pool에서 처음 만들 때 실행
+    // 농작물 처음 생성할때 (Pool에서 처음 만들 때 실행)
     public void Initialize()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -80,5 +81,15 @@ public class CropViewer : BaseDataViewer<CropContainer, CropData>
     {
         pos.z = 0;
         transform.position = pos;
+    }
+
+    public void SetPool(IObjectPool<GameObject> pool)
+    {
+        Initialize();
+    }
+
+    public void ReturnToPool()
+    {
+        Disconnect();
     }
 }

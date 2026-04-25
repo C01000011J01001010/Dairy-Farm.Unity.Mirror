@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,8 @@ public class BaseDataViewerProvider<DataContainer, Data, Viewer> : MonoBehaviour
     where Viewer : BaseDataViewer<DataContainer, Data>
 {
     protected Dictionary<DataContainer, Viewer> showerDictionary = new();
+    MultiObjectPoolManager poolManager;
+
 
     [SerializeField] protected LayoutGroup containBox;
 
@@ -35,13 +38,16 @@ public class BaseDataViewerProvider<DataContainer, Data, Viewer> : MonoBehaviour
         Initialize();
     }
 
-    public virtual void Initialize() { }
+    public virtual void Initialize() 
+    {
+        poolManager = WorldManager.GetManager<MultiObjectPoolManager>();
+    }
 
     public Viewer CreateViewer(DataContainer newContainer)
     {
         if (ViewerPreset is null) return null;
-        // 생성해주기!
-        // TODO : 이부분을 나중에 Pool로
+
+        //poolManager.Spawn(ViewerPreset);
         GameObject inst = Instantiate(ViewerPreset, containBox.transform);
         // 생성되었고         컴포넌트도 잘 가지고 있다면
         if (inst && inst.TryGetComponent(out Viewer result))

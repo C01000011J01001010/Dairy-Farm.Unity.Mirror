@@ -8,7 +8,7 @@ using UnityEngine;
 
 // 커스텀 인스펙터는 "누구의" 커스텀 인스펙터인지 명시!
 // CustomEditor를 명시하면 자동으로 빌드 대상에서 제외
-[CustomEditor(typeof(PoolManager))]
+[CustomEditor(typeof(Disabled_PoolManager))]
 public class PoolManagerEditor : Editor
 {
     struct TableState

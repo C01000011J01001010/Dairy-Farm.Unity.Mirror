@@ -1,16 +1,34 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlantSeed", menuName = "Item/ItemEffect/PlantSeed")]
 public class PlantSeed : BaseItemEffect
 {
-    // TODO : Prefab을 들고있지 않고 Pool에서 받아오기
-    [SerializeField] CropViewer prefab;
+    [NonSerialized]
+    MultiObjectPoolManager _poolManager;
+    MultiObjectPoolManager PoolManager
+    {
+        get
+        {
+            // 씬 전환시 fake null 방지를 위해 (??=) 대신 (== null)을 사용
+            if (_poolManager == null)
+            {
+                _poolManager = WorldManager.GetManager<MultiObjectPoolManager>();
+
+                if (_poolManager == null)
+                {
+                    Debug.LogError("MultiObjectPoolManager를 찾을 수 없음");
+                }
+            }
+            return _poolManager;
+        }
+    }
+
     public override void ApplyEffect(BaseCharacter character, ItemDataContainer item)
     {
         CharacterTileChecker tileChecker = character.GetModule<CharacterTileChecker>();
         CharacterCropDataSheet cropDataSheet = character.GetModule<CharacterCropDataSheet>();
 
-        // TODO : Pool에서 받아오기
         CropViewer cropViewer = GetNewCrop(item);
 
         int cropId = GetCropIndexFromSeed(item);
@@ -18,7 +36,7 @@ public class PlantSeed : BaseItemEffect
         cropContainer.SetCropPosition(tileChecker.GetTilePosition());
 
         // view에 Model 연결
-        cropViewer.Connect(cropContainer);
+        cropViewer?.Connect(cropContainer);
     }
 
     private int GetCropIndexFromSeed(ItemDataContainer item)
@@ -28,13 +46,13 @@ public class PlantSeed : BaseItemEffect
 
     private CropViewer GetNewCrop(ItemDataContainer item)
     {
-        GameObject newObject = Instantiate(prefab.gameObject);
+        GameObject newObject = PoolManager.Spawn(PoolType.Crop);
         if(newObject.TryGetComponent(out CropViewer asCropViewer))
         {
-            asCropViewer.gameObject.name = item.GetNameTag();
-            asCropViewer.Initialize();
+            newObject.name = item.GetNameTag();
             return asCropViewer;
         }
+        Debug.LogWarning($"{newObject.name}에 CropViewer 컴포넌트 없음");
         return null;
     }
 }
