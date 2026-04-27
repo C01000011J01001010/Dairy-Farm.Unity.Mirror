@@ -1,14 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
-{
-    // 씬 매니저 초기화 우선순위
-    public int Priority => 0;
 
-    [System.Serializable]
+
+public class BasePoolManager<PoolType> : MonoBehaviour, IManager
+    where PoolType : Enum
+{
+    #region PoolSetup
+
+
+    [Serializable]
     public class PoolSetup
     {
         public PoolType poolType;
@@ -20,37 +24,31 @@ public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
         [Range(2, maxCount)] public int maxSize;
 
 #if UNITY_EDITOR
-
-        /// <summary>
-        /// 인스펙터 조절시 오류 방지
-        /// </summary>
         public void ValidateValues()
         {
-            if (defaultAmount > defaultCapacity)
-            {
-                defaultCapacity = defaultAmount;
-            }
-
-            if (defaultCapacity > maxSize)
-            {
-                maxSize = defaultCapacity;
-            }
+            if (defaultAmount > defaultCapacity) defaultCapacity = defaultAmount;
+            if (defaultCapacity > maxSize) maxSize = defaultCapacity;
         }
 #endif
     }
 
-    [SerializeField] private List<PoolSetup> poolSetups;
+    #endregion
+
+
+    public int _priority = 0;
+    public int Priority => _priority;
+    public List<PoolSetup> poolSetups = new();
 
     private Dictionary<PoolType, IObjectPool<GameObject>> _pools;
     private Dictionary<PoolType, GameObject> _prefabs;
-
-    // [추가됨] 하이라키에서 객체들을 묶어줄 부모 Transform을 관리하는 딕셔너리
     private Dictionary<PoolType, Transform> _poolParents;
 
-    // --- [IScenedManager 생명주기 구현] ---
+    // 씬 종료 처리가 진행 중인지 체크하는 플래그
+    private bool _isShuttingDown = false;
 
     public IEnumerator Initialize()
     {
+        _isShuttingDown = false;
         InitializePools();
         yield return null;
     }
@@ -62,19 +60,22 @@ public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
 
     public void Exit()
     {
+        // 씬 전환 시 플래그를 켜서 더 이상 풀 반환 로직이 실행되지 않도록 막음
+        _isShuttingDown = true;
+
         if (_pools != null)
         {
-            foreach (var pool in _pools.Values)
-            {
-                pool.Clear();
-            }
             _pools.Clear();
             _prefabs.Clear();
-            _poolParents.Clear(); // 딕셔너리 비우기
+            _poolParents.Clear();
         }
     }
 
-    // --- [풀링 시스템 내부 로직] ---
+    // (MonoBehaviour 기본 콜백) 매니저 자체가 파괴될 때도 플래그 작동
+    private void OnDestroy()
+    {
+        _isShuttingDown = true;
+    }
 
     private void InitializePools()
     {
@@ -84,28 +85,20 @@ public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
 
         foreach (var setup in poolSetups)
         {
-            if (_pools.ContainsKey(setup.poolType))
-            {
-                Debug.LogError($"[MultiObjectPoolManager] 중복된 Pool: {setup.poolType}");
-                continue;
-            }
-
+            if (_pools.ContainsKey(setup.poolType)) continue;
             if (setup.prefab == null) continue;
 
             _prefabs.Add(setup.poolType, setup.prefab);
 
-            // 1. 하이라키 정리를 위한 전용 부모(Folder) 객체 생성
             GameObject parentObj = new GameObject($"[{setup.poolType}_Pool]");
             parentObj.transform.SetParent(this.transform);
             _poolParents.Add(setup.poolType, parentObj.transform);
 
-            // 람다식에서 사용할 수 있도록 현재 타입 변수 캡처
             PoolType currentType = setup.poolType;
 
             IObjectPool<GameObject> pool = new ObjectPool<GameObject>(
                 createFunc: () => CreateItem(currentType),
                 actionOnGet: OnTakeFromPool,
-                // 2. 반환될 때 타입을 알 수 있도록 람다식을 이용해 currentType 전달
                 actionOnRelease: (obj) => OnReturnedToPool(obj, currentType),
                 actionOnDestroy: OnDestroyPoolObject,
 #if UNITY_EDITOR
@@ -123,6 +116,8 @@ public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
 
     private IEnumerator PreWarming()
     {
+        int lastTime = Environment.TickCount;
+
         foreach (var setup in poolSetups)
         {
             if (!_pools.TryGetValue(setup.poolType, out IObjectPool<GameObject> pool)) continue;
@@ -132,20 +127,24 @@ public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
             for (int i = 0; i < setup.defaultAmount; i++)
             {
                 prewarmList.Add(pool.Get());
+
+                if (Environment.TickCount - lastTime > 100)
+                {
+                    yield return null;
+                    lastTime = Environment.TickCount; // 갱신 위치 수정 (프레임 단위 대기 후 시간 리셋)
+                }
             }
 
             foreach (var obj in prewarmList)
             {
                 pool.Release(obj);
             }
-
             yield return null;
         }
     }
 
     private GameObject CreateItem(PoolType type)
     {
-        // 3. 인스턴스화 할 때부터 전용 부모(_poolParents)의 자식으로 생성
         GameObject obj = Instantiate(_prefabs[type], _poolParents[type]);
 
         if (obj.TryGetComponent(out IPooledObject pooledItem))
@@ -154,24 +153,22 @@ public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
             return obj;
         }
 
-        Debug.LogError($"'{type}' 프리팹에 IPooledObject를 구현한 컴포넌트가 없습니다!");
         Destroy(obj);
         return null;
     }
 
     private void OnTakeFromPool(GameObject obj) => obj.SetActive(true);
 
-    // 4. 매개변수로 PoolType을 추가로 받아 원래 자리로 돌려놓는 로직
     private void OnReturnedToPool(GameObject obj, PoolType type)
     {
+        // 씬이 종료 중이거나 객체가 파괴 중일 때는 아무 처리도 하지 않음 (유니티가 알아서 날림)
+        if (_isShuttingDown || obj == null) return;
+
         obj.SetActive(false);
-        // 플레이 도중 부모가 바뀌었을 수 있으므로(예: 캐릭터에 부착된 이펙트), 원래 풀 폴더로 원대복귀
         obj.transform.SetParent(_poolParents[type]);
     }
 
     private void OnDestroyPoolObject(GameObject obj) => Destroy(obj);
-
-    // --- [스폰 메서드] ---
 
     public GameObject Spawn2D(PoolType type, Vector2 position2D)
     {
@@ -180,25 +177,14 @@ public class MultiObjectPoolManager : MonoBehaviour, IScenedManager
 
     public GameObject Spawn(PoolType type)
     {
-        if (!_pools.ContainsKey(type))
-        {
-            Debug.LogError($"Pooling key 오류 : [{type.ToString()}: {(int)type}]");
-            return null;
-        }
-        GameObject obj = _pools[type].Get();
-        if(obj == null)
-        {
-            Debug.LogWarning($"Pooling Spawn 실패 : [{type.ToString()}: {(int)type}]");
-            return null;
-        }
-
-        return obj;
+        if (!_pools.ContainsKey(type)) return null;
+        return _pools[type].Get();
     }
 
     public GameObject Spawn(PoolType type, Vector3 position)
     {
         GameObject obj = Spawn(type);
-        if(obj != null) obj.transform.position = position;
+        if (obj != null) obj.transform.position = position;
         return obj;
     }
 

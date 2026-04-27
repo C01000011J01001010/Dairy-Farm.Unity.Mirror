@@ -188,6 +188,18 @@ public sealed class GameManager : MonoBehaviour, IManager
         yield return ProcessManagerLoading<TimeManager>();
     }
 
+    // 예외처리로 매니저 등록할 경우 사용
+    public static IEnumerator RegisterManager<T>() where T : MonoBehaviour, IGlobalManager
+    {
+        if (Inst.TryGetOrAddManager<T>())
+        {
+            T manager = GetManager<T>();
+            yield return manager.Initialize();
+            manager.EndInit();
+            yield return null;
+        }
+    }
+
     private IEnumerator ProcessManagerLoading<T>() where T : MonoBehaviour, IGlobalManager
     {
         // 매니저를 찾거나 생성해서 컨테이너(리스트, 딕셔너리)에 넣기
@@ -199,8 +211,8 @@ public sealed class GameManager : MonoBehaviour, IManager
             UIManager.ClaimLoading_Next(loadingMessage);
             yield return manager.Initialize();
             manager.EndInit();
+            yield return null;
         }
-        yield return null;
     }
 
     private bool TryGetOrAddManager<T>() where T : MonoBehaviour, IGlobalManager

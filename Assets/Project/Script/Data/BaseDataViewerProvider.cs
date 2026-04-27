@@ -15,7 +15,6 @@ public class BaseDataViewerProvider<DataContainer, Data, Viewer> : MonoBehaviour
     where Viewer : BaseDataViewer<DataContainer, Data>
 {
     protected Dictionary<DataContainer, Viewer> showerDictionary = new();
-    MultiObjectPoolManager poolManager;
 
 
     [SerializeField] protected LayoutGroup containBox;
@@ -40,7 +39,6 @@ public class BaseDataViewerProvider<DataContainer, Data, Viewer> : MonoBehaviour
 
     public virtual void Initialize() 
     {
-        poolManager = WorldManager.GetManager<MultiObjectPoolManager>();
     }
 
     public Viewer CreateViewer(DataContainer newContainer)

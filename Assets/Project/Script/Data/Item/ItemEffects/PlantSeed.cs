@@ -5,15 +5,15 @@ using UnityEngine;
 public class PlantSeed : BaseItemEffect
 {
     [NonSerialized]
-    MultiObjectPoolManager _poolManager;
-    MultiObjectPoolManager PoolManager
+    GlobalPoolManager _poolManager;
+    GlobalPoolManager PoolManager
     {
         get
         {
             // 씬 전환시 fake null 방지를 위해 (??=) 대신 (== null)을 사용
             if (_poolManager == null)
             {
-                _poolManager = WorldManager.GetManager<MultiObjectPoolManager>();
+                _poolManager = GameManager.GetManager<GlobalPoolManager>();
 
                 if (_poolManager == null)
                 {
@@ -46,7 +46,7 @@ public class PlantSeed : BaseItemEffect
 
     private CropViewer GetNewCrop(ItemDataContainer item)
     {
-        GameObject newObject = PoolManager.Spawn(PoolType.Crop);
+        GameObject newObject = PoolManager.Spawn(GlobalPoolType.Crop);
         if(newObject.TryGetComponent(out CropViewer asCropViewer))
         {
             newObject.name = item.GetNameTag();

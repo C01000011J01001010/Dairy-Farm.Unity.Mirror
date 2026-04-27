@@ -13,7 +13,6 @@ public struct GraphicOptionValues
      * enum으로 하나씩 다 쓰기 -> enum으로 저장했기 때문에 적용할 때 width와 height를 계산
      * 비율, 기준 픽셀 -> 픽셀과 비율을 모두 입력해놓아야함, 설정창에서 글자를 계산해야함
      */
-    public string testString;
     public AA_Sampling Antialiasing;
     public ResolutionType   resolutionType;
     public UnityEngine.ShadowQuality shadowLevel;
@@ -43,7 +42,6 @@ public struct GraphicOptionValues
 #if UNITY_EDITOR
     public static GraphicOptionValues testOption = new()
     {
-        testString = "hello world",
         Antialiasing = AA_Sampling.MSAA_8X,
         resolutionType = ResolutionType._1920x1080,
         shadowLevel = UnityEngine.ShadowQuality.HardOnly,

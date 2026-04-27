@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Default Local Group
+  m_GUID: 4bef5f83cbc1bfd4d997c2d7fe14d941
+  m_SerializeEntries:
+  - m_GUID: 0cac76613f4253745ad55647f432ce6c
+    m_Address: Assets/Project/AddresableAssets/ScriptableObject
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 112bc46649e6b0d4d8719efe1ccb4e56
+    m_Address: GlobalPoolObjects
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GlobalPoolObjects
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: df1673be90b4b29409cb42c6297a2a4f
+    m_Address: ScenedPoolObjects
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ScenedPoolObjects
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b631d96092f96e44c8799570322cd6c6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 653d018d2a9e33c4b9dafaa07e100c1d, type: 2}
+    - {fileID: 11400000, guid: dd95acd242df0df4695d626f15604441, type: 2}

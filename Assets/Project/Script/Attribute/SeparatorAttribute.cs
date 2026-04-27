@@ -9,7 +9,7 @@ public class SeparatorAttribute : PropertyAttribute
     public float padding;
     public Color color;
 
-    public SeparatorAttribute(float thickness = 1f, float padding = 5f, float r = 0.6f, float g = 0.6f, float b = 0.6f)
+    public SeparatorAttribute(float thickness = 1f, float padding = 30f, float r = 0.6f, float g = 0.6f, float b = 0.6f)
     {
         this.thickness = thickness;
         this.padding = padding;

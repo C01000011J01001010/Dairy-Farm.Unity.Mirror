@@ -6,7 +6,7 @@ using System.Reflection;
 using UnityEngine;
 
 
-public class FileManager : BaseGlobalManager, IGlobalManager
+public class Disabled_FileManager : BaseGlobalManager, IGlobalManager
 {
     public static GraphicOptionValues savedGraphicOption { get; protected set; }
 
@@ -33,29 +33,10 @@ public class FileManager : BaseGlobalManager, IGlobalManager
         }
 
 #if UNITY_EDITOR
-        TestLocalOption();
-#endif
-        LoadLocalOption();
-
-        CheckStruct<GraphicOptionValues>(savedGraphicOption);
-
-
-        yield return FillContainer(CharacterPrefabs, "Prefabs/Characters");
-        //yield return FillContainer(EffectPrefabs, "Prefabs/Effects");
-        //yield return FillContainer(WeaponPrefabs, "Prefabs/Weapons");
-        yield break;
-    }
-
-    private void TestLocalOption()
-    {
         // 데이터 저장 테스트
         GraphicOptionValues options = GraphicOptionValues.testOption;
         SaveFile(Path.directory.Option, Path.fileName.GraphicSettings, options.Struct2ByteArray());
-    }
-
-    private void LoadLocalOption()
-    {
-        // 로컬 환경 설정 불러오기
+#endif
         try
         {
             byte[] savedData = LoadFile_FromSaveFolder(Path.directory.Option, Path.fileName.GraphicSettings);
@@ -66,15 +47,25 @@ public class FileManager : BaseGlobalManager, IGlobalManager
             savedGraphicOption = GraphicOptionValues.defaultOption;
             Debug.LogWarning(ex);
         }
+
+
+        //CheckStruct<GraphicOptionValues>(savedGraphicOption);
+
+
+        yield return FillContainer(CharacterPrefabs, "Prefabs/Characters");
+        //yield return FillContainer(EffectPrefabs, "Prefabs/Effects");
+        //yield return FillContainer(WeaponPrefabs, "Prefabs/Weapons");
+        yield break;
     }
 
     private void CheckStruct<T_Struct>(object obj)
     {
-        if(typeof(T_Struct).IsStruct())
+        if (typeof(T_Struct).IsStruct())
         {
             Type type = typeof(T_Struct);
             foreach (FieldInfo field in type.GetFields())
             {
+
                 Debug.Log($"{field.Name} : {field.GetValue(obj)}");
             }
         }
@@ -82,11 +73,11 @@ public class FileManager : BaseGlobalManager, IGlobalManager
         {
             Debug.LogWarning($"{typeof(T_Struct).Name} is not struct");
         }
-        
+
     }
 
-    
-    
+
+
     //// 캐릭터 프리팹 초기화
     //IEnumerator initializeCharacterPrefabs()
     //{
@@ -193,7 +184,7 @@ public class FileManager : BaseGlobalManager, IGlobalManager
 
         DataType[] loadedDatas = Resources.LoadAll<DataType>(directory);
 
-        if(loadedDatas.IsNullOrEmpty())
+        if (loadedDatas.IsNullOrEmpty())
         {
             Debug.LogError("사용할 수 없는 데이터 로드");
             return null;
@@ -203,7 +194,7 @@ public class FileManager : BaseGlobalManager, IGlobalManager
 
         foreach (var data in loadedDatas)
         {
-            if(dataDict.ContainsKey(data.Index))
+            if (dataDict.ContainsKey(data.Index))
             {
                 DataType old = dataDict[data.Index];
                 Debug.LogError($"유일하지 않은 Index 발견!\n" +
@@ -222,7 +213,7 @@ public class FileManager : BaseGlobalManager, IGlobalManager
         {
             string totalDirectory = $"{directory}/{fileName}";
 
-            if(File.Exists(totalDirectory))
+            if (File.Exists(totalDirectory))
             {
                 return File.ReadAllBytes(totalDirectory);
             }
@@ -262,10 +253,10 @@ public class FileManager : BaseGlobalManager, IGlobalManager
         return file;
     }
 
-    public static GameObject GetCharacterPrefab(Type_Character type) 
+    public static GameObject GetCharacterPrefab(Type_Character type)
         => CharacterPrefabs.TryGetValue(type, out var result) ? result : null;
 
-    
+
     //public static GameObject GetEffactPrefab(Type_Effect type)
     //    => EffectPrefabs.TryGetValue(type, out var result) ? result : null;
     //public static GameObject GetWeaponPrefab(Type_Weapon type)

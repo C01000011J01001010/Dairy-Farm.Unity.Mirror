@@ -35583,15 +35583,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 7885083539828422498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5ad6e5945bfabe45b7930407235cec5, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e3ebd4995f0264448fc2787ac48605a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  m_EditorClassIdentifier: Assembly-CSharp::ScenedPoolManager
+  _priority: 0
   poolSetups:
-  - poolType: 1001
-    prefab: {fileID: 3174206237122861089, guid: f5ebff851da7d1f42b6103cc89acc226, type: 3}
+  - poolType: 1000
+    prefab: {fileID: 694271336957016650, guid: 2383ae1303d63024da33854598867dda, type: 3}
     defaultAmount: 1
-    defaultCapacity: 2
-    maxSize: 2
+    defaultCapacity: 256
+    maxSize: 256
 --- !u!1001 &7977155789988994286
 PrefabInstance:
   m_ObjectHideFlags: 0
