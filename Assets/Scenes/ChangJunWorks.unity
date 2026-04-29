@@ -35507,8 +35507,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UiController
   _priority: 0
-  InitialUis: 32000000
-  ScenedCanvasArr: []
+  _initialScenedUis:
+  - m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
+  _someGlobalUi:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
 --- !u!1001 &7885083539828422497
 PrefabInstance:
   m_ObjectHideFlags: 0
