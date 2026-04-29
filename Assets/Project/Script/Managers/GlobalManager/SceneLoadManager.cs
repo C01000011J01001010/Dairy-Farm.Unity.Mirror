@@ -76,14 +76,14 @@ public sealed class SceneLoadManager : BaseGlobalManager, IGlobalManager
     public IEnumerator LoadingScene(string sceneName)
     {
         // 씬에서는 퍼센트로 초기화 상태를 보여주며, 정수 개수를 전달하지 않음
-        UIManager.ClaimLoading_Start(-1);
+        GlobalUiManager.ClaimLoading_Start(-1);
 
         sceneChangeProgress = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
         while (!sceneChangeProgress.isDone)
         {
             // worldManager.Attach()가 나머지 70% 사용하도록 함
-            UIManager.ClaimLoading_Next($"SceneLoad {sceneName}...", sceneChangeProgress.progress * 0.3f);
+            GlobalUiManager.ClaimLoading_Next($"SceneLoad {sceneName}...", sceneChangeProgress.progress * 0.3f);
             yield return null;
         }
         // 이 시점에서 씬의 모든 객체는 Awake와 OnEnable이 호출되어 처리됨
@@ -91,7 +91,7 @@ public sealed class SceneLoadManager : BaseGlobalManager, IGlobalManager
         // 새로운 씬을 로드 후 현재씬의 객체들 초기화
         yield return worldManager.Initialize();
 
-        UIManager.ClaimLoading_End();
+        GlobalUiManager.ClaimLoading_End();
     }
 
 

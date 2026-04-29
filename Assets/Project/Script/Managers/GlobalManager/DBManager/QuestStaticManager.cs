@@ -1,4 +1,9 @@
-class QuestStaticManager : BaseStaticDataManager<QuestData>
+
+using UnityEngine;
+
+[AddComponentMenu(AssetMenu + "/QuestStaticManager")]
+
+public class QuestStaticManager : BaseStaticDataManager<QuestData>
 {
-    protected override string FolderName => "Quests";
+    protected override string Label => Constants.LABEL_QuestDatas;
 }

@@ -7,8 +7,6 @@ public sealed class TitleSelection : BaseSelection, IInitialize
     private BaseButton[] _buttonList;
     SceneLoadManager _sceneLoadManager;
 
-    public override MyUi UiType => MyUi.TitleSelection;
-
     public override IEnumerator Initialize()
     {
         _buttonList = gameObject.GetComponentsInChildren<BaseButton>();

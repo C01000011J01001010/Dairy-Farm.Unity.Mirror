@@ -1,50 +1,43 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class UiController : MonoBehaviour, IScenedInitialize
 {
-    [SerializeField] private int _priority;
-
-    [Header("Ui"), Separator]
-    [Tooltip("씬 시작시 초기 Ui")]
-
-    [SerializeField] private MyUi[] InitialUis;
-
-    [SerializeField] private Canvas[] ScenedCanvasArr;
-
+    [SerializeField] private int _priority = 100; // 매니저들보다 늦게 초기화되도록 우선순위 설정
     public int Priority => _priority;
 
-    UIManager uiManager;
-    Dictionary<MyUi, BaseUi> UI_Dictionary = new();
+    [Header("이 씬의 초기화 UI 목록")]
+    [Tooltip("씬 시작 시 자동으로 로드하고 화면에 띄울 UI 프리팹들을 할당하세요.")]
+    [AssetReferenceUILabelRestriction("ScenedUi")]
+    [SerializeField] private AssetReferenceUi[] _initialScenedUis;
 
-    public void Exit()
-    {
-        foreach (BaseUi ui in UI_Dictionary.Values)
-        {
-            ui.Exit();
-        }
-    }
+    [Header("전역 UI 참조 (선택사항/테스트용)")]
+    [AssetReferenceUILabelRestriction("GlobalUi")]
+    [SerializeField] private AssetReferenceUi _someGlobalUi;
+
+    // 매니저 참조 캐싱
+    private GlobalUiManager _globalUiManager;
+    private ScenedUiManager _scenedUiManager;
 
     public IEnumerator Initialize()
     {
-        uiManager = GameManager.GetManager<UIManager>();
+        // 1. 매니저 참조 가져오기
+        _globalUiManager = GameManager.GetManager<GlobalUiManager>();
+        _scenedUiManager = WorldManager.GetManager<ScenedUiManager>();
 
-        // 모든 ScenedCanvas는 Ui컨트롤 자식객체로 둠
-        ScenedCanvasArr = GetComponentsInChildren<Canvas>();
+        // 2. 인스펙터에 할당된 초기 UI들을 비동기로 로드하고 화면에 띄움
+        foreach (AssetReferenceUi assetRef in _initialScenedUis)
+        {
+            if (assetRef.RuntimeKeyIsValid())
+            {
+                yield return LoadAndOpenInitialUi(assetRef);
+            }
+        }
 
-        // 깊이우선 탐색으로 각 캔버스 아래의 모든 Ui를 초기화
-        foreach (Canvas canvas in ScenedCanvasArr)
-        {
-            yield return uiManager.InitChildUiByDFS(canvas.transform, UI_Dictionary);
-        }
-        // 로딩 후 초기화면에 보여줄 Ui만 호출
-        foreach (MyUi ui in InitialUis)
-        {
-            ClaimUiOpen(ui);
-        }
-        yield return null;
+        Debug.Log("[UiController] 초기화 완료");
     }
 
     public IEnumerator PostInitialize()
@@ -52,48 +45,88 @@ public class UiController : MonoBehaviour, IScenedInitialize
         yield break;
     }
 
-
-
-    protected virtual bool TryGetScenedUi(MyUi type, out BaseUi ui)
+    /// <summary>
+    /// Addressables를 이용해 초기 UI를 인스턴스화하고 엽니다.
+    /// </summary>
+    private IEnumerator LoadAndOpenInitialUi(AssetReferenceUi assetRef)
     {
-        if (UI_Dictionary.ContainsKey(type))
+        // UiController의 자식으로 UI를 생성 (원한다면 다른 Canvas Transform을 넘겨도 됨)
+        var handle = assetRef.InstantiateAsync(transform);
+        yield return handle;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
         {
-            ui = UI_Dictionary[type];
-            if (ui) return true;
-            else return false;
+            if (handle.Result.TryGetComponent(out BaseUi ui))
+            {
+                // 생성된 UI 초기화 및 열기
+                yield return ui.Initialize();
+                ui.ClaimOpen();
+
+                // (선택) 만약 생성한 UI를 ScenedUiManager에서도 검색(GetUi)되게 하고 싶다면 등록
+                // _scenedUiManager.RegisterDynamicUi(ui); 
+            }
         }
-        ui = null;
-        return false;
+        else
+        {
+            Debug.LogError($"[UiController] 초기 UI 로드 실패: {assetRef.RuntimeKey}");
+        }
     }
 
-    public virtual BaseUi GetUi(MyUi type)
-    {
-        BaseUi ui = null;
-        // 씬에 종속된 Ui인지 먼저 확인 후
-        if (!TryGetScenedUi(type, out ui))
-        {
-            Debug.LogWarning($"UiController has no UserInterface of ({type.ToString()}) ");
+    // ====================================================================
+    // 비즈니스 로직에서 UI를 조작할 때 사용하는 단일 창구 (Facade) 메서드들
+    // ====================================================================
 
-            // 없다면 UiManager에 문의
-            ui = uiManager.GetUi(type);
+    /// <summary>
+    /// 전역(Global) UI를 화면에 엽니다.
+    /// 사용 예: OpenGlobalUi<InventoryUi>();
+    /// </summary>
+    public T OpenGlobalUi<T>() where T : BaseUi, IGlobalUi
+    {
+        T ui = _globalUiManager.GetUi<T>();
+        if (ui != null)
+        {
+            ui.ClaimOpen();
+        }
+        else
+        {
+            Debug.LogWarning($"[UiController] 전역 UI ({typeof(T).Name}) 가 매니저에 없습니다.");
         }
         return ui;
     }
-    public BaseUi ClaimUiOpen(MyUi type)
-    {
-        BaseUi ui = GetUi(type);
-        if (ui is null) return null;
 
-        ui.ClaimOpen();
+    /// <summary>
+    /// 씬(Scened) 전용 UI를 화면에 엽니다.
+    /// 사용 예: OpenScenedUi<SmithyUi>();
+    /// </summary>
+    public T OpenScenedUi<T>() where T : BaseUi, IScenedUi
+    {
+        T ui = _scenedUiManager.GetUi<T>();
+        if (ui != null)
+        {
+            ui.ClaimOpen();
+        }
+        else
+        {
+            Debug.LogWarning($"[UiController] 씬 UI ({typeof(T).Name}) 가 매니저에 없습니다.");
+        }
         return ui;
     }
-    public void ClaimUiClose(MyUi type)
-    {
-        BaseUi ui = GetUi(type);
-        if (ui is null) return;
 
-        ui.ClaimClose();
+    /// <summary>
+    /// 열려있는 UI를 닫습니다.
+    /// </summary>
+    public void CloseUi(BaseUi ui)
+    {
+        if (ui != null)
+        {
+            ui.ClaimClose();
+        }
     }
 
-    
+    public void Exit()
+    {
+        // 실제 UI 파괴와 메모리 해제는 ScenedUiManager의 Exit()에서 일괄 처리되므로
+        // Controller에서는 별도의 파괴 로직을 신경 쓰지 않아도 됩니다. (관심사 분리)
+        Debug.Log("[UiController] Exit 처리됨");
+    }
 }

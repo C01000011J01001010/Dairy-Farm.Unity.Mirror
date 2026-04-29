@@ -4,270 +4,190 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class FileManager : BaseGlobalManager, IGlobalManager
 {
     public static GraphicOptionValues savedGraphicOption { get; protected set; }
 
-    // 프리팹은 Resources에 있는 객체를 참조하는 것이니 씬이 넘어가도 삭제되지 않음
-    private static Dictionary<Type_Character, GameObject> CharacterPrefabs = new();
-    //private static Dictionary<Type_Effect, GameObject> EffectPrefabs = new();
-    //private static Dictionary<Type_Weapon, GameObject> WeaponPrefabs = new();
+    // 1. 공용 UI 저장소 (게임 종료 시까지 유지 - UIManager용)
+    private Dictionary<string, GameObject> globalUIPrefabs = new();
+    private List<AsyncOperationHandle<GameObject>> globalUIHandles = new();
 
-    private PathManager Path;
+    // 2. 씬 전용 UI 저장소 (씬 전환 시 비워짐 - UIController용)
+    private Dictionary<string, GameObject> sceneUIPrefabs = new();
+    private List<AsyncOperationHandle<GameObject>> sceneUIHandles = new();
+
+    private PathManager pathManager;
 
     public void Exit()
     {
-        GetComponent<GameObject>();
+        // 모든 핸들 해제 (공용 + 씬 전용)
+        ReleaseAssets(globalUIHandles, globalUIPrefabs);
+        ReleaseAssets(sceneUIHandles, sceneUIPrefabs);
+
+        if (gameObject != null) Destroy(gameObject);
     }
 
     public IEnumerator Initialize()
     {
-        Path = GameManager.GetManager<PathManager>();
-        if (Path is null)
-        {
-            GameManager.RegisterManager<PathManager>();
-            PathManager pathManager = GameManager.GetManager<PathManager>();
-            Debug.LogWarning("PathManager 예외처리 등록함");
-        }
+        pathManager = GameManager.GetManager<PathManager>();
 
 #if UNITY_EDITOR
         TestLocalOption();
 #endif
         LoadLocalOption();
-
         CheckStruct<GraphicOptionValues>(savedGraphicOption);
 
-
-        yield return FillContainer(CharacterPrefabs, "Prefabs/Characters");
-        //yield return FillContainer(EffectPrefabs, "Prefabs/Effects");
-        //yield return FillContainer(WeaponPrefabs, "Prefabs/Weapons");
         yield break;
     }
 
-    private void TestLocalOption()
+    // ----------------------------------------------------------------------------------
+    // [UI 로드 로직] 공용 및 씬 전용 구분 로드
+    // ----------------------------------------------------------------------------------
+
+    // UIManager가 초기화 시 호출: 공용 UI들을 미리 로드
+    public IEnumerator LoadGlobalUIs(List<string> addresses)
     {
-        // 데이터 저장 테스트
-        GraphicOptionValues options = GraphicOptionValues.testOption;
-        SaveFile(Path.directory.Option, Path.fileName.GraphicSettings, options.Struct2ByteArray());
+        yield return LoadAndCacheAssets(addresses, globalUIPrefabs, globalUIHandles);
     }
 
-    private void LoadLocalOption()
+    // UIController가 씬 시작 시 호출: 씬 종속 UI들을 로드
+    public IEnumerator LoadSceneUIs(List<string> addresses)
     {
-        // 로컬 환경 설정 불러오기
-        try
-        {
-            byte[] savedData = LoadFile_FromSaveFolder(Path.directory.Option, Path.fileName.GraphicSettings);
-            savedGraphicOption = savedData.ByteArray2Struct<GraphicOptionValues>();
-        }
-        catch (Exception ex)
-        {
-            savedGraphicOption = GraphicOptionValues.defaultOption;
-            Debug.LogWarning(ex);
-        }
+        yield return LoadAndCacheAssets(addresses, sceneUIPrefabs, sceneUIHandles);
     }
 
-    private void CheckStruct<T_Struct>(object obj)
+    // 실제 비동기 로드 처리 핵심 로직
+    private IEnumerator LoadAndCacheAssets(List<string> addresses,
+        Dictionary<string, GameObject> targetDict, List<AsyncOperationHandle<GameObject>> targetHandles)
     {
-        if(typeof(T_Struct).IsStruct())
+        foreach (string addr in addresses)
         {
-            Type type = typeof(T_Struct);
-            foreach (FieldInfo field in type.GetFields())
+            if (targetDict.ContainsKey(addr)) continue;
+
+            var handle = Addressables.LoadAssetAsync<GameObject>(addr);
+            yield return handle;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
             {
-                Debug.Log($"{field.Name} : {field.GetValue(obj)}");
+                targetDict.TryAdd(addr, handle.Result);
+                targetHandles.Add(handle);
             }
-        }
-        else
-        {
-            Debug.LogWarning($"{typeof(T_Struct).Name} is not struct");
-        }
-        
-    }
-
-    
-    
-    //// 캐릭터 프리팹 초기화
-    //IEnumerator initializeCharacterPrefabs()
-    //{
-    //    if (CharacterPrefabs is not null) yield break;
-    //    CharacterPrefabs = new();
-
-    //    yield return FillContainer(CharacterPrefabs, "Prefabs/Characters");
-    //}
-
-
-    //IEnumerator initializeEffectPrefabs()
-    //{
-    //    if (EffectPrefabs is not null) yield break;
-    //    EffectPrefabs = new();
-
-    //    yield return FillContainer(EffectPrefabs, "Prefabs/Effects");
-    //}
-    //IEnumerator initializeWeaponPrefabs()
-    //{
-    //    if (WeaponPrefabs is not null) yield break;
-    //    WeaponPrefabs = new();
-
-    //    yield return FillContainer(WeaponPrefabs, "Prefabs/Weapons");
-    //}
-
-    public IEnumerator FillContainer<T_Enum, T_PrefabType>
-        (Dictionary<T_Enum, T_PrefabType> targetDictionary, string directory)
-        where T_Enum : struct, Enum
-        where T_PrefabType : UnityEngine.Object
-    {
-        int lastTime = Environment.TickCount;
-        Type enumType = typeof(T_Enum);
-        foreach (T_Enum current in Enum.GetValues(enumType))
-        {
-            string fileName = current.ToString();
-            if (fileName == "Length" || fileName.Contains("__")) continue;
-            T_PrefabType prefab = GetPrefab_ByEnum(directory, fileName, current, targetDictionary);
-
-            int currentTime = Environment.TickCount;
-            // 마지막부터 0.1초 뒤 현재시간
-            if (lastTime + 100 < currentTime)
+            else
             {
-                lastTime = currentTime;
-                yield return null; // 다음프레임에 계속
+                Debug.LogError($"[FileManager] 에셋 로드 실패: {addr}");
             }
         }
     }
 
+    // ----------------------------------------------------------------------------------
+    // [에셋 사용] 캐싱된 프리팹 즉시 반환
+    // ----------------------------------------------------------------------------------
 
-    public static void SaveFile(string directory, string fileName, params byte[] data) // params : 가변매개변수 키워드
+    public GameObject GetGlobalUiPrefab(string address) => GetCachedPrefab(address, globalUIPrefabs);
+    public GameObject GetSceneUI(string address) => GetCachedPrefab(address, sceneUIPrefabs);
+
+    private GameObject GetCachedPrefab(string address, Dictionary<string, GameObject> dict)
     {
-        // directory(경로) -> 폴더
-        // 경로가 확정되어야 파일을 그 안에 만들 수 있음
-        if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
-
-        string totalDirectory = $"{directory}/{fileName}";
-
-        /*
-         * create는 FileStream을 반환
-         * FileStream->데이터 전송 또는 통신
-         * 생성된 파일을 잡고 있는 FileStream이 존재하게 됨
-         * 이미 하나의 fileStream을 가지고 있을 때에 같은 프로그램이라도
-         * 여러개의 fileStream으로 하나의 파일을 관리할 수 없음!(동시접근 제한)
-         * FileStream을 제대로 안끄고 나가면 프로그램을 껐음에도 불구하고 파일이 안지워짐
-         * => 컴퓨터를 재부팅하거나 시간이 자나면 => 윈도우가 안쓰는 메모리를 정리
-        */
-
-        if (!File.Exists(totalDirectory)) File.Create(totalDirectory).Close();
-
-        File.WriteAllBytes(totalDirectory, data);
+        if (dict.TryGetValue(address, out GameObject prefab)) return prefab;
+        Debug.LogWarning($"[FileManager] 캐싱되지 않은 에셋 요청: {address}");
+        return null;
     }
 
-    private string GetDirectoryForResources(string directory)
+    // ----------------------------------------------------------------------------------
+    // [메모리 해제] 씬 전환 시 UIController가 호출
+    // ----------------------------------------------------------------------------------
+
+    public void ReleaseSceneAssets()
     {
-        directory = directory.Replace("\\", "/");
+        ReleaseAssets(sceneUIHandles, sceneUIPrefabs);
+        Debug.Log("[FileManager] 씬 전용 에셋 메모리 해제 완료");
+    }
 
-        // "Resources"라는 단어가 시작되는 인덱스(위치)를 찾음
-        int resourceIndex = directory.IndexOf("Resources");
-
-        // 경로에 "Resources"가 포함되어 있다면 (없으면 -1을 반환)
-        if (resourceIndex >= 0)
+    private void ReleaseAssets(List<AsyncOperationHandle<GameObject>> handles, Dictionary<string, GameObject> dict)
+    {
+        foreach (var handle in handles)
         {
-            // 잘라낼 시작점 계산 ("Resources" 글자수만큼 뒤로 이동)
-            int startIndex = resourceIndex + "Resources".Length;
-
-            // 만약 "Resources" 바로 뒤에 슬래시("/")가 있다면, 슬래시까지 깔끔하게 날려줌
-            // ex) "Assets/Resources/Items" -> "/Items" 가 아니라 "Items" 로 만들기
-            if (startIndex < directory.Length && directory[startIndex] == '/')
-            {
-                startIndex++;
-            }
-
-            // 시작점부터 끝까지 문자열을 잘라서 덮어씌움
-            directory = directory.Substring(startIndex);
+            if (handle.IsValid()) Addressables.Release(handle);
         }
-        return directory;
+        handles.Clear();
+        dict.Clear();
     }
 
-    public Dictionary<int, DataType> LoadAllGameData<DataType>(string directory)
+    // ----------------------------------------------------------------------------------
+    // [데이터 로드] ScriptableObject 등 정적 데이터 로드
+    // ----------------------------------------------------------------------------------
+
+    public IEnumerator LoadAllGameDataAsync<DataType>(string label, Action<Dictionary<int, DataType>> onComplete)
         where DataType : BaseData
     {
-        // Resources에서 쓸 수 있는 경로로 변환
-        directory = GetDirectoryForResources(directory);
+        var dataHandle = Addressables.LoadAssetsAsync<DataType>(label, null);
+        yield return dataHandle;
 
-        DataType[] loadedDatas = Resources.LoadAll<DataType>(directory);
-
-        if(loadedDatas.IsNullOrEmpty())
+        if (dataHandle.Status == AsyncOperationStatus.Succeeded)
         {
-            Debug.LogError("사용할 수 없는 데이터 로드");
-            return null;
-        }
-
-        Dictionary<int, DataType> dataDict = new Dictionary<int, DataType>();
-
-        foreach (var data in loadedDatas)
-        {
-            if(dataDict.ContainsKey(data.Index))
+            Dictionary<int, DataType> dataDict = new Dictionary<int, DataType>();
+            foreach (var data in dataHandle.Result)
             {
-                DataType old = dataDict[data.Index];
-                Debug.LogError($"유일하지 않은 Index 발견!\n" +
-                    $"기존 데이터 파일 이름 : {old.name}\n" +
-                    $"겹친 데이터 파일 이름 : {data.name}");
-                continue;
+                if (!dataDict.TryAdd(data.Index, data))
+                {
+                    Debug.LogError($"유일하지 않은 Index 발견: {data.name}");
+                }
             }
-            dataDict[data.Index] = data;
+            onComplete?.Invoke(dataDict);
         }
-        return dataDict;
+        // 데이터는 보통 참조만 하므로 핸들을 바로 놔줘도 되지만, 
+        // 확실한 메모리 관리를 위해선 사용하는 곳에서 Release 시점을 정해야 함
+    }
+
+    // ----------------------------------------------------------------------------------
+    // 일반 IO 저장 시스템 (유지)
+    // ----------------------------------------------------------------------------------
+    public static void SaveFile(string directory, string fileName, params byte[] data)
+    {
+        if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
+        string totalDirectory = Path.Combine(directory, fileName);
+        if (!File.Exists(totalDirectory)) File.Create(totalDirectory).Close();
+        File.WriteAllBytes(totalDirectory, data);
     }
 
     public static byte[] LoadFile_FromSaveFolder(string directory, string fileName)
     {
-        if (Directory.Exists(directory))
-        {
-            string totalDirectory = $"{directory}/{fileName}";
-
-            if(File.Exists(totalDirectory))
-            {
-                return File.ReadAllBytes(totalDirectory);
-            }
-        }
-        return null;
+        string totalDirectory = Path.Combine(directory, fileName);
+        return File.Exists(totalDirectory) ? File.ReadAllBytes(totalDirectory) : null;
     }
 
-
-    public static T_FileType LoadFile_FromResources<T_FileType>(string path)
-        where T_FileType : UnityEngine.Object
-        => Resources.Load<T_FileType>(path);
-
-    public static T_FileType LoadFile_FromResources<T_FileType>(string directory, string fileName)
-        where T_FileType : UnityEngine.Object
-        => Resources.Load<T_FileType>($"{directory}/{fileName}");
-
-    public static GameObject GetPrefab(string path)
-        => LoadFile_FromResources<GameObject>(path);
-
-    private T_File GetPrefab_ByEnum<T_Enum, T_File>(string Directory, string fileName,
-        T_Enum fileEnum, Dictionary<T_Enum, T_File> container = null)
-        where T_Enum : struct, Enum
-        where T_File : UnityEngine.Object // Resources.Load는 UnityEngine.Object를 상속받은 타입만 파일로 읽어올 수 있음
+#if UNITY_EDITOR
+    private void TestLocalOption()
     {
-        T_File file = LoadFile_FromResources<T_File>(Directory, fileName);
+        GraphicOptionValues options = GraphicOptionValues.testOption;
 
-        if (file is null)
-        {
-            Debug.LogError($"{Directory}/{fileName} doesn't exist in Resources");
-            return null;
-        }
+        string directory = pathManager.directory.Option;
+        string fileName = pathManager.fileName.GraphicSettings;
+        SaveFile(directory, fileName, options.Struct2ByteArray());
+    }
+#endif
 
-        else if (container is not null)
+    private void LoadLocalOption()
+    {
+        try
         {
-            container.TryAdd(fileEnum, file);
+            string directory = pathManager.directory.Option;
+            string fileName = pathManager.fileName.GraphicSettings;
+            byte[] savedData = LoadFile_FromSaveFolder(directory, fileName);
+            if (savedData != null) savedGraphicOption = savedData.ByteArray2Struct<GraphicOptionValues>();
         }
-        return file;
+        catch (Exception ex) { savedGraphicOption = GraphicOptionValues.defaultOption; Debug.LogWarning(ex); }
     }
 
-    public static GameObject GetCharacterPrefab(Type_Character type) 
-        => CharacterPrefabs.TryGetValue(type, out var result) ? result : null;
-
-    
-    //public static GameObject GetEffactPrefab(Type_Effect type)
-    //    => EffectPrefabs.TryGetValue(type, out var result) ? result : null;
-    //public static GameObject GetWeaponPrefab(Type_Weapon type)
-    //    => WeaponPrefabs.TryGetValue(type, out var result) ? result : null;
+    private void CheckStruct<T_Struct>(object obj)
+    {
+        if (typeof(T_Struct).IsValueType)
+        {
+            foreach (FieldInfo field in typeof(T_Struct).GetFields())
+                Debug.Log($"{field.Name} : {field.GetValue(obj)}");
+        }
+    }
 }

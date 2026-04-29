@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoadingScreen : BaseUi
+public class LoadingScreen : BaseUi, IGlobalUi
 {
     [SerializeField] private Image loadingImage;
     [SerializeField] private Slider loadingSlider;
@@ -17,30 +17,39 @@ public class LoadingScreen : BaseUi
 
     public bool isLoading {get; protected set; }
 
-    public override MyUi UiType => MyUi.LoadingScreen;
 
     public override void Exit()
     {
-        UIManager.OnLoadingCall -= Loading_Call;
-        UIManager.OnLoadingNext -= Loading_Next;
-        UIManager.OnLoadingNextPercent -= Loading_NextPercent;
-        UIManager.OnLoadingEnd -= Loading_End;
+        GlobalUiManager.OnLoadingCall -= Loading_Call;
+        GlobalUiManager.OnLoadingNext -= Loading_Next;
+        GlobalUiManager.OnLoadingNextPercent -= Loading_NextPercent;
+        GlobalUiManager.OnLoadingEnd -= Loading_End;
+    }
+
+    private IEnumerator Start()
+    {
+        // GameManager가 1프레임 양보할때 먼저 초기화
+        yield return Initialize();
+
+        // ui매니저에 자기 자신 등록
+        GlobalUiManager uiManager = GameManager.GetManager<GlobalUiManager>();
+        uiManager.RegisterPreplacedUi(this);
     }
 
     public override IEnumerator Initialize()
     {
         loadingSlider.onValueChanged.RemoveAllListeners();
 
-        UIManager.OnLoadingCall -= Loading_Call;
-        UIManager.OnLoadingCall += Loading_Call;
-        UIManager.OnLoadingNext -= Loading_Next;
-        UIManager.OnLoadingNext += Loading_Next;
-        UIManager.OnLoadingNextPercent -= Loading_NextPercent;
-        UIManager.OnLoadingNextPercent += Loading_NextPercent;
-        UIManager.OnLoadingEnd -= Loading_End;
-        UIManager.OnLoadingEnd += Loading_End;
+        GlobalUiManager.OnLoadingCall -= Loading_Call;
+        GlobalUiManager.OnLoadingCall += Loading_Call;
+        GlobalUiManager.OnLoadingNext -= Loading_Next;
+        GlobalUiManager.OnLoadingNext += Loading_Next;
+        GlobalUiManager.OnLoadingNextPercent -= Loading_NextPercent;
+        GlobalUiManager.OnLoadingNextPercent += Loading_NextPercent;
+        GlobalUiManager.OnLoadingEnd -= Loading_End;
+        GlobalUiManager.OnLoadingEnd += Loading_End;
 
-        yield return null;
+        yield break;
     }
 
     

@@ -6,30 +6,17 @@ using System;
 [CustomEditor(typeof(GlobalPoolManager), true)]
 public class GlobalPoolManagerEditor : BaseAddressablesEditor // 부모 상속!
 {
-    // 이 에디터만의 고유한 저장소 키값 설정
-    protected override string PrefsKey => "GlobalPoolManager_LastLabel";
+    protected override string Label => Constants.LABEL_GlobalPoolObjects;
 
-    public override void OnInspectorGUI()
+    protected override string Description => "선택한 라벨이 붙은 모든 프리팹을 긁어와 리스트를 자동으로 채웁니다.";
+
+    protected override string ButtonTooltip => "전체 프리팹 가져오기";
+
+    protected override void OnButtonClick(string targetLabel)
     {
-        DrawDefaultInspector(); // base.OnInspectorGUI()와 동일하게 기본 UI 그림
-
         GlobalPoolManager manager = target as GlobalPoolManager;
         if (manager == null) return;
-
-        EditorGUILayout.Space(10);
-        EditorGUILayout.HelpBox("선택한 라벨이 붙은 모든 프리팹을 긁어와 리스트를 자동으로 채웁니다.", MessageType.Info);
-
-        // 부모의 공통 UI 호출
-        string selectedLabel = DrawLabelSelector();
-        EditorGUILayout.Space(5);
-
-        if (GUILayout.Button("전체 프리팹 가져오기", GUILayout.Height(40)))
-        {
-            if (!string.IsNullOrEmpty(selectedLabel))
-            {
-                AutoFillGlobalPool(manager, selectedLabel);
-            }
-        }
+        AutoFillGlobalPool(manager, targetLabel);
     }
 
     private void AutoFillGlobalPool(GlobalPoolManager manager, string targetLabel)
@@ -57,7 +44,8 @@ public class GlobalPoolManagerEditor : BaseAddressablesEditor // 부모 상속!
 
             if (Enum.TryParse(prefab.name, out GlobalPoolType matchedType))
             {
-                var existingSetup = manager.poolSetups.Find(x => x.poolType.Equals(matchedType));
+                BasePoolManager<GlobalPoolType>.PoolSetup existingSetup 
+                    = manager.poolSetups.Find(x => x.poolType.Equals(matchedType));
 
                 if (existingSetup != null)
                 {
@@ -69,14 +57,12 @@ public class GlobalPoolManagerEditor : BaseAddressablesEditor // 부모 상속!
                 }
                 else
                 {
-                    manager.poolSetups.Add(new BasePoolManager<GlobalPoolType>.PoolSetup()
+                    BasePoolManager<GlobalPoolType>.PoolSetup newSetup = new()
                     {
                         poolType = matchedType,
                         prefab = prefab,
-                        defaultAmount = 10,
-                        defaultCapacity = 20,
-                        maxSize = 100
-                    });
+                    };
+                    manager.poolSetups.Add(newSetup);
                     addCount++;
                 }
             }

@@ -3,53 +3,37 @@ using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 using System.Collections.Generic;
-using System;
 
 public abstract class BaseAddressablesEditor : Editor
 {
-    // 자식 클래스에서 자신만의 저장 키값(PlayerPrefs Key)을 명시하도록 강제함
-    protected abstract string PrefsKey { get; }
+    protected abstract string Label { get; }
+    protected abstract string Description { get; }
+    protected abstract string ButtonTooltip { get; }
 
-    protected string[] availableLabels;
-    protected int selectedLabelIndex = 0;
+    //protected string[] availableLabels;
+    //protected int selectedLabelIndex = 0;
 
-    protected virtual void OnEnable()
+    public override void OnInspectorGUI()
     {
-        // 1. 에디터가 켜질 때 라벨 목록 동기화
-        var settings = AddressableAssetSettingsDefaultObject.Settings;
-        if (settings != null)
-        {
-            availableLabels = settings.GetLabels().ToArray();
+        DrawDefaultInspector(); // base.OnInspectorGUI()와 동일하게 기본 UI 그림
 
-            // 2. 자식 클래스가 지정한 키값을 통해 마지막 선택 라벨 복구
-            string lastLabel = EditorPrefs.GetString(PrefsKey, "default");
-            selectedLabelIndex = Array.IndexOf(availableLabels, lastLabel);
-            if (selectedLabelIndex < 0) selectedLabelIndex = 0;
-        }
-        else
+        EditorGUILayout.Space(10);
+        EditorGUILayout.HelpBox(Description, MessageType.Info);
+
+        // 부모의 공통 UI 호출
+        //string selectedLabel = DrawLabelSelector();
+        EditorGUILayout.Space(5);
+
+        if (GUILayout.Button(ButtonTooltip, GUILayout.Height(40)))
         {
-            availableLabels = new string[] { "설정 파일 없음" };
+            if (!string.IsNullOrEmpty(Label))
+            {
+                OnButtonClick(Label);
+            }
         }
     }
 
-    // [공통 UI] 드롭다운을 그리고 선택된 라벨 문자열을 반환하는 함수
-    protected string DrawLabelSelector()
-    {
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.PrefixLabel("검색할 Addressables 라벨");
-
-        if (availableLabels != null && availableLabels.Length > 0)
-        {
-            selectedLabelIndex = EditorGUILayout.Popup(selectedLabelIndex, availableLabels);
-            EditorPrefs.SetString(PrefsKey, availableLabels[selectedLabelIndex]);
-            EditorGUILayout.EndHorizontal();
-
-            return availableLabels[selectedLabelIndex];
-        }
-
-        EditorGUILayout.EndHorizontal();
-        return null;
-    }
+    protected abstract void OnButtonClick(string targetLabel);
 
     // [공통 기능] 선택된 라벨을 가진 모든 에셋(Entry)을 찾아주는 함수
     protected List<AddressableAssetEntry> GetAddressableEntries(string targetLabel)

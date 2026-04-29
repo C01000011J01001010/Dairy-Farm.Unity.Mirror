@@ -25,12 +25,6 @@ public class Disabled_FileManager : BaseGlobalManager, IGlobalManager
     public IEnumerator Initialize()
     {
         Path = GameManager.GetManager<PathManager>();
-        if (Path is null)
-        {
-            GameManager.RegisterManager<PathManager>();
-            PathManager pathManager = GameManager.GetManager<PathManager>();
-            Debug.LogWarning("PathManager 예외처리 등록함");
-        }
 
 #if UNITY_EDITOR
         // 데이터 저장 테스트

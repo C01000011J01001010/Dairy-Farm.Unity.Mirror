@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class InventoryScreen : BaseUi
+public class InventoryScreen : BaseUi, IGlobalUi
 {
-    public override MyUi UiType => MyUi.InventoryScreen;
 
     public override void Exit()
     {

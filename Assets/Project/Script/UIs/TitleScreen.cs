@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
-public class TitleScreen : BaseUi
+public class TitleScreen : BaseUi, IGlobalUi
 {
-    public override MyUi UiType => MyUi.TitleScreen;
 
     [Header("Movement Settings")]
     public float moveRange = 100f;  // 움직일 범위 (픽셀 단위)

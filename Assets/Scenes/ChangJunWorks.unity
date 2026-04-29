@@ -35590,9 +35590,14 @@ MonoBehaviour:
   poolSetups:
   - poolType: 1000
     prefab: {fileID: 694271336957016650, guid: 2383ae1303d63024da33854598867dda, type: 3}
-    defaultAmount: 1
-    defaultCapacity: 256
-    maxSize: 256
+    defaultAmount: 8
+    defaultCapacity: 16
+    maxSize: 128
+  - poolType: 1001
+    prefab: {fileID: 694271336957016650, guid: 6028a978cd710e647b024b650cf29da8, type: 3}
+    defaultAmount: 8
+    defaultCapacity: 16
+    maxSize: 128
 --- !u!1001 &7977155789988994286
 PrefabInstance:
   m_ObjectHideFlags: 0

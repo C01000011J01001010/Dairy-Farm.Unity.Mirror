@@ -77,7 +77,7 @@ public class Disabled_PoolManager : MonoBehaviour, IScenedManager
         // 풀링된 객체의 기본 루트
         rootParent = new GameObject("PoolRoot").transform;
 
-        yield return Register(requestCharacter, FileManager.GetCharacterPrefab);
+        //yield return Register(requestCharacter, FileManager.GetCharacterPrefab);
 
         yield return null;
     }

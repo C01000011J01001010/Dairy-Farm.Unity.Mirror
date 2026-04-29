@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Scened Ui Group
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Scened Ui Group
+  m_GUID: 5d7bbbf7a5cb3494c8e846371e25eab1
+  m_SerializeEntries:
+  - m_GUID: 2a72b551f6478f549865f89d71b48e99
+    m_Address: TitleScreen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ScenedUi
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9b4d44165a937de4d82fa0cf1738cafb
+    m_Address: TitleSelection
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ScenedUi
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b631d96092f96e44c8799570322cd6c6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: de767294d3222094abd5629502492ecf, type: 2}
+    - {fileID: 11400000, guid: e3c23b891a29b5043aebd50347c3751e, type: 2}

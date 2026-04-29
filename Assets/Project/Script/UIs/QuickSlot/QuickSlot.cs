@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class QuickSlot : BaseUi
+public class QuickSlot : BaseUi, IGlobalUi
 {
     private BaseButton[] itemSlots;
     private ItemViewer[] itemViewers;
@@ -13,7 +13,6 @@ public class QuickSlot : BaseUi
     // [추가] UI에서 현재 선택된 슬롯 번호를 기억하기 위한 변수
     private int currentIndex = -1;
 
-    public override MyUi UiType => MyUi.QuickSlot;
 
     public override void Exit()
     {

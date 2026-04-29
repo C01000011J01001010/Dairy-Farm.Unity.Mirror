@@ -5,30 +5,22 @@ using System.IO;
 [CustomEditor(typeof(ScenedPoolManager), true)]
 public class ScenedPoolManagerEditor : BaseAddressablesEditor // 부모 상속!
 {
-    // 이 에디터만의 고유한 저장소 키값 설정
-    protected override string PrefsKey => "ScenedPoolManager_LastLabel";
+    protected override string Label => Constants.LABEL_ScenedPoolObjects;
+
+    protected override string Description => "리스트에 추가된 빈 항목의 이름과 일치하는 프리팹만 찾아 연결합니다.";
+
+    protected override string ButtonTooltip => "비어있는 프리팹 자동 할당";
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        base.OnInspectorGUI();
+    }
 
+    protected override void OnButtonClick(string targetLabel)
+    {
         ScenedPoolManager manager = target as ScenedPoolManager;
         if (manager == null) return;
-
-        EditorGUILayout.Space(10);
-        EditorGUILayout.HelpBox("리스트에 추가된 빈 항목의 이름과 일치하는 프리팹만 찾아 연결합니다.", MessageType.Info);
-
-        // 부모의 공통 UI 호출
-        string selectedLabel = DrawLabelSelector();
-        EditorGUILayout.Space(5);
-
-        if (GUILayout.Button("비어있는 프리팹 자동 할당", GUILayout.Height(40)))
-        {
-            if (!string.IsNullOrEmpty(selectedLabel))
-            {
-                FillEmptyPrefabs(manager, selectedLabel);
-            }
-        }
+        FillEmptyPrefabs(manager, targetLabel);
     }
 
     private void FillEmptyPrefabs(ScenedPoolManager manager, string targetLabel)
@@ -47,8 +39,6 @@ public class ScenedPoolManagerEditor : BaseAddressablesEditor // 부모 상속!
 
         foreach (var setup in manager.poolSetups)
         {
-            if (setup.prefab != null) continue;
-
             string targetName = setup.poolType.ToString();
             var matchedEntry = entries.Find(e => Path.GetFileNameWithoutExtension(e.AssetPath) == targetName);
 

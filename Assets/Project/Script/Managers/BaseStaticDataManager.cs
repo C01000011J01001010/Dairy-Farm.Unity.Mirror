@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using static UnityEditor.LightingExplorerTableColumn;
 
 /// <summary>
 /// 하나의 정적 데이터(Table)를 관리하는 매니저의 기반구조
@@ -9,8 +11,8 @@ using UnityEngine;
 public abstract class BaseStaticDataManager<TDataObject> : BaseGlobalManager, IGlobalManager
     where TDataObject : BaseData
 {
-    protected abstract string FolderName { get; }
-    private string Directory => $"ScriptableObject/{FolderName}";
+    protected const string AssetMenu = "Static Data Manager";
+    protected abstract string Label { get; }
     // 아이템 ID를 키(Key)로 사용하여 빠르게 검색하기 위한 딕셔너리
     protected Dictionary<int, TDataObject> database = new Dictionary<int/*id*/, TDataObject>();
     public void Exit()
@@ -28,14 +30,19 @@ public abstract class BaseStaticDataManager<TDataObject> : BaseGlobalManager, IG
     {
         // Resources/Items 경로 안에 ScriptableObject들을 모아두었다고 가정
         FileManager fileManager = GameManager.GetManager<FileManager>();
-        database = fileManager.LoadAllGameData<TDataObject>(Directory);
+        yield return fileManager.LoadAllGameDataAsync<TDataObject>(Label, OnLoadedDataBase);
 
-        if (database.IsNullOrEmpty())
+    }
+
+    private void OnLoadedDataBase(Dictionary<int, TDataObject> LoadedDataBase)
+    {
+        if (LoadedDataBase.IsNullOrEmpty())
         {
             Debug.LogError($"[{this.GetType().Name}] 데이터 로드 실패");
-            yield break;
+            return;
         }
-        Debug.Log($"[{this.GetType().Name}] 총 {database.Count}개의 데이터 로드 성공");
+        Debug.Log($"[{this.GetType().Name}] 총 {LoadedDataBase.Count}개의 데이터 로드 성공");
+        database = LoadedDataBase;
     }
 
     /// <summary>

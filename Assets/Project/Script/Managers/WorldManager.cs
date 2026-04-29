@@ -163,7 +163,7 @@ public sealed class WorldManager : MonoBehaviour, IManager
     private void VisualizeNextLoading()
     {
         _currentPercent += _processPercent;
-        UIManager.ClaimLoading_Next("현재 씬 초기화 중...", _currentPercent);
+        GlobalUiManager.ClaimLoading_Next("현재 씬 초기화 중...", _currentPercent);
     }
 
     

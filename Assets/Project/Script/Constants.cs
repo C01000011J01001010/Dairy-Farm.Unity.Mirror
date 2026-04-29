@@ -6,10 +6,19 @@ public class Constants
     public const int REAL_SECONDS_PER_GAME_MINUTE = 1;
     public const int REAL_SECONDS_PER_GAME_HOUR = 60;
 
-    #region Resources 디렉터리
-    public const string DIRECTORY_Prefabs_Characters = "Prefabs/Characters";
-    public const string DIRECTORY_Prefabs_Controllers = "Prefabs/Controllers";
-    public const string DIRECTORY_Prefabs_Uis = "Prefabs/UIs";
+    //#region Resources 디렉터리
+    //public const string DIRECTORY_Prefabs_Characters = "Prefabs/Characters";
+    //public const string DIRECTORY_Prefabs_Controllers = "Prefabs/Controllers";
+    //public const string DIRECTORY_Prefabs_Uis = "Prefabs/UIs";
+    //#endregion
+
+    #region Addressable Label
+    public const string LABEL_GlobalPoolObjects = "GlobalPoolObjects";
+    public const string LABEL_ScenedPoolObjects = "ScenedPoolObjects";
+    public const string LABEL_CropDatas = "CropDatas";
+    public const string LABEL_ItemDatas = "ItemDatas";
+    public const string LABEL_QuestDatas = "QuestDatas";
+    public const string LABEL_MagicalEggDatas = "MagicalEggDatas";
     #endregion
 
     #region Scene이름

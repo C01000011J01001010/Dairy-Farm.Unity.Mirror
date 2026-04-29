@@ -23,9 +23,23 @@ public class BasePoolManager<PoolType> : MonoBehaviour, IManager
         [Range(2, maxCount)] public int defaultCapacity;
         [Range(2, maxCount)] public int maxSize;
 
+        public PoolSetup() { SetDefaultValues(); }
+        public void SetDefaultValues()
+        {
+            defaultAmount = 8;
+            defaultCapacity = 16;
+            maxSize = 128;
+        }
+
+
 #if UNITY_EDITOR
         public void ValidateValues()
         {
+            if (defaultAmount < 1 || defaultCapacity < 2 || maxSize < 2)
+            {
+                SetDefaultValues();
+                return;
+            }
             if (defaultAmount > defaultCapacity) defaultCapacity = defaultAmount;
             if (defaultCapacity > maxSize) maxSize = defaultCapacity;
         }
@@ -33,7 +47,6 @@ public class BasePoolManager<PoolType> : MonoBehaviour, IManager
     }
 
     #endregion
-
 
     public int _priority = 0;
     public int Priority => _priority;

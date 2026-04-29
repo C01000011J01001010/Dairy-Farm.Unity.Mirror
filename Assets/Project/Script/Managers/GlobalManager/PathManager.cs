@@ -1,4 +1,5 @@
 using System.Collections;
+using System.IO; // Path.Combine을 사용하기 위해 반드시 필요합니다!
 using UnityEngine;
 
 public class PathManager : BaseGlobalManager, IGlobalManager
@@ -14,13 +15,17 @@ public class PathManager : BaseGlobalManager, IGlobalManager
         {
             // 응용 프로그램에서 사용하는 데이터 경로
             // Executable Application
-            _main = $"{Application.persistentDataPath}/Datas"; //Application은 런타임 객체
+
+            // [수정됨] 하드코딩된 "/" 대신 Path.Combine 사용
+            _main = Path.Combine(Application.persistentDataPath, "Datas");
+
 #if UNITY_EDITOR
             Debug.Log("저장 경로 : " + _main);
 #endif
 
-            Save = $"{_main}/Saves";
-            Option = $"{_main}/Options";
+            // [수정됨] 각 하위 폴더도 Path.Combine으로 안전하게 병합
+            Save = Path.Combine(_main, "Saves");
+            Option = Path.Combine(_main, "Options");
         }
     }
 

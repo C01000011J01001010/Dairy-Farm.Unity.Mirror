@@ -79,24 +79,37 @@ public sealed class GameManager : MonoBehaviour, IManager
         {
             Destroy(this);
         }
+
+        if (!RegisterManager())
+        {
+            Debug.LogError("GameManager에서 일부 Manager 등록 실패");
+        }
     }
 
     private IEnumerator Start()
     {
+        yield return null; // 로딩 ui에 초기화 우선권 부여
         yield return Initializer = Initialize();
     }
 
     public IEnumerator Initialize()
     {
         // UiManager를 먼저 추가하여 로딩 화면을 보여줌
-        TryGetOrAddManager<UIManager>();
-        IGlobalManager uiManager = GetManager<UIManager>();
-        yield return uiManager?.Initialize();
-        uiManager.EndInit();
+        //TryGetOrAddManager<UIManager>();
+        //IGlobalManager uiManager = GetManager<UIManager>();
+        //yield return uiManager?.Initialize();
+        //uiManager.EndInit();
 
-        // 모든 매니저 초기화 실행
-        yield return ProcessManagerLoading();
-        UIManager.ClaimLoading_End();
+        // LoadingScreen의 Start에서 초기화 끝냈으니 바로 사용
+        GlobalUiManager.ClaimLoading_Start(managerList.Count);
+        foreach (var manager in managerList)
+        {
+            yield return ProcessManagerLoading(manager);
+        }
+        GlobalUiManager.ClaimLoading_End();
+
+        //yield return ProcessManagerLoading();
+        
 
         SceneLoadManager loadManager = GetManager<SceneLoadManager>();
 
@@ -111,11 +124,11 @@ public sealed class GameManager : MonoBehaviour, IManager
 #if UNITY_EDITOR
         else
         {
-            UIManager.ClaimLoading_Start(-1);
-            UIManager.ClaimLoading_Next("", 30.0f);
+            GlobalUiManager.ClaimLoading_Start(-1);
+            GlobalUiManager.ClaimLoading_Next("", 30.0f);
             SceneManager.SetActiveScene(SceneTester.TestScene);
             yield return WorldManager.Inst.Initialize();
-            UIManager.ClaimLoading_End();
+            GlobalUiManager.ClaimLoading_End();
         }
 #endif
 
@@ -170,36 +183,53 @@ public sealed class GameManager : MonoBehaviour, IManager
         }
     }
 
+    private bool RegisterManager()
+    {
+        bool result = true;
+        result &= TryGetOrAddManager<PathManager>();
+        result &= TryGetOrAddManager<FileManager>();
+        result &= TryGetOrAddManager<GlobalUiManager>();
+        result &= TryGetOrAddManager<OptionManager>();
+        result &= TryGetOrAddManager<AudioManager>();
+        result &= TryGetOrAddManager<UserInputManager>();
+        result &= TryGetOrAddManager<DragManager>();
+        result &= TryGetOrAddManager<ItemStaticManager>();
+        result &= TryGetOrAddManager<QuestStaticManager>();
+        result &= TryGetOrAddManager<CropStaticManager>();
+        result &= TryGetOrAddManager<SceneLoadManager>();
+        result &= TryGetOrAddManager<TimeManager>();
+        return result;
+    }
+
     private IEnumerator ProcessManagerLoading()
     {
-        UIManager.ClaimLoading_Start(8);
+        yield break;
 
-        yield return ProcessManagerLoading<PathManager>();
-        yield return ProcessManagerLoading<FileManager>();
-        yield return ProcessManagerLoading<OptionManager>();
-        yield return ProcessManagerLoading<AudioManager>();
-        yield return ProcessManagerLoading<UserInputManager>();
-        yield return ProcessManagerLoading<DragManager>();
-
-        yield return ProcessManagerLoading<ItemStaticManager>();
-        yield return ProcessManagerLoading<QuestStaticManager>();
-        yield return ProcessManagerLoading<CropStaticManager>();
-        yield return ProcessManagerLoading<SceneLoadManager>();
-        yield return ProcessManagerLoading<TimeManager>();
+        //yield return ProcessManagerLoading<PathManager>();
+        //yield return ProcessManagerLoading<FileManager>();
+        //yield return ProcessManagerLoading<UIManager>();
+        //yield return ProcessManagerLoading<OptionManager>();
+        //yield return ProcessManagerLoading<AudioManager>();
+        //yield return ProcessManagerLoading<UserInputManager>();
+        //yield return ProcessManagerLoading<DragManager>();
+        //yield return ProcessManagerLoading<ItemStaticManager>();
+        //yield return ProcessManagerLoading<QuestStaticManager>();
+        //yield return ProcessManagerLoading<CropStaticManager>();
+        //yield return ProcessManagerLoading<SceneLoadManager>();
+        //yield return ProcessManagerLoading<TimeManager>();
     }
 
-    // 예외처리로 매니저 등록할 경우 사용
-    public static IEnumerator RegisterManager<T>() where T : MonoBehaviour, IGlobalManager
+    // 이미 리스트에 올라온 Manager 객체
+    private IEnumerator ProcessManagerLoading(IGlobalManager manager)
     {
-        if (Inst.TryGetOrAddManager<T>())
-        {
-            T manager = GetManager<T>();
-            yield return manager.Initialize();
-            manager.EndInit();
-            yield return null;
-        }
+        string loadingMessage = GetManagerLoadingMessage(manager);
+        GlobalUiManager.ClaimLoading_Next(loadingMessage);
+        yield return manager.Initialize();
+        manager.EndInit();
+        yield return null;
     }
 
+    // 리스트에 올라오지 않은 Manager 객체
     private IEnumerator ProcessManagerLoading<T>() where T : MonoBehaviour, IGlobalManager
     {
         // 매니저를 찾거나 생성해서 컨테이너(리스트, 딕셔너리)에 넣기
@@ -208,7 +238,7 @@ public sealed class GameManager : MonoBehaviour, IManager
             // 성공했으면 꺼내서 로딩 시작하고 초기화
             T manager = GetManager<T>();
             string loadingMessage = GetManagerLoadingMessage(manager);
-            UIManager.ClaimLoading_Next(loadingMessage);
+            GlobalUiManager.ClaimLoading_Next(loadingMessage);
             yield return manager.Initialize();
             manager.EndInit();
             yield return null;
@@ -242,7 +272,7 @@ public sealed class GameManager : MonoBehaviour, IManager
         AudioManager       => "오디오 초기화 중...",
         UserInputManager   => "유저 입력디바이스를 조정중...",
         SceneLoadManager   => "씬을 불러오는 중...",
-        _=> "로딩중..."
+        _=> "기타 로딩중..."
     };
 
     public static T GetManager<T>() where T : class, IGlobalManager
