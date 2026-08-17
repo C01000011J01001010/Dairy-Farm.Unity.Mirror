@@ -11,6 +11,23 @@ public delegate void DelegateLoading_Next(string loadingContext, int skipAmount)
 public delegate void DelegateLoading_NextPercent(string loadingContext, float percent);
 public delegate void DelegateLoading_End();
 
+[Serializable]
+public class GlobalUiSelection : BaseUiSelection
+{
+    [Header("전역 UI 목록")]
+    [AssetReferenceUILabelRestriction("GlobalUi")] // GlobalUi 라벨 전용 필터링
+    [SerializeField] private List<AssetReferenceGameObject> _initialUis;
+
+    public IEnumerable<AssetReferenceGameObject> GetValidUis() => base.GetValidUis(_initialUis);
+
+#if UNITY_EDITOR
+    public void Validate(MonoBehaviour owner, string fieldName)
+    {
+        ValidateList<IGlobalUi>(owner, _initialUis, $"{fieldName}._initialUis");
+    }
+#endif
+}
+
 public class GlobalUiManager : BaseGlobalManager, IGlobalManager
 {
     // --- 로딩 이벤트 ---
@@ -29,6 +46,9 @@ public class GlobalUiManager : BaseGlobalManager, IGlobalManager
     private const string HUD_CANVAS = "HUD Canvas";
     private const string POPUP_CANVAS = "PopUp Canvas";
     private const string LOADING_CANVAS = "Loading Canvas";
+
+    [Tooltip("화면에 띄우지 않고 로드만 해둘 UI들")]
+    [SerializeField] private GlobalUiSelection _preloadSelection;
 
     public IEnumerator Initialize()
     {
@@ -149,4 +169,11 @@ public class GlobalUiManager : BaseGlobalManager, IGlobalManager
     {
         OnLoadingEnd?.Invoke();
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        _preloadSelection?.Validate(this, nameof(_preloadSelection));
+    }
+#endif
 }

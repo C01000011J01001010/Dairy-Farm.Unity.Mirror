@@ -1,0 +1,1 @@
+public interface IGlobalGameObject : IInitialize, IPostInitialize, IPriority { }

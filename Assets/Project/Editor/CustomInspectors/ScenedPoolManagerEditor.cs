@@ -5,7 +5,7 @@ using System.IO;
 [CustomEditor(typeof(ScenedPoolManager), true)]
 public class ScenedPoolManagerEditor : BaseAddressablesEditor // 부모 상속!
 {
-    protected override string Label => Constants.LABEL_ScenedPoolObjects;
+    protected override string Label => Constants.LABEL_ScenedPoolling;
 
     protected override string Description => "리스트에 추가된 빈 항목의 이름과 일치하는 프리팹만 찾아 연결합니다.";
 

@@ -3,17 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using GlobalHub = BaseHub<GameManager, IGlobalManager, IGlobalGameObject>;
 
 
 
 public delegate void DelegateUpdate();
 
 
-public sealed class GameManager : MonoBehaviour, IManager
+public sealed class GameManager : GlobalHub
 {
     public bool IsInit { get; private set; }
-    private List<IGlobalManager> managerList = new(); // 초기화 순서에 사용
-    private Dictionary<Type, IGlobalManager> managerDict = new(); // 접근에 사용
+    //private List<IGlobalManager> managerList = new(); // 초기화 순서에 사용
+    //private Dictionary<Type, IGlobalManager> managerDict = new(); // 접근에 사용
 
     #region Event_Update
     // 프레임 시작 시 데이터를 초기화하는 단계의 업데이트
@@ -45,8 +46,8 @@ public sealed class GameManager : MonoBehaviour, IManager
 
     IEnumerator Initializer;
 
-    private static GameManager _instance;
-    public static GameManager Inst => _instance;
+    //private static GameManager _instance;
+    //public static GameManager Inst => _instance;
 
     private void OnDisable()
     {
@@ -62,12 +63,12 @@ public sealed class GameManager : MonoBehaviour, IManager
             StopCoroutine(Initializer);
         }
 
-        for (int i = managerList.Count - 1; i >= 0; i--)
+        for (int i = PreSetManagerList.Count - 1; i >= 0; i--)
         {
-            IGlobalManager manager = managerList[i];
+            IGlobalManager manager = PreSetManagerList[i];
             if(manager != null && manager.IsInit)
             {
-                managerList[i].Exit();
+                PreSetManagerList[i].Exit();
             }
         }
         _instance = null;
@@ -101,10 +102,17 @@ public sealed class GameManager : MonoBehaviour, IManager
         //uiManager.EndInit();
 
         // LoadingScreen의 Start에서 초기화 끝냈으니 바로 사용
-        GlobalUiManager.ClaimLoading_Start(managerList.Count);
-        foreach (var manager in managerList)
+        GlobalUiManager.ClaimLoading_Start(PreSetManagerList.Count);
+        foreach (var manager in PreSetManagerList)
         {
-            yield return ProcessManagerLoading(manager);
+            string loadingMessage = GetManagerLoadingMessage(manager);
+            GlobalUiManager.ClaimLoading_Next(loadingMessage);
+            yield return manager.Initialize();
+            manager.EndInit();
+            yield return null;
+
+            // TODO: WorldManager처럼 Global 객체의 초기화도 추가하자
+            // TODO: 
         }
         GlobalUiManager.ClaimLoading_End();
 
@@ -183,7 +191,7 @@ public sealed class GameManager : MonoBehaviour, IManager
         }
     }
 
-    private bool RegisterManager()
+    protected override bool RegisterManager()
     {
         bool result = true;
         result &= TryGetOrAddManager<PathManager>();
@@ -199,68 +207,6 @@ public sealed class GameManager : MonoBehaviour, IManager
         result &= TryGetOrAddManager<SceneLoadManager>();
         result &= TryGetOrAddManager<TimeManager>();
         return result;
-    }
-
-    private IEnumerator ProcessManagerLoading()
-    {
-        yield break;
-
-        //yield return ProcessManagerLoading<PathManager>();
-        //yield return ProcessManagerLoading<FileManager>();
-        //yield return ProcessManagerLoading<UIManager>();
-        //yield return ProcessManagerLoading<OptionManager>();
-        //yield return ProcessManagerLoading<AudioManager>();
-        //yield return ProcessManagerLoading<UserInputManager>();
-        //yield return ProcessManagerLoading<DragManager>();
-        //yield return ProcessManagerLoading<ItemStaticManager>();
-        //yield return ProcessManagerLoading<QuestStaticManager>();
-        //yield return ProcessManagerLoading<CropStaticManager>();
-        //yield return ProcessManagerLoading<SceneLoadManager>();
-        //yield return ProcessManagerLoading<TimeManager>();
-    }
-
-    // 이미 리스트에 올라온 Manager 객체
-    private IEnumerator ProcessManagerLoading(IGlobalManager manager)
-    {
-        string loadingMessage = GetManagerLoadingMessage(manager);
-        GlobalUiManager.ClaimLoading_Next(loadingMessage);
-        yield return manager.Initialize();
-        manager.EndInit();
-        yield return null;
-    }
-
-    // 리스트에 올라오지 않은 Manager 객체
-    private IEnumerator ProcessManagerLoading<T>() where T : MonoBehaviour, IGlobalManager
-    {
-        // 매니저를 찾거나 생성해서 컨테이너(리스트, 딕셔너리)에 넣기
-        if (TryGetOrAddManager<T>())
-        {
-            // 성공했으면 꺼내서 로딩 시작하고 초기화
-            T manager = GetManager<T>();
-            string loadingMessage = GetManagerLoadingMessage(manager);
-            GlobalUiManager.ClaimLoading_Next(loadingMessage);
-            yield return manager.Initialize();
-            manager.EndInit();
-            yield return null;
-        }
-    }
-
-    private bool TryGetOrAddManager<T>() where T : MonoBehaviour, IGlobalManager
-    {
-        T manager = gameObject.GetOrAddComponent<T>();
-        if(manager is null)
-        {
-            Debug.LogAssertion($"GetOrAddComponent Failed => {typeof(T).Name}");
-            return false;
-        }
-
-        if (!managerDict.TryAdd(manager.GetType(), manager))
-        {
-            Debug.LogWarning($"Manager({typeof(T).Name}) is alreay Added");
-            return false;
-        }
-        managerList.Add(manager);
-        return true;
     }
 
     // 타입패턴

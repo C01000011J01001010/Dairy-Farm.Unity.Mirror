@@ -4,9 +4,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+[Serializable]
+public class ScenedUiSelection : BaseUiSelection
+{
+    [Header("씬 UI 목록")]
+    [AssetReferenceUILabelRestriction("ScenedUi")] // ScenedUi 라벨 전용 필터링
+    [SerializeField] private List<AssetReferenceGameObject> _initialUis;
+
+    public IEnumerable<AssetReferenceGameObject> GetValidUis() => base.GetValidUis(_initialUis);
+
+#if UNITY_EDITOR
+    // fieldName: 객체를 선언한 변수의 이름 (예: "_scenedSelection")
+    public void Validate(MonoBehaviour owner, string fieldName)
+    {
+        ValidateList<IScenedUi>(owner, _initialUis, $"{fieldName}._initialUis");
+    }
+#endif
+}
+
 public class ScenedUiManager : MonoBehaviour, IScenedManager
 {
     public int Priority => 10;
+
+    [Tooltip("화면에 띄우지 않고 로드만 해둘 UI들")]
+    [SerializeField] private ScenedUiSelection _preloadSelection;
+
     private Dictionary<Type, BaseUi> _scenedUiDict = new();
 
     public IEnumerator Initialize()
@@ -48,4 +70,11 @@ public class ScenedUiManager : MonoBehaviour, IScenedManager
         foreach (var ui in _scenedUiDict.Values) ui.Exit();
         _scenedUiDict.Clear();
     }
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        _preloadSelection?.Validate(this, nameof(_preloadSelection));
+    }
+#endif
 }

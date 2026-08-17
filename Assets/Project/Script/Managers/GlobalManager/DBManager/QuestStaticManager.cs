@@ -5,5 +5,5 @@ using UnityEngine;
 
 public class QuestStaticManager : BaseStaticDataManager<QuestData>
 {
-    protected override string Label => Constants.LABEL_QuestDatas;
+    protected override string Label => Constants.LABEL_QuestData;
 }

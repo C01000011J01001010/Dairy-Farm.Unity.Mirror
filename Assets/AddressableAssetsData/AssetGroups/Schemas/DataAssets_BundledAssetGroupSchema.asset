@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5d17a21594effb4e9591490b009e7aa, type: 3}
-  m_Name: Global Ui Group_BundledAssetGroupSchema
+  m_Name: DataAssets_BundledAssetGroupSchema
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.GroupSchemas.BundledAssetGroupSchema
-  m_Group: {fileID: 11400000, guid: 67af2780628f41141b19838c134302c2, type: 2}
+  m_Group: {fileID: 11400000, guid: c37de41cf8803a645adf4c5ce20a75ca, type: 2}
   m_InternalBundleIdMode: 1
   m_Compression: 1
   m_IncludeAddressInCatalog: 1

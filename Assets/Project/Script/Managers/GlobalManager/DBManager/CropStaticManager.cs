@@ -9,5 +9,5 @@ using UnityEngine;
 [AddComponentMenu(AssetMenu + "/CropStaticManager")]
 public class CropStaticManager : BaseStaticDataManager<CropData>, IGlobalManager
 {
-    protected override string Label => Constants.LABEL_CropDatas;
+    protected override string Label => Constants.LABEL_CropData;
 }

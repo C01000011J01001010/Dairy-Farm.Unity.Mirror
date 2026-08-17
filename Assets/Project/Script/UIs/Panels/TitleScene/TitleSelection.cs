@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class TitleSelection : BaseSelection, IInitialize
+public sealed class TitleSelection : BaseSelection, IInitialize, IScenedUi
 {
     private BaseButton[] _buttonList;
     SceneLoadManager _sceneLoadManager;

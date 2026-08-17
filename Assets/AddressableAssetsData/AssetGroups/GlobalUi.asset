@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Scened Ui Group
+  m_Name: GlobalUi
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: Scened Ui Group
-  m_GUID: 5d7bbbf7a5cb3494c8e846371e25eab1
+  m_GroupName: GlobalUi
+  m_GUID: 3d4c65815818d9d48bd9166b98c3d135
   m_SerializeEntries:
-  - m_GUID: 2a72b551f6478f549865f89d71b48e99
-    m_Address: TitleScreen
+  - m_GUID: 82923b698aba81c40b300ed35ead1f3f
+    m_Address: LoadingScreen
     m_ReadOnly: 0
     m_SerializedLabels:
-    - ScenedUi
+    - GlobalUi
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9b4d44165a937de4d82fa0cf1738cafb
-    m_Address: TitleSelection
+  - m_GUID: bd8a9e6ba63f9754eb6a69610d66e6f8
+    m_Address: SlotBar
     m_ReadOnly: 0
     m_SerializedLabels:
-    - ScenedUi
+    - GlobalUi
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b631d96092f96e44c8799570322cd6c6, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: de767294d3222094abd5629502492ecf, type: 2}
-    - {fileID: 11400000, guid: e3c23b891a29b5043aebd50347c3751e, type: 2}
+    - {fileID: 11400000, guid: 39ed830e09d136047888422a0b53d0d5, type: 2}
+    - {fileID: 11400000, guid: c9e2153eec849274d9b4a6136391bff2, type: 2}

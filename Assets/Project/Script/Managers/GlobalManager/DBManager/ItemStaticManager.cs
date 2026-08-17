@@ -8,5 +8,5 @@ using UnityEngine;
 [AddComponentMenu(AssetMenu + "/ItemStaticManager")]
 public class ItemStaticManager : BaseStaticDataManager<ItemData>, IGlobalManager
 {
-    protected override string Label => Constants.LABEL_ItemDatas;
+    protected override string Label => Constants.LABEL_ItemData;
 }

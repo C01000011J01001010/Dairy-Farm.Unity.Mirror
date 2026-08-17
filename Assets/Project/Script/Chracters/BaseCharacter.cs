@@ -8,7 +8,7 @@ using UnityEngine.TextCore.Text;
 [RequireComponent(typeof(baseCharacterAnim))]
 [RequireComponent(typeof(CharacterStateController))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class BaseCharacter : MonoBehaviour, IScenedInitialize
+public class BaseCharacter : MonoBehaviour, IScenedGameObject
 {
     [SerializeField] protected int _priority = 11;
     public int Priority => _priority;

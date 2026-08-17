@@ -15,41 +15,11 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 4bef5f83cbc1bfd4d997c2d7fe14d941
   m_SerializeEntries:
-  - m_GUID: 112bc46649e6b0d4d8719efe1ccb4e56
-    m_Address: GlobalPoolObjects
+  - m_GUID: 9b688e84b1102294da7ca6d459b20798
+    m_Address: CanvasPreset
     m_ReadOnly: 0
     m_SerializedLabels:
-    - GlobalPoolObjects
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 125abacc18233d644a585cdbfbda793c
-    m_Address: QuestDatas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - QuestDatas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 3b14e1cf378ed3148ab9855f7164353a
-    m_Address: ItemsDatas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - ItemDatas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: bb6bec5f266c41d40b4ee77e493efe76
-    m_Address: MagicalEggDatas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - MagicalEggDatas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ce677610aa91db04aae84fd1bd8c7861
-    m_Address: CropDatas
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - CropDatas
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: df1673be90b4b29409cb42c6297a2a4f
-    m_Address: ScenedPoolObjects
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - ScenedPoolObjects
+    - None
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: b631d96092f96e44c8799570322cd6c6, type: 2}

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TitleScreen : BaseUi, IGlobalUi
+public class TitleScreen : BaseUi, IScenedUi
 {
 
     [Header("Movement Settings")]

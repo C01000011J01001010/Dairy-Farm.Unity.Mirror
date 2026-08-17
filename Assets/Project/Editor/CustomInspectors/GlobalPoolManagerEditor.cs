@@ -6,7 +6,7 @@ using System;
 [CustomEditor(typeof(GlobalPoolManager), true)]
 public class GlobalPoolManagerEditor : BaseAddressablesEditor // 부모 상속!
 {
-    protected override string Label => Constants.LABEL_GlobalPoolObjects;
+    protected override string Label => Constants.LABEL_GlobalPoolling;
 
     protected override string Description => "선택한 라벨이 붙은 모든 프리팹을 긁어와 리스트를 자동으로 채웁니다.";
 

@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class MagicalEggStaticManager : BaseStaticDataManager<MagicalEggData>
 {
-    protected override string Label => Constants.LABEL_MagicalEggDatas;
+    protected override string Label => Constants.LABEL_MagicalEggData;
 }

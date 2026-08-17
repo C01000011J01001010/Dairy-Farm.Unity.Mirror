@@ -35,22 +35,3 @@ public interface IGlobalUi : IBaseUi { }
 
 // 씬 UI들이 상속받는 인터페이스(태그)
 public interface IScenedUi : IBaseUi { }
-
-[Serializable]
-public class AssetReferenceUi : AssetReferenceT<BaseUi>
-{
-    public AssetReferenceUi(string guid) : base(guid) { }
-}
-
-
-//[Serializable]
-//public class AssetReferenceScenedUi : AssetReferenceT<ScenedUi>
-//{
-//    public AssetReferenceScenedUi(string guid) : base(guid) { }
-//}
-
-//[Serializable]
-//public class AssetReferenceGlobalUi : AssetReferenceT<GlobalUi>
-//{
-//    public AssetReferenceGlobalUi(string guid) : base(guid) { }
-//}

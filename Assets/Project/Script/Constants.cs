@@ -13,12 +13,19 @@ public class Constants
     //#endregion
 
     #region Addressable Label
-    public const string LABEL_GlobalPoolObjects = "GlobalPoolObjects";
-    public const string LABEL_ScenedPoolObjects = "ScenedPoolObjects";
-    public const string LABEL_CropDatas = "CropDatas";
-    public const string LABEL_ItemDatas = "ItemDatas";
-    public const string LABEL_QuestDatas = "QuestDatas";
-    public const string LABEL_MagicalEggDatas = "MagicalEggDatas";
+    public const string LABEL_GlobalPoolling = "GlobalPoolling";
+    public const string LABEL_ScenedPoolling = "ScenedPoolling";
+
+    public const string LABEL_CropData = "CropData";
+    public const string LABEL_ItemData = "ItemData";
+    public const string LABEL_QuestData = "QuestData";
+    public const string LABEL_MagicalEggData = "MagicalEggData";
+
+    public const string LABEL_ScenedUi = "ScenedUi";
+    public const string LABEL_GlobalUi = "GlobalUi";
+
+
+
     #endregion
 
     #region Scene이름

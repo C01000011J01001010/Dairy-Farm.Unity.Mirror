@@ -5,7 +5,7 @@ using UnityEngine.InputSystem.XR;
 using UnityEngine.TextCore.Text;
 
 
-public class PlayerCotroller : MonoBehaviour, IScenedInitialize
+public class PlayerCotroller : MonoBehaviour, IScenedGameObject
 {
     [SerializeField] private int _priority = 10;
 

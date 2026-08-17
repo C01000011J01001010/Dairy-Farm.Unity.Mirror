@@ -82,7 +82,6 @@ public sealed class SceneLoadManager : BaseGlobalManager, IGlobalManager
 
         while (!sceneChangeProgress.isDone)
         {
-            // worldManager.Attach()가 나머지 70% 사용하도록 함
             GlobalUiManager.ClaimLoading_Next($"SceneLoad {sceneName}...", sceneChangeProgress.progress * 0.3f);
             yield return null;
         }

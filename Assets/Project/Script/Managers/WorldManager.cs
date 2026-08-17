@@ -3,16 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using ScenedHub = BaseHub<WorldManager, IScenedManager, IScenedGameObject>;
 
-
-
-public sealed class WorldManager : MonoBehaviour, IManager
+public sealed class WorldManager : ScenedHub
 {
-    private static WorldManager _instance;
-    public  static WorldManager Inst => _instance;
+    //private static WorldManager _instance;
+    //public  static WorldManager Inst => _instance;
 
-    private Dictionary<Type, IScenedManager> managerDict = new();
-    private Dictionary<Type, List<IScenedInitialize> /*중복된 객체 허용*/> objectsDict = new();
+    //private Dictionary<Type, IScenedManager> managerDict = new();
+    //private Dictionary<Type, List<IScenedGameObject> /*중복된 객체 허용*/> objectsDict = new();
 
     // Manager에 할당된 초기화 퍼센트는 70%
     // 개별 WorldManager에서 초기화할 객체의 개수를 설정해줘야함
@@ -34,7 +33,7 @@ public sealed class WorldManager : MonoBehaviour, IManager
             manager?.Exit();
         }
 
-        List<IScenedInitialize> targetObjects = new();
+        List<IScenedGameObject> targetObjects = new();
         foreach (var objList in objectsDict.Values) targetObjects.AddRange(objList);
         targetObjects.Sort((x, y) => y.Priority - x.Priority);
         foreach (var obj in targetObjects)
@@ -66,7 +65,7 @@ public sealed class WorldManager : MonoBehaviour, IManager
         var allMonoBehaviours = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 
         var managerList = AddToDict<IScenedManager>(allMonoBehaviours, AddManager);
-        var ObjectList = AddToDict<IScenedInitialize>(allMonoBehaviours, AddObject);
+        var ObjectList = AddToDict<IScenedGameObject>(allMonoBehaviours, AddObject);
 
         int InitilzieSize = (managerList.Count + ObjectList.Count) * 2; // 2단계 초기화
         SetInitializeCount(InitilzieSize);
@@ -119,12 +118,12 @@ public sealed class WorldManager : MonoBehaviour, IManager
         }
     }
 
-    private void AddObject(IScenedInitialize obj)
+    private void AddObject(IScenedGameObject obj)
     {
         Type objType = obj.GetType();
         if (!objectsDict.ContainsKey(objType))
         {
-            objectsDict.Add(objType, new List<IScenedInitialize>());
+            objectsDict.Add(objType, new List<IScenedGameObject>());
         }
         objectsDict[objType].Add(obj);
     }
@@ -165,44 +164,4 @@ public sealed class WorldManager : MonoBehaviour, IManager
         _currentPercent += _processPercent;
         GlobalUiManager.ClaimLoading_Next("현재 씬 초기화 중...", _currentPercent);
     }
-
-    
-
-
-    public static T GetObject<T>() where T : MonoBehaviour, IScenedInitialize
-    {
-        // 딕셔너리에 들어있는 리스트에서 첫번째 원소를 반환
-        return (T)GetRawObjects<T>()?[0];
-    }
-
-    public static T[] GetObjects<T>() where T : MonoBehaviour, IScenedInitialize
-    {
-        // 딕셔너리에 있는 리스트를 T로 캐스팅하여 배열로 반환
-        return GetRawObjects<T>()?.Cast<T>().ToArray();
-    }
-
-    private static List<IScenedInitialize> GetRawObjects<T>() where T : MonoBehaviour, IScenedInitialize
-    {
-        Type wantType = typeof(T);
-
-        if (Inst.objectsDict.ContainsKey(wantType))
-        {
-            return Inst.objectsDict[wantType];
-        }
-        Debug.LogWarning($"Type({wantType.Name}) 객체 없음");
-        return null;
-    }
-
-    public static T GetManager<T>() where T : MonoBehaviour, IScenedManager
-    {
-        Type managerType = typeof(T);
-        if (Inst.managerDict.TryGetValue(managerType, out IScenedManager manager))
-        {
-            return (T)manager;
-        }
-
-        Debug.LogError("정의되지 않은 매니저 객체");
-        return null;
-    }
-
 }

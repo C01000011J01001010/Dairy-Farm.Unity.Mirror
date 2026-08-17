@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: DataAssets
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: DataAssets
+  m_GUID: 0cbfacedc7688c6419b4e11b4495009c
+  m_SerializeEntries:
+  - m_GUID: 125abacc18233d644a585cdbfbda793c
+    m_Address: QuestDatas
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - QuestData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9dc086b6f094406459beedb1351815e0
+    m_Address: ItemData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ItemData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb6bec5f266c41d40b4ee77e493efe76
+    m_Address: MagicalEggDatas
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MagicalEggData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ce677610aa91db04aae84fd1bd8c7861
+    m_Address: CropDatas
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CropData
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b631d96092f96e44c8799570322cd6c6, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 065367c21e5fc1845b1087aee0210008, type: 2}
+    - {fileID: 11400000, guid: 0fca0ad57b8a0804988122936ef9eaff, type: 2}

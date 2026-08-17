@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 
-public class PlayableCharacter : BaseCharacter, IScenedInitialize
+public class PlayableCharacter : BaseCharacter, IScenedGameObject
 {
     public event System.Action Event_OnControllTargetSet;
     public event System.Action Event_OnControllTargetRemoved;
