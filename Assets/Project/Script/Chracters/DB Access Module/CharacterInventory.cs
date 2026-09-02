@@ -37,6 +37,7 @@ public class CharacterInventory : BaseDatabaseAccessModule<ItemStaticManager, It
         AcquireItem(1101, 99);
         AcquireItem(1201, 99);
         AcquireItem(1301, 99);
+        AcquireItem(4, 1);
 #endif
         // 최소 한개의 아이템이 선택되도록
     }

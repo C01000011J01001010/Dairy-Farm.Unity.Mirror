@@ -1,3 +1,4 @@
+using Farm.Fishing;
 using System.Collections;
 using UnityEngine;
 
@@ -18,6 +19,8 @@ public class PlayableCharacter : BaseCharacter, IScenedInitialize
         TryAddCharacterModule<CharacterTileChecker>();
         TryAddCharacterModule<CharacterActionController>();
         TryAddCharacterModule<CharacterQuestBook>();
+        TryAddCharacterModule<FishModule>();
+         
 
         yield return base.Initialize();
         yield return null;

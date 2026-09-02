@@ -35412,6 +35412,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6219577974002766604, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: fishModule
+      value: 
+      objectReference: {fileID: 6252017686205240035}
     - target: {fileID: 7056573058341501588, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -35459,6 +35463,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       insertIndex: 10
       addedObject: {fileID: 6252017686205240022}
+    - targetCorrespondingSourceObject: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6252017686205240035}
   m_SourcePrefab: {fileID: 100100000, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
 --- !u!1 &6252017686205240021 stripped
 GameObject:
@@ -35477,6 +35484,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69950ca6fef0df84eae24604a7e4736d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterQuestBook
+--- !u!114 &6252017686205240035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6252017686205240021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb74f39d524ba1240b62da30adef2dc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Farm.Fishing.FishModule
+  waterTilemap: {fileID: 1536885724}
 --- !u!4 &6292144794035441961
 Transform:
   m_ObjectHideFlags: 0
