@@ -12,6 +12,7 @@ namespace Farm.Fishing
         {
             //이벤트에 내 함수를 구독
             fishModule.Event_OnFishingResult += OnFishingResult;
+            Debug.Log("구독완료");
         }
 
         private void OnDisable()
@@ -22,8 +23,10 @@ namespace Farm.Fishing
 
         private void OnFishingResult(bool isFishing)
         {
+            Debug.Log("호출완료");
             if (isFishing)
             {
+                Debug.Log("애니메이션 출력");
                 //낚시중이라면 Fish트리거를 켜 애니메이션 재생 요청
                 animator.SetTrigger("Fish");
             }
