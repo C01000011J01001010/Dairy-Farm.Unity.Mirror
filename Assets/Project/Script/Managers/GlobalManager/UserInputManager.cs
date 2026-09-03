@@ -1,48 +1,40 @@
+using CoreEngine.Manager;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class UserInputManager : BaseGlobalManager, IGlobalManager
+public class UserInputManager : BaseInputManager<UserInputActions>
 {
-    private  UserInputActions input;
 
-    public Vector2 Move => input.Player.Move.ReadValue<Vector2>();
-    public bool Sprint => input.Player.Sprint.IsPressed();
-    public float ScrollY => input.Player.Scroll.ReadValue<Vector2>().y;
+    public Vector2 Move => inputAction.Player.Move.ReadValue<Vector2>();
+    public bool Sprint => inputAction.Player.Sprint.IsPressed();
+    public float ScrollY => inputAction.Player.Scroll.ReadValue<Vector2>().y;
 
     public event System.Action Event_OnUseItemInput;
 
-    private void OnEnable()
-    {
-        input?.Enable();
-    }
 
-    private void OnDisable()
+    public override void Exit()
     {
-        input?.Disable();
-    }
-
-    public void Exit()
-    {
-        if(input != null)
+        base.Exit();
+        if(inputAction != null)
         {
-            input.Disable();
+            inputAction.Disable();
 
-            input.Player.UseItem.performed -= OnUseItemInput;
+            inputAction.Player.UseItem.performed -= OnUseItemInput;
         }
         
     }
 
-    public IEnumerator Initialize()
+    public override IEnumerator Initialize()
     {
-        input ??= new UserInputActions();
+        base.Initialize();
 
-        if(input != null )
+        if(inputAction != null )
         {
-            input.Enable();
+            inputAction.Enable();
 
-            input.Player.UseItem.performed += OnUseItemInput;
+            inputAction.Player.UseItem.performed += OnUseItemInput;
         }
         yield return null;
     }
@@ -54,13 +46,13 @@ public class UserInputManager : BaseGlobalManager, IGlobalManager
 
     public void OnOpenUi()
     {
-        input.UI.Enable();       // UI 조작 입력 켬
-        input.Player.Disable();  // 플레이어 이동 입력 끔
+        inputAction.UI.Enable();       // UI 조작 입력 켬
+        inputAction.Player.Disable();  // 플레이어 이동 입력 끔
     }
 
     public void OnCloseUi()
     {
-        input.UI.Disable();
-        input.Player.Enable();   // 다시 플레이어 이동 가능하게 함
+        inputAction.UI.Disable();
+        inputAction.Player.Enable();   // 다시 플레이어 이동 가능하게 함
     }
 }

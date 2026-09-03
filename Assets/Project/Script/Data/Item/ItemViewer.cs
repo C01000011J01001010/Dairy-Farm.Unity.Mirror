@@ -1,18 +1,24 @@
+using CoreEngine.Data;
+using Farm.StaticData.Item;
 using UnityEngine;
 
-public class ItemViewer : BaseDataViewer_ForUi<ItemDataContainer, ItemData>
+namespace Farm.Ui.Item
 {
-    public override void UpdateView()
+    public class ItemViewer : BaseDataViewer_ForUi<ItemDataContainer, ItemData>
     {
-        // 아이템이 없으면 슬롯만 보이도록
-        if(ConnectObject.Get() == null)
+        public override void UpdateView()
         {
-            iconImage.color = Color.clear;
+            // 아이템이 없으면 슬롯만 보이도록
+            if (ConnectObject.Get() == null)
+            {
+                iconImage.color = Color.clear;
+            }
+            else
+            {
+                iconImage.color = Color.white;
+            }
+            base.UpdateView();
         }
-        else
-        {
-            iconImage.color = Color.white;
-        }
-        base.UpdateView();
     }
 }
+

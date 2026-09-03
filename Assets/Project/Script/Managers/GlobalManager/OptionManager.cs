@@ -1,3 +1,4 @@
+using CoreEngine;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -58,7 +59,7 @@ public struct GraphicOptionValues
 
 public delegate void DelegateGraphicOptionChanged(GraphicOptionValues value);
 
-public class OptionManager : BaseGlobalManager, IGlobalManager
+public class OptionManager : BaseManager
 {
     public static event DelegateGraphicOptionChanged OnGraphicOptionChanged;
     public static GraphicOptionValues appliedGraphicOption; // 현재 적용중인 그래픽 세팅을 저장
@@ -69,15 +70,16 @@ public class OptionManager : BaseGlobalManager, IGlobalManager
 
     
 
-    public void Exit()
+    public override void Exit()
     {
-
+        base.Exit();
     }
 
-    public IEnumerator Initialize()
+    public override IEnumerator Initialize()
     {
+        base.Initialize();
         CreateVolume();
-        ApplyGraphicSetting(FileManager.savedGraphicOption);
+        //ApplyGraphicSetting(FileManager.savedGraphicOption);
 
         yield return null;
     }

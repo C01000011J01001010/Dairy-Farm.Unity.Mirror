@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using CoreEngine.Data;
 
 public class MagicalEggData : BaseData_ForUi
 {

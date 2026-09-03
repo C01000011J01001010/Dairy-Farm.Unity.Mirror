@@ -1,15 +1,25 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
+using CoreEngine.Data;
+using CoreEngine;
+using CoreEngine.Manager.Pool;
 
 /// <summary>
 /// 게임에 등장하는 농작물 객체에 붙일 스크립트
 /// </summary>
 [RequireComponent(typeof(SpriteRenderer))]
-public class CropViewer : BaseDataViewer<CropContainer, CropData>, IPooledObject
+public class CropViewer : BaseDataViewer<CropContainer, CropData>, IPoolable
 {
     private SpriteRenderer spriteRenderer;
     private static readonly Color32 rottenColor = new Color32(130, 70, 20, 255);
+
+    public IObjectPool<GameObject> RootPool { get; set; }
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
     protected override void OnDisconnected(CropContainer target)
     {
@@ -21,10 +31,10 @@ public class CropViewer : BaseDataViewer<CropContainer, CropData>, IPooledObject
     }
 
     // 농작물 처음 생성할때 (Pool에서 처음 만들 때 실행)
-    public void Initialize()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
+    //public void Initialize()
+    //{
+    //    spriteRenderer = GetComponent<SpriteRenderer>();
+    //}
 
     // Initialize된 객체가 CropContainer에 연결될 때 Connet에서 실행
     protected override void OnConnected()
@@ -83,12 +93,21 @@ public class CropViewer : BaseDataViewer<CropContainer, CropData>, IPooledObject
         transform.position = pos;
     }
 
-    public void SetPool(IObjectPool<GameObject> pool)
+    //public void SetPool(IObjectPool<GameObject> pool)
+    //{
+    //    Initialize();
+    //}
+
+    //public void ReturnToPool()
+    //{
+    //    Disconnect();
+    //}
+
+    public void OnSpawn()
     {
-        Initialize();
     }
 
-    public void ReturnToPool()
+    public void OnDespawn()
     {
         Disconnect();
     }

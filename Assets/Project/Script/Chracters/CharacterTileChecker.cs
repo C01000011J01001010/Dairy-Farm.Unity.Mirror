@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.Tilemaps; // 타일맵 관련 기능을 위해 필수!
 using UnityEngine.InputSystem;
+using CoreEngine.Actor;
 
 /// <summary>
 /// 캐릭터가 현재 타겟으로하는 타일 확인해주는 객체
 /// </summary>
-public class CharacterTileChecker : BaseCharacterModule, ICharacterModule
+public class CharacterTileChecker : BaseActorFeature, IActorFeature
 {
     [SerializeField] private Tilemap targetTilemap;   // 현재 사용 중인 타일맵
     [SerializeField] private GameObject tileMarker;   // 타일을 표시할 view
@@ -13,23 +14,21 @@ public class CharacterTileChecker : BaseCharacterModule, ICharacterModule
     private BoxCollider2D tileMarkerCollider;
     private Vector3 tileMarkerPos; // 타일마커의 현재 위치
 
-    public override void Initialize(BaseCharacter owner)
+    protected override void OnInitialized()
     {
-        Owner = owner;
+        base.OnInitialized();
         highlightRenderers = tileMarker.GetComponentsInChildren<Renderer>();
         tileMarkerCollider = tileMarker.GetComponent<BoxCollider2D>();
     }
 
-    
-
-    public override void Tick(float deltaTime)
+    public void Tick(float deltaTime)
     {
         TileCheck();
     }
 
     private void TileCheck()
     {
-        Vector3 curPos = Owner.transform.position;
+        Vector3 curPos = Host.transform.position;
         // TODO 캐릭터 정면 +0.5 만큼 위치 이동
         curPos.z = 0f;
 

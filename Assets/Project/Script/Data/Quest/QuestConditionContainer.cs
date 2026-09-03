@@ -1,11 +1,17 @@
-public class QuestConditionContainer : BaseObjectContainer<BaseQuestCondition>
-{
-    public QuestConditionContainer(BaseQuestCondition questCondition) : base(questCondition)
-    { } 
+using CoreEngine.Data;
+using Farm.Character;
 
-    public bool IsSatisfied(BaseCharacter character)
+namespace Farm.StaticData.Quest
+{
+    public class QuestConditionContainer : BaseObjectContainer<BaseQuestCondition>
     {
-        bool isSatisfied = connectData.IsSatisfied(character);
-        return isSatisfied;
+        public QuestConditionContainer(BaseQuestCondition questCondition) : base(questCondition)
+        { }
+
+        public bool IsSatisfied(BaseCharacter character)
+        {
+            bool isSatisfied = connectData.IsSatisfied(character);
+            return isSatisfied;
+        }
     }
 }

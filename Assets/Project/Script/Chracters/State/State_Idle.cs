@@ -1,32 +1,35 @@
 using UnityEngine.TextCore.Text;
 
-public class State_Idle : BaseCharacterState
+namespace Farm.Character.StateMachine
 {
-    baseCharacterAnim anim;
-
-    public override void Initialize(BaseCharacter owner)
+    public class State_Idle : BaseCharacterState
     {
-        anim = owner.anim;
-        base.Initialize(owner);
-    }
+        baseCharacterAnim anim;
 
-    public override CharacterState? CheckTransitions()
-    {
-        if (owner.isMove)
+        public override void Initialize(BaseCharacter owner)
         {
-            if(owner.isSprint)return CharacterState.Sprint;
-            else return CharacterState.Walk;
+            anim = owner.anim;
+            base.Initialize(owner);
         }
-        return null;
-    }
 
-    public override void Enter()
-    {
-        anim.SetIsMove(false);
-    }
+        public override CharacterState? CheckTransitions()
+        {
+            if (owner.isMove)
+            {
+                if (owner.isSprint) return CharacterState.Sprint;
+                else return CharacterState.Walk;
+            }
+            return null;
+        }
 
-    public override void Exit(CharacterState? nextState)
-    {
-        
+        public override void Enter()
+        {
+            anim.SetIsMove(false);
+        }
+
+        public override void Exit(CharacterState? nextState)
+        {
+
+        }
     }
 }

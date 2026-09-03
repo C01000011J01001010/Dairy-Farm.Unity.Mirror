@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using static UnityEditor.LightingExplorerTableColumn;
+using CoreEngine.Data;
+using CoreEngine;
+using CoreEngine.Extentions;
 
 /// <summary>
 /// 하나의 정적 데이터(Table)를 관리하는 매니저의 기반구조
 /// </summary>
-public abstract class BaseStaticDataManager<TDataObject> : BaseGlobalManager, IGlobalManager
+public abstract class BaseStaticDataManager<TDataObject> : BaseManager
     where TDataObject : BaseData
 {
     protected const string AssetMenu = "Static Data Manager";
@@ -20,23 +22,23 @@ public abstract class BaseStaticDataManager<TDataObject> : BaseGlobalManager, IG
 
     }
 
-    public IEnumerator Initialize()
-    {
-        yield return InitializeDatabase();
-        yield return null;
-    }
+    //public IEnumerator Initialize()
+    //{
+    //    yield return InitializeDatabase();
+    //    yield return null;
+    //}
 
-    private IEnumerator InitializeDatabase()
-    {
-        // Resources/Items 경로 안에 ScriptableObject들을 모아두었다고 가정
-        FileManager fileManager = GameManager.GetManager<FileManager>();
-        yield return fileManager.LoadAllGameDataAsync<TDataObject>(Label, OnLoadedDataBase);
+    //private IEnumerator InitializeDatabase()
+    //{
+    //    // Resources/Items 경로 안에 ScriptableObject들을 모아두었다고 가정
+    //    FileManager fileManager = GameManager.GetManager<FileManager>();
+    //    yield return fileManager.LoadAllGameDataAsync<TDataObject>(Label, OnLoadedDataBase);
 
-    }
+    //}
 
     private void OnLoadedDataBase(Dictionary<int, TDataObject> LoadedDataBase)
     {
-        if (LoadedDataBase.IsNullOrEmpty())
+        if ( LoadedDataBase.IsNullOrEmpty())
         {
             Debug.LogError($"[{this.GetType().Name}] 데이터 로드 실패");
             return;

@@ -1,5 +1,8 @@
-public class ItemData_Equipment : ItemData
+namespace Farm.StaticData.Item
 {
-    public int maxDurability;
+    public class ItemData_Equipment : ItemData
+    {
+        public int maxDurability;
 
+    }
 }

@@ -1,22 +1,27 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Farm.StaticData.Item;
 
-public class ItemCsvConverter : BaseCsvConverter
+namespace Farm.Editor.CsvConverter
 {
-    const string target = "Item";
-    protected override string ConverterTarget => target;
-
-    protected override Type TargetType => typeof(ItemData);
-
-    [MenuItem(defaultMenu + target)]
-    public static void ShowWindow() => GetWindow<ItemCsvConverter>("CSV Converter");
-
-    protected override void ConvertDetails(ScriptableObject asset, int rowNum, string[] cols)
+    public class ItemCsvConverter : BaseCsvConverter
     {
-        ItemData asItemInfo = asset as ItemData;
-        if (asItemInfo == null) WarningTypeError(asset);
+        const string target = "Item";
+        protected override string ConverterTarget => target;
 
-        asItemInfo.SetFieldByReflection(headers[2], cols[2].Trim());
+        protected override Type TargetType => typeof(ItemData);
+
+        [MenuItem(defaultMenu + target)]
+        public static void ShowWindow() => GetWindow<ItemCsvConverter>("CSV Converter");
+
+        protected override void ConvertDetails(ScriptableObject asset, int rowNum, string[] cols)
+        {
+            ItemData asItemInfo = asset as ItemData;
+            if (asItemInfo == null) WarningTypeError(asset);
+
+            asItemInfo.SetFieldByReflection(headers[2], cols[2].Trim());
+        }
     }
 }
+

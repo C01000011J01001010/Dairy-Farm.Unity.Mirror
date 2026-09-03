@@ -1,4 +1,5 @@
 using UnityEngine;
+using CoreEngine.Data;
 
 public class MagicalEggDataContainer : BaseDataContainer<MagicalEggData>
 {

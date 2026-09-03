@@ -1,36 +1,39 @@
 using UnityEngine;
 
-public class State_Sprint : BaseCharacterState
+namespace Farm.Character.StateMachine
 {
-    baseCharacterAnim anim;
-
-    public override void Initialize(BaseCharacter owner)
+    public class State_Sprint : BaseCharacterState
     {
-        base.Initialize(owner);
-        anim = owner.anim;
-    }
+        baseCharacterAnim anim;
 
-    public override CharacterState? CheckTransitions()
-    {
-        if (!owner.isMove) return CharacterState.Idle;
-        else if (!owner.isSprint) return CharacterState.Walk;
+        public override void Initialize(BaseCharacter owner)
+        {
+            base.Initialize(owner);
+            anim = owner.anim;
+        }
 
-        return null;
-    }
+        public override CharacterState? CheckTransitions()
+        {
+            if (!owner.isMove) return CharacterState.Idle;
+            else if (!owner.isSprint) return CharacterState.Walk;
 
-    public override void Enter()
-    {
-        anim.SetIsMove(true);
-        anim.SetIsSprint(true);
-    }
+            return null;
+        }
 
-    public override void Exit(CharacterState? nextState)
-    {
+        public override void Enter()
+        {
+            anim.SetIsMove(true);
+            anim.SetIsSprint(true);
+        }
 
-    }
+        public override void Exit(CharacterState? nextState)
+        {
 
-    public override void Update(float deltaTime)
-    {
-        anim.SetInputMove(owner.inputMove);
+        }
+
+        public override void Update(float deltaTime)
+        {
+            anim.SetInputMove(owner.inputMove);
+        }
     }
 }

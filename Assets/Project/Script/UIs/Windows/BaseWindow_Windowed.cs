@@ -1,11 +1,9 @@
+using CoreEngine.UI;
 using UnityEngine;
 
 
 public abstract class BaseWindow_Windowed : BaseWindow
 {
-    [SerializeField] protected DragTarget dragTarget_Top;
-    [SerializeField] protected DragTarget dragTarget_Bottom;
-
     private RectTransform rectTransform {  get; set; }
     private Vector2 AnchoredStartPos { get; set; }
 
@@ -14,15 +12,13 @@ public abstract class BaseWindow_Windowed : BaseWindow
         CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
         rectTransform = GetComponent<RectTransform>();
 
-        dragTarget_Top.SetMoveObjAttribute(rectTransform, canvasGroup);
-        dragTarget_Bottom.SetMoveObjAttribute(rectTransform, canvasGroup);
 
         AnchoredStartPos = rectTransform.anchoredPosition;
     }
 
     protected virtual void OnEnable()
     {
-        // Ã¢¸ğµå´Â ¸¶Áö¸· À§Ä¡°¡ Áß½ÉÀÌ ¾Æ´Ò ¼ö ÀÖÀ½
+        // ì°½ëª¨ë“œëŠ” ë§ˆì§€ë§‰ ìœ„ì¹˜ê°€ ì¤‘ì‹¬ì´ ì•„ë‹ ìˆ˜ ìˆìŒ
         rectTransform.anchoredPosition = AnchoredStartPos;
     }
 }

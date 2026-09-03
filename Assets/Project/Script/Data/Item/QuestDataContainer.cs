@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using CoreEngine.Data;
 using UnityEngine;
+using Farm.Character;
+using Farm.StaticData.Quest;
 public class QuestDataContainer : BaseDataContainer<QuestData>
 {
     #region 저장할 데이터

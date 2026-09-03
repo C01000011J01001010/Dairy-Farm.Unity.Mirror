@@ -1,11 +1,15 @@
-public enum ConsumableType
+
+namespace Farm.StaticData.Item
 {
-    Seed,
-}
+    public enum ConsumableType
+    {
+        Seed,
+    }
 
 
-public class ItemData_Consumable : ItemData
-{
-    public ConsumableType consumableType;
-    public float effectValue;
+    public class ItemData_Consumable : ItemData
+    {
+        public ConsumableType consumableType;
+        public float effectValue;
+    }
 }

@@ -1,9 +1,12 @@
+using CoreEngine;
+using CoreEngine.EventBus;
+using CoreEngine.Facades;
+using Farm.GameLogic.Time;
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class CharacterCropDataSheet : BaseDatabaseAccessModule<CropStaticManager, CropData>
+public class CharacterCropDataSheet : BaseDatabaseAccess<CropStaticManager, CropData>
 {
     #region 저장할 데이터
     private Dictionary<int/*농작물 index*/, int /*농작물 채집횟수*/> _cropHarvestCounts;
@@ -13,33 +16,41 @@ public class CharacterCropDataSheet : BaseDatabaseAccessModule<CropStaticManager
 
     public Dictionary<int/*농작물 index*/, int /*농작물 채집횟수*/> CropHarvestCounts => _cropHarvestCounts;
 
-    public override void Exit()
+
+    public override void Dispose()
     {
 #if UNITY_EDITOR
-        timeManager.Event_OnGameMinutesPassed -= PassTimeForCrops;
+        EventBus<GameMinutePassedEvent>.Unsubscribe(OnMinutePassed);
 #else
-        timeManager.Event_OnGameHoursPassed -= PassTimeForCrops;
+        EventBus<GameHourPassedEvent>.Unsubscribe(OnHourPassed);
 #endif
-
-        base.Exit();
+        base.Dispose();
     }
-    public override void Initialize(BaseCharacter owner)
+
+    protected override void OnInitialized()
     {
-        base.Initialize(owner);
-        timeManager = GameManager.GetManager<TimeManager>();
+        base.OnInitialized();
+        timeManager = CoreFacade.GetManager<TimeManager>();
         activeCropList = new();
+
+#if UNITY_EDITOR
+        EventBus<GameMinutePassedEvent>.Subscribe(OnMinutePassed);
+#else
+        EventBus<GameHourPassedEvent>.Subscribe(OnHourPassed);
+#endif
 
         // TODO 세이브 데이터 로드 추가
     }
 
-    public override void PostInitialize()
+    // --- EventBus 전용 수신 콜백 ---
+    private void OnMinutePassed(GameMinutePassedEvent evt)
     {
-#if UNITY_EDITOR
-        // 빠른 테스트를 위해 사용
-        timeManager.Event_OnGameMinutesPassed += PassTimeForCrops;
-#else
-        timeManager.Event_OnGameHoursPassed += PassTimeForCrops;
-#endif
+        PassTimeForCrops(evt.DeltaMinutes);
+    }
+
+    private void OnHourPassed(GameHourPassedEvent evt)
+    {
+        PassTimeForCrops(evt.DeltaHours * 60); // 시간에 60을 곱해 분 단위로 전달
     }
 
     public CropContainer AcquireCrop(int id)

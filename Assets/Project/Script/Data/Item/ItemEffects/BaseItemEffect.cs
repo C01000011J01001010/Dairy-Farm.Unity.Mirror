@@ -1,7 +1,11 @@
 using UnityEngine;
 using System;
+using Farm.Character;
 
-public abstract class BaseItemEffect : ScriptableObject
+namespace Farm.StaticData.Item
 {
-    public abstract void ApplyEffect(BaseCharacter character, ItemDataContainer item);
+    public abstract class BaseItemEffect : ScriptableObject
+    {
+        public abstract void ApplyEffect(BaseCharacter character, ItemDataContainer item);
+    }
 }

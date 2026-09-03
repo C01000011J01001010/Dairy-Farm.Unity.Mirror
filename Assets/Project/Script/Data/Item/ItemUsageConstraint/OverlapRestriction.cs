@@ -1,13 +1,17 @@
 using System;
 using UnityEngine;
+using CoreEngine.Data;
+using CoreEngine.Actor;
 
 // 이미 작물이 있는 곳에 중복되는거 금지
 [CreateAssetMenu(fileName = "OverlapRestriction", menuName = "Item/ItemConstraint/OverlapRestriction")]
 public class OverlapRestriction : BaseCondition
 {
-    public override bool IsSatisfied(BaseCharacter character)
+    public override bool IsSatisfied(IActorHost character)
     {
-        CharacterTileChecker tileChecker = character.GetModule<CharacterTileChecker>();
+        CharacterTileChecker tileChecker = null;
+        if (!character.TryGetFeature(out tileChecker)) return false;
+
         BoxCollider2D collider = tileChecker.GetTileMarkerBoxCollider();
 
         Vector2 center = collider.bounds.center;

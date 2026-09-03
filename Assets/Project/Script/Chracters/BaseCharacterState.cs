@@ -1,18 +1,24 @@
+using CoreEngine.DesignPattern.StateMachine;
 using UnityEngine;
 
-public enum CharacterState
+namespace Farm.Character.StateMachine
 {
-    None,
-    Idle,
-    Walk,
-    Sprint,
+    public enum CharacterState
+    {
+        None,
+        Idle,
+        Walk,
+        Sprint,
+    }
+
+    public abstract class BaseCharacterState : BaseState<CharacterState>
+    {
+        protected BaseCharacter owner;
+        public virtual void Initialize(BaseCharacter owner)
+        {
+            this.owner = owner;
+        }
+    }
+
 }
 
-public abstract class BaseCharacterState : BaseState<CharacterState>
-{
-    protected BaseCharacter owner;
-    public virtual void Initialize(BaseCharacter owner)
-    {
-        this.owner = owner;
-    }
-}

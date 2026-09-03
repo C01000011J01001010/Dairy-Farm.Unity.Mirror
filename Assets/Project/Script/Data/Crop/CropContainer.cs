@@ -1,5 +1,6 @@
 using UnityEngine;
 using static Constants;
+using CoreEngine.Data;
 
 [System.Serializable]
 public class CropContainer : BaseDataContainer<CropData> // CropObject에 목표 성장시간(분)이 있다고 가정

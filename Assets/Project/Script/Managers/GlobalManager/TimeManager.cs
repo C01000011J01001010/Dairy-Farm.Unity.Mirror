@@ -1,116 +1,105 @@
+using CoreEngine.EventBus;
+using CoreEngine;
+using CoreEngine.TimeSystem;  // TimeDirector가 위치한 네임스페이스
 using System;
 using System.Collections;
 using UnityEngine;
-using static Constants;
 
-// 매니저 클래스중 가장 마지막에 초기화
-public class TimeManager : BaseGlobalManager, IGlobalManager
+namespace Farm.GameLogic.Time
 {
-    // 현실 24분(1440초) = 게임 내 하루
-
-    /// <summary>
-    /// 게임 속 하루를 현실 시간 초로 환산한 값<br/>
-    /// *현실의 1분은 게임속 1시간
-    /// </summary>
-    public static float DayLength { get; private set; } = 24 * 60;
-
-    /// <summary>
-    /// 플레이어 새게임을 시작하고 경과한 총 시간
-    /// </summary>
-    public double TotalGameSeconds { get; private set; }
-
-    public event System.Action<int/*분*/> Event_OnGameMinutesPassed; // 현실 1초마다 발생
-    public event System.Action<int/*분*/> Event_OnGameHoursPassed;   // 현실 1분마다 발생
-
-    private float timerForMinute = 0f;
-    private float timerForHour = 0f;
-
-    
-
-    public void Exit()
+    public struct GameMinutePassedEvent : IEvent
     {
-        GameManager.UPDATE_Initial -= OnUpdate;
+        public int DeltaMinutes;
     }
 
-    public IEnumerator Initialize()
+    public struct GameHourPassedEvent : IEvent
     {
-        GameManager.UPDATE_Initial += OnUpdate;
-        yield break;
+        public int DeltaHours;
     }
 
-    /// <summary>
-    /// 타이틀 씬에서 플레이어 선택후 씬 전환시 실행
-    /// </summary>
-    public void OnPlayerGameStart()
+    public class TimeManager : BaseManager, ITickable
     {
-        TotalGameSeconds = LoadPlayerLastTotalTime();
-        DateTime lastSaveTime = LoadPlayerLastPlayDataTime();
-        TimeSpan offlineDelta = DateTime.UtcNow - lastSaveTime;
-        UpdateTime((float)offlineDelta.TotalSeconds);
-    }
+        [Header("기획 수치 설정")]
+        [Tooltip("현실의 1초 = 게임 속 1분")]
+        private const float REAL_SECONDS_PER_GAME_MINUTE = 1f;
 
-    public double LoadPlayerLastTotalTime()
-    {
-        // TODO: 세이브된 최종 플레이 타임 로드
-        return 0;
-    }
+        [Tooltip("현실의 60초 = 게임 속 1시간")]
+        private const float REAL_SECONDS_PER_GAME_HOUR = 60f;
 
-    public DateTime LoadPlayerLastPlayDataTime()
-    {
-        // TODO: 마지막 플레이 했던 날짜, 시간 데이터 로드
-        return DateTime.UtcNow;
-    }
+        public static float DayLength { get; private set; } = 24f * 60f;
+        public double TotalGameSeconds { get; private set; }
 
-    private void OnUpdate()
-    {
-        UpdateTime(Time.unscaledDeltaTime);
-    }
+        // UpdateDirector가 이 객체를 언제 실행할지 지정
+        public TickGroup TickGroup => TickGroup.Controller;
 
-    private void OnPlayerSleep()
-    {
-        // 8시간 처리
-        UpdateTime(8 * REAL_SECONDS_PER_GAME_HOUR);
-    }
+        private float _timerForMinute = 0f;
+        private float _timerForHour = 0f;
 
-    private void UpdateTime(float deltaTime)
-    {
-        TotalGameSeconds += deltaTime;
-        timerForMinute += deltaTime;
-        timerForHour += deltaTime;
-
-        if (timerForMinute >= REAL_SECONDS_PER_GAME_MINUTE)
+        public override IEnumerator Initialize()
         {
-            int deltaGameMinutes = ((int)timerForMinute) / REAL_SECONDS_PER_GAME_MINUTE;
-            timerForMinute -= (deltaGameMinutes * REAL_SECONDS_PER_GAME_MINUTE);
-            Event_OnGameMinutesPassed?.Invoke(deltaGameMinutes);
+            // BaseManager(BaseLeaf)의 OnEnable에서 RegisterTick()이 자동 호출되므로 초기화만 수행
+            _timerForMinute = 0f;
+            _timerForHour = 0f;
+            yield break;
         }
 
-        if (timerForHour >= REAL_SECONDS_PER_GAME_HOUR)
+        /// <summary>
+        /// DataManager(우선순위 0순위)가 세이브 파일을 읽은 후, 이 메서드를 호출하여 데이터를 주입(Inject)합니다.
+        /// </summary>
+        public void LoadTimeData(double savedTotalTime, DateTime lastSaveTime)
         {
-            int deltaGameHours = ((int)timerForHour) / REAL_SECONDS_PER_GAME_HOUR;
-            timerForHour -= (deltaGameHours * REAL_SECONDS_PER_GAME_HOUR);
-            Event_OnGameHoursPassed?.Invoke(deltaGameHours);
+            TotalGameSeconds = savedTotalTime;
+
+            // TimeDirector의 UTC 유틸리티를 활용하거나 직접 오프라인 경과 시간 계산
+            float offlineSeconds = (float)(DateTime.UtcNow - lastSaveTime).TotalSeconds;
+            AdvanceTime(offlineSeconds);
+        }
+
+        public void OnPlayerSleep()
+        {
+            // 침대 취침 시 8시간 강제 경과 처리
+            AdvanceTime(8f * REAL_SECONDS_PER_GAME_HOUR);
+        }
+
+        /// <summary>
+        /// 강제로 시간을 흐르게 하거나, 매 프레임 업데이트 시 공통으로 사용하는 시간 연산 로직
+        /// </summary>
+        public void AdvanceTime(float secondsToAdd)
+        {
+            TotalGameSeconds += secondsToAdd;
+            _timerForMinute += secondsToAdd;
+            _timerForHour += secondsToAdd;
+
+            if (_timerForMinute >= REAL_SECONDS_PER_GAME_MINUTE)
+            {
+                int deltaMins = (int)(_timerForMinute / REAL_SECONDS_PER_GAME_MINUTE);
+                _timerForMinute -= deltaMins * REAL_SECONDS_PER_GAME_MINUTE;
+
+                EventBus<GameMinutePassedEvent>.Publish(new GameMinutePassedEvent { DeltaMinutes = deltaMins });
+            }
+
+            if (_timerForHour >= REAL_SECONDS_PER_GAME_HOUR)
+            {
+                int deltaHours = (int)(_timerForHour / REAL_SECONDS_PER_GAME_HOUR);
+                _timerForHour -= deltaHours * REAL_SECONDS_PER_GAME_HOUR;
+
+                EventBus<GameHourPassedEvent>.Publish(new GameHourPassedEvent { DeltaHours = deltaHours });
+            }
+        }
+
+        // --- UpdateDirector에 의해 매 프레임 호출 ---
+        public void Tick(float deltaTime)
+        {
+            // UpdateDirector가 넘겨주는 순수 deltaTime 대신, 
+            // 1계층 TimeDirector가 가공한(일시정지, 배속 등이 적용된) World 시계를 참조합니다.
+            AdvanceTime(TimeDirector.Inst.WorldDeltaTime);
+        }
+
+        public int GetCurrentDay() => (int)(TotalGameSeconds / DayLength) + 1;
+
+        public void SetWorldTime(float dayLength)
+        {
+            DayLength = dayLength;
         }
     }
-
-
-    // 게임속에서 현재가 몇 일째인지 반환
-    public int GetCurrentDay() => (int)(TotalGameSeconds / DayLength) + 1;
-
-    public void SetWorldTime(float dayLength)
-    {
-        DayLength = dayLength;
-    }
-
-    //public IEnumerator EventLoopbyTime(int loopCount, float LoopIntervel, System.Action Event)
-    //{
-    //    int count = 0;
-    //    Debug.Log($"{loopCount}번의 Event({Event.Method.Name})루프 시작");
-    //    while (count < loopCount)
-    //    {
-    //        count++;
-    //        yield return new WaitForSecondsRealtime(LoopIntervel);
-    //        Event?.Invoke();
-    //    }
-    //}
 }

@@ -1,22 +1,29 @@
+using CoreEngine;
+using CoreEngine.Actor;
+using CoreEngine.Data;
+using CoreEngine.Facades;
+using System;
 using UnityEngine;
-using static UnityEditor.Progress;
 
-public class BaseDatabaseAccessModule<DatabaseManager/*정적데이터를 관리하는 객체*/, DataType/*정적데이터SO*/> 
-    : BaseCharacterModule, ICharacterModule
+public class BaseDatabaseAccess<DatabaseManager/*정적데이터를 관리하는 객체*/, DataType/*정적데이터SO*/> 
+    : BaseActorFeature, IActorFeature, IDisposable
     where DatabaseManager : BaseStaticDataManager<DataType>
     where DataType : BaseData
 {
     private DatabaseManager databaseManager;
-    public override void Initialize(BaseCharacter owner)
+
+    protected override void OnInitialized()
     {
-        base.Initialize(owner);
-        databaseManager = GameManager.GetManager<DatabaseManager>();
-        if(databaseManager == null)
+        base.OnInitialized();
+        databaseManager = CoreFacade.GetManager<DatabaseManager>();
+        if (databaseManager == null)
         {
             Debug.LogError($"정적데이터 관리자({typeof(DatabaseManager).Name}) 객체 없음");
             return;
         }
     }
+
+    public virtual void Dispose() { }
 
     protected virtual DataType GetData(int ID)
     {
@@ -30,4 +37,6 @@ public class BaseDatabaseAccessModule<DatabaseManager/*정적데이터를 관리
         }
         return data;
     }
+
+    
 }

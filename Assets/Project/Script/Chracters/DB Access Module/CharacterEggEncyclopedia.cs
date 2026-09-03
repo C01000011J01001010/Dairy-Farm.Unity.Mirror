@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-public class CharacterEggEncyclopedia : BaseDatabaseAccessModule<MagicalEggStaticManager, MagicalEggData>
+public class CharacterEggEncyclopedia : BaseDatabaseAccess<MagicalEggStaticManager, MagicalEggData>
 {
     #region 저장할 데이터
     // 캐릭터는 한번에 하나의 알만 갖음

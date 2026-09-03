@@ -1,3 +1,6 @@
+using CoreEngine.Actor;
+using CoreEngine.Data;
+
 public enum ComparisonType
 {
     GreaterThanOrEqual, GreaterThan,
@@ -12,9 +15,4 @@ public abstract class BaseQuestCondition : BaseCondition
     public string identifier; // 그 대상이 누군지도 보고 싶다!
     public int count; // 그 대상이 몇 개 필요한지
     public ComparisonType comparison;
-
-    public override bool IsSatisfied(BaseCharacter character)
-    {
-        return true;
-    }
 }

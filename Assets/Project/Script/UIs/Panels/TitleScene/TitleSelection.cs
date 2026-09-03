@@ -1,3 +1,6 @@
+using CoreEngine;
+using CoreEngine.EventBus;
+using CoreEngine.SceneManagement;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,12 +8,12 @@ using UnityEngine.UI;
 public sealed class TitleSelection : BaseSelection, IInitialize, IScenedUi
 {
     private BaseButton[] _buttonList;
-    SceneLoadManager _sceneLoadManager;
+    [SerializeField] private SceneReference _sceneReference;
+
 
     public override IEnumerator Initialize()
     {
         _buttonList = gameObject.GetComponentsInChildren<BaseButton>();
-        _sceneLoadManager = GameManager.GetManager<SceneLoadManager>();
 
         foreach (BaseButton button in _buttonList)
         {
@@ -40,9 +43,7 @@ public sealed class TitleSelection : BaseSelection, IInitialize, IScenedUi
 
     public void CALLBACK_StatNewGame()
     {
-#pragma warning disable CS4014 // 이 호출을 대기하지 않으므로 호출이 완료되기 전에 현재 메서드가 계속 실행됩니다.
-        _sceneLoadManager.ChangeScene(Constants.SCENE_NAME_SampleScene);
-#pragma warning restore CS4014 // 이 호출을 대기하지 않으므로 호출이 완료되기 전에 현재 메서드가 계속 실행됩니다.
+        EventBus<SceneLoadRequestEvent>.Publish(new SceneLoadRequestEvent(_sceneReference));
     }
 
     public void CALLBACK_OpenGameSettingsWindow()
