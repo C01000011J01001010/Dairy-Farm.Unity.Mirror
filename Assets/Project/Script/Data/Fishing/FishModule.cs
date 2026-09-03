@@ -8,6 +8,7 @@ namespace Farm.Fishing
     public class FishModule : BaseCharacterModule, IActorFeature
     {
         [SerializeField] private Tilemap waterTilemap; //인스펙터에서 씬의 "Water"Tilemap 오브젝트 가져오기
+        [SerializeField] private Grid terrainGrid; //인스펙터에서 위쪽 레이어부터 순서대로 넣기
 
         private Vector2 lastFacingDir = Vector2.down;
         baseCharacterAnim _anim;
@@ -54,7 +55,21 @@ namespace Farm.Fishing
         public bool IsSeaTile()
         {
             Vector3Int frontCell = GetFrontCell();
-            return waterTilemap.HasTile(frontCell);
+
+            if (!waterTilemap.HasTile(frontCell))
+            {
+                return false;
+            }
+            
+            foreach (Tilemap layer in terrainGrid.GetComponentsInChildren<Tilemap>())
+            {
+                if (layer == waterTilemap) continue;
+                if ((layer.HasTile(frontCell)))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         //캐릭터 1칸 위치값 실수에서 정수로 변환후 반환 WorldToCell 이용
@@ -66,14 +81,6 @@ namespace Farm.Fishing
             frontWorldPos.z = 0f;
             // 정수로 변환후 반환
             return waterTilemap.WorldToCell(frontWorldPos);
-           // 처음부터 정수로 가져오는 방법
-
-           // 플레이어 현재 칸을 정수로 가져옴
-            Vector3Int currentcell = waterTilemap.WorldToCell(Owner.transform.position);
-            // 방향의 정수 오프셋으로 변환해 칸 단위로 이동
-            Vector3Int direction = new Vector3Int((int)lastFacingDir.x, (int)lastFacingDir.y, 0);
-
-            return currentcell + direction;
         }
 
         //플레이어가 움직일때 정면이 어느방향인지 체크

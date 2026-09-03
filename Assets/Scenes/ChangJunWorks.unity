@@ -35509,6 +35509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Farm.Fishing.FishModule
   waterTilemap: {fileID: 1536885724}
+  terrainGrid: {fileID: 1464263674}
 --- !u!4 &6252017686205240048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7056573058341501588, guid: 176f481974d777b45918e5c503c0d21b, type: 3}

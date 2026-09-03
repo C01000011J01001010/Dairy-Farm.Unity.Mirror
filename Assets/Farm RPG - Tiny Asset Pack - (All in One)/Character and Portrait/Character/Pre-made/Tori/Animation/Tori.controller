@@ -514,7 +514,7 @@ AnimatorController:
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
-    m_DefaultBool: 1
+    m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
   - m_Name: IsSprint
     m_Type: 4
@@ -632,7 +632,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 1
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0
   m_TransitionOffset: 0
   m_ExitTime: 0.8032787
   m_HasExitTime: 0
@@ -741,9 +741,6 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: -2550277994677610315}
-    second:
-    - {fileID: 5871203727811886504}
   - first: {fileID: -1933429492209903505}
     second:
     - {fileID: -1141693236825534606}
@@ -751,6 +748,9 @@ AnimatorStateMachine:
   - first: {fileID: 1567492204831070245}
     second:
     - {fileID: 2168770852011417047}
+  - first: {fileID: -2550277994677610315}
+    second:
+    - {fileID: 5871203727811886504}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 260, y: -10, z: 0}
   m_EntryPosition: {x: -40, y: 70, z: 0}
