@@ -11918,12 +11918,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366824173}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 6252017686205240048}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1366824177
 MonoBehaviour:
@@ -35408,6 +35408,14 @@ PrefabInstance:
       propertyPath: m_Constraints
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 5881906098883695533, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: m_Size.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881906098883695533, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: m_Size.y
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5934245097170789464, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       propertyPath: m_IsTrigger
       value: 1
@@ -35456,9 +35464,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6219577974002766604, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7056573058341501588, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1366824176}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       insertIndex: 10
@@ -35497,6 +35509,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Farm.Fishing.FishModule
   waterTilemap: {fileID: 1536885724}
+--- !u!4 &6252017686205240048 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7056573058341501588, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+  m_PrefabInstance: {fileID: 6252017686205240020}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6292144794035441961
 Transform:
   m_ObjectHideFlags: 0
@@ -35673,7 +35690,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1366824176}
   - {fileID: 6252017686205240020}
   - {fileID: 297942957}
   - {fileID: 2029615457}

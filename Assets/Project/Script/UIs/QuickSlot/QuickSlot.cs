@@ -87,7 +87,7 @@ public class QuickSlot : BaseUi
     // 컨트롤 타겟이 바뀔때마다 이벤트가 연결되는 대상 교체
     private void OnControllTargetSet(PlayableCharacter newCharacter)
     {
-        CharacterInventory inventory = newCharacter.GetModule<CharacterInventory>();
+        CharacterInventory inventory = newCharacter.GetFeature<CharacterInventory>();
         if (inventory != null)
         {
             inventory.Event_OnSelectedSlotChanged += OnSelectedSlotChanged;
@@ -107,7 +107,7 @@ public class QuickSlot : BaseUi
 
     private void OnControllTargetRemoved(PlayableCharacter oldCharacter)
     {
-        CharacterInventory inventory = oldCharacter.GetModule<CharacterInventory>();
+        CharacterInventory inventory = oldCharacter.GetFeature<CharacterInventory>();
         if (inventory != null)
         {
             inventory.Event_OnSelectedSlotChanged -= OnSelectedSlotChanged;

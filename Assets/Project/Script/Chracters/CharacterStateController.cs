@@ -6,7 +6,7 @@ using UnityEngine;
 
 
 
-public class CharacterStateController : BaseStateController<CharacterState>, ICharacterModule
+public class CharacterStateController : BaseStateController<CharacterState>, IActorFeature
 {
     public BaseCharacter Owner { get; private set; }
 

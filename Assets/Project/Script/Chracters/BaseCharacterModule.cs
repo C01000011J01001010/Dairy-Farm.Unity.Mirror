@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class BaseCharacterModule : MonoBehaviour, ICharacterModule
+public class BaseCharacterModule : MonoBehaviour, IActorFeature
 {
     public BaseCharacter Owner { get; protected set; }
 

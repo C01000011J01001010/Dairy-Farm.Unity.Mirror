@@ -5,15 +5,21 @@ using System;
 namespace Farm.Fishing
 {
     //기본 모듈 참조해서 기존 코드 쌀먹
-    public class FishModule : BaseCharacterModule, ICharacterModule
+    public class FishModule : BaseCharacterModule, IActorFeature
     {
         [SerializeField] private Tilemap waterTilemap; //인스펙터에서 씬의 "Water"Tilemap 오브젝트 가져오기
 
         private Vector2 lastFacingDir = Vector2.down;
-
+        baseCharacterAnim _anim;
 
         //결과를 밖으로 방송
         public event Action<bool> Event_OnFishingResult;
+
+        public override void Initialize(BaseCharacter owner)
+        {
+            base.Initialize(owner);
+            _anim = owner.GetComponent<baseCharacterAnim>();
+        }
 
         //플레이어가 바라보는 방향 갱신
         public override void Tick(float deltaTime)
@@ -33,9 +39,16 @@ namespace Farm.Fishing
             Event_OnFishingResult?.Invoke(isFishing);
 
             if (IsSeaTile())
+            {
                 Debug.Log("낚시중");
+                _anim.SetIsFishing(true);
+            }
+                
             else
+            {
                 Debug.Log("낚시할 곳이 없습니다.");
+            }
+
         }
 
         public bool IsSeaTile()

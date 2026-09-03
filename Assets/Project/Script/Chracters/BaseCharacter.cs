@@ -25,8 +25,8 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     protected bool isReady;
 
-    private List<ICharacterModule> modules = new(); // 모듈 초기화, 업데이트 순서용
-    private Dictionary<Type, ICharacterModule> moduleDict = new();// 중복방지, Get용
+    private List<IActorFeature> modules = new(); // 모듈 초기화, 업데이트 순서용
+    private Dictionary<Type, IActorFeature> moduleDict = new();// 중복방지, Get용
 
 
     private void OnDisable()
@@ -71,7 +71,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         TryAddCharacterModule<CharacterCropDataSheet>();
 
         
-        foreach(ICharacterModule module in modules)
+        foreach(IActorFeature module in modules)
         {
             module.Initialize(this);
         }
@@ -79,7 +79,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
     }
     public virtual IEnumerator PostInitialize()
     {
-        foreach (ICharacterModule module in modules)
+        foreach (IActorFeature module in modules)
         {
             module.PostInitialize();
 
@@ -91,9 +91,9 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         Subscribe();
     }
 
-    protected void TryAddCharacterModule<Module>() where Module : ICharacterModule
+    protected void TryAddCharacterModule<Module>() where Module : IActorFeature
     {
-        ICharacterModule module = GetComponent<Module>();
+        IActorFeature module = GetComponent<Module>();
         if(module == null)
         {
             Debug.LogError($"이 모듈({typeof(Module).Name})은 캐릭터에 준비되지 않음 모듈");
@@ -112,10 +112,10 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         }
     }
 
-    public T GetModule<T>() where T : class, ICharacterModule
+    public T GetFeature<T>() where T : class, IActorFeature
     {
         Type moduleType = typeof(T);
-        if (moduleDict.TryGetValue(moduleType, out ICharacterModule manager))
+        if (moduleDict.TryGetValue(moduleType, out IActorFeature manager))
         {
             return (T)manager;
         }
@@ -163,7 +163,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     public virtual void Tick() 
     {
-        foreach(ICharacterModule module in modules)
+        foreach(IActorFeature module in modules)
         {
             if (module.IsActive)
             {
@@ -174,7 +174,7 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     public virtual void FixedTick()
     {
-        foreach (ICharacterModule module in modules)
+        foreach (IActorFeature module in modules)
         {
             if (module.IsActive)
             {

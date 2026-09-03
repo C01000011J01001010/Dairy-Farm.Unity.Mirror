@@ -67,7 +67,7 @@ public class PlayerCotroller : MonoBehaviour, IScenedInitialize
                 Event_OnControllTargetRemoved?.Invoke(character);
             }
             character = newCharacter;
-            inventory = newCharacter.GetModule<CharacterInventory>();
+            inventory = newCharacter.GetFeature<CharacterInventory>();
 
             // 새캐릭터에 이벤트 연결됐음을 알림
             character.OnControllTargetSet();

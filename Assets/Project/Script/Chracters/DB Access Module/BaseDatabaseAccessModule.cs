@@ -2,7 +2,7 @@ using UnityEngine;
 using static UnityEditor.Progress;
 
 public class BaseDatabaseAccessModule<DatabaseManager/*정적데이터를 관리하는 객체*/, DataType/*정적데이터SO*/> 
-    : BaseCharacterModule, ICharacterModule
+    : BaseCharacterModule, IActorFeature
     where DatabaseManager : BaseStaticDataManager<DataType>
     where DataType : BaseData
 {

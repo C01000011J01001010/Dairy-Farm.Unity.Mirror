@@ -7,7 +7,7 @@ public class OverlapRestriction : BaseCondition
 {
     public override bool IsSatisfied(BaseCharacter character)
     {
-        CharacterTileChecker tileChecker = character.GetModule<CharacterTileChecker>();
+        CharacterTileChecker tileChecker = character.GetFeature<CharacterTileChecker>();
         BoxCollider2D collider = tileChecker.GetTileMarkerBoxCollider();
 
         Vector2 center = collider.bounds.center;

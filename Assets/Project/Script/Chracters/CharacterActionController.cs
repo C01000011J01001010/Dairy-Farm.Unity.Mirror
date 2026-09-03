@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class CharacterActionController : BaseCharacterModule, ICharacterModule
+public class CharacterActionController : BaseCharacterModule, IActorFeature
 {
     // 현재 손에 들고 있는(선택된) 아이템
     private ItemDataContainer currentItem;
@@ -17,7 +17,7 @@ public class CharacterActionController : BaseCharacterModule, ICharacterModule
     public override void Initialize(BaseCharacter owner)
     {
         base.Initialize(owner);
-        inventory = owner.GetModule<CharacterInventory>();
+        inventory = owner.GetFeature<CharacterInventory>();
     }
     public override void PostInitialize()
     {

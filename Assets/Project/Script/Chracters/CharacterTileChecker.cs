@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// 캐릭터가 현재 타겟으로하는 타일 확인해주는 객체
 /// </summary>
-public class CharacterTileChecker : BaseCharacterModule, ICharacterModule
+public class CharacterTileChecker : BaseCharacterModule, IActorFeature
 {
     [SerializeField] private Tilemap targetTilemap;   // 현재 사용 중인 타일맵
     [SerializeField] private GameObject tileMarker;   // 타일을 표시할 view

@@ -26,8 +26,8 @@ public class PlantSeed : BaseItemEffect
 
     public override void ApplyEffect(BaseCharacter character, ItemDataContainer item)
     {
-        CharacterTileChecker tileChecker = character.GetModule<CharacterTileChecker>();
-        CharacterCropDataSheet cropDataSheet = character.GetModule<CharacterCropDataSheet>();
+        CharacterTileChecker tileChecker = character.GetFeature<CharacterTileChecker>();
+        CharacterCropDataSheet cropDataSheet = character.GetFeature<CharacterCropDataSheet>();
 
         CropViewer cropViewer = GetNewCrop(item);
 

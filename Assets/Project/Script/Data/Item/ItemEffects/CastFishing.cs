@@ -7,7 +7,7 @@ namespace Farm.Fishing
     {
         public override void ApplyEffect(BaseCharacter character, ItemDataContainer item)
         { 
-            character.GetModule<FishModule>().TryFish();
+            character.GetFeature<FishModule>().TryFish();
         }
     }
 }
