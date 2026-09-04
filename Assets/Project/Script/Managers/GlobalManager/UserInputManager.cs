@@ -12,6 +12,7 @@ public class UserInputManager : BaseGlobalManager, IGlobalManager
     public float ScrollY => input.Player.Scroll.ReadValue<Vector2>().y;
 
     public event System.Action Event_OnUseItemInput;
+    public event System.Action Event_OnSwitchReelInput;
 
     private void OnEnable()
     {
@@ -30,6 +31,7 @@ public class UserInputManager : BaseGlobalManager, IGlobalManager
             input.Disable();
 
             input.Player.UseItem.performed -= OnUseItemInput;
+            input.Player.SwitchReel.performed -= OnSwitchReelInput;
         }
         
     }
@@ -43,6 +45,7 @@ public class UserInputManager : BaseGlobalManager, IGlobalManager
             input.Enable();
 
             input.Player.UseItem.performed += OnUseItemInput;
+            input.Player.SwitchReel.performed += OnSwitchReelInput;
         }
         yield return null;
     }
@@ -50,6 +53,11 @@ public class UserInputManager : BaseGlobalManager, IGlobalManager
     private void OnUseItemInput(InputAction.CallbackContext context)
     {
         Event_OnUseItemInput?.Invoke();
+    }
+
+    private void OnSwitchReelInput(InputAction.CallbackContext context)
+    {
+        Event_OnSwitchReelInput?.Invoke();
     }
 
     public void OnOpenUi()
