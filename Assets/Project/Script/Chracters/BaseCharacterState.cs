@@ -1,4 +1,5 @@
 using CoreEngine.DesignPattern.StateMachine;
+using CoreEngine.Actor;
 using UnityEngine;
 
 namespace Farm.Character.StateMachine
@@ -11,13 +12,9 @@ namespace Farm.Character.StateMachine
         Sprint,
     }
 
-    public abstract class BaseCharacterState : BaseState<CharacterState>
+    public abstract class BaseCharacterState : BaseState<CharacterState, CharacterStateController>
     {
-        protected BaseCharacter owner;
-        public virtual void Initialize(BaseCharacter owner)
-        {
-            this.owner = owner;
-        }
+
     }
 
 }

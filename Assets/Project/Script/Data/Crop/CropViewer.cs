@@ -14,7 +14,7 @@ public class CropViewer : BaseDataViewer<CropContainer, CropData>, IPoolable
     private SpriteRenderer spriteRenderer;
     private static readonly Color32 rottenColor = new Color32(130, 70, 20, 255);
 
-    public IObjectPool<GameObject> RootPool { get; set; }
+    public IPoolReleaser Releaser { get; set; }
 
     private void Awake()
     {

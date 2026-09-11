@@ -4,6 +4,7 @@ using CoreEngine.Data;
 using CoreEngine.Facades;
 using System;
 using UnityEngine;
+using CoreEngine.Manager;
 
 public class BaseDatabaseAccess<DatabaseManager/*정적데이터를 관리하는 객체*/, DataType/*정적데이터SO*/> 
     : BaseActorFeature, IActorFeature, IDisposable

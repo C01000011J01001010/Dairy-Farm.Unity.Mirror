@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Farm.GameLogic.Time;
+using Farm.StaticData;
 using CoreEngine.Facades;
 using CoreEngine.EventBus;
 
 namespace Farm.Character
 {
-    class CharacterQuestBook : BaseDatabaseAccess<QuestStaticManager, QuestData>
+    public class CharacterQuestBook : BaseDatabaseAccess<QuestStaticManager, QuestData>
     {
         #region 데이터
         // 현재 진행 중인 퀘스트들 (Key: 퀘스트 Index)

@@ -1189,51 +1189,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &323711966
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 323711968}
-  - component: {fileID: 323711967}
-  m_Layer: 0
-  m_Name: CharacterManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &323711967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 323711966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1958d23ae7376d45bef776b12d86837, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterManager
-  _priority: 0
---- !u!4 &323711968
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 323711966}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.52657, y: 0.25556, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &324494198
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32614,7 +32569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2702c66e028eff94f8b4b5ef8e483209, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCotroller
-  myScope: 0
+  myScope: 2
   _priority: 10
 --- !u!4 &2029615457
 Transform:
@@ -33799,7 +33754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21260b33b77ea0247947c32492c2c8ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UiController
-  myScope: 0
+  myScope: 2
   _priority: 0
   _uiSelection:
     _uiList: []
@@ -33811,6 +33766,5 @@ SceneRoots:
   - {fileID: 6252017686205240020}
   - {fileID: 297942957}
   - {fileID: 2029615457}
-  - {fileID: 323711968}
   - {fileID: 1464263675}
   - {fileID: 6292144794035441961}

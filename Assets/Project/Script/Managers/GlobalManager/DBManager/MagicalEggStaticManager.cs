@@ -1,8 +1,20 @@
 using UnityEngine;
-
-[AddComponentMenu(AssetMenu + "/MagicalEggStaticManager")]
-
-public class MagicalEggStaticManager : BaseStaticDataManager<MagicalEggData>
+using CoreEngine.Manager;
+namespace Farm.StaticData
 {
-    protected override string Label => Constants.LABEL_MagicalEggData;
+    //[AddComponentMenu(AssetMenu + "/MagicalEggStaticManager")]
+    [AddComponentMenu("MagicalEggStaticManager")]
+
+    public class MagicalEggStaticManager : BaseStaticDataManager<MagicalEggData>
+    {
+        //protected override string Label => Constants.LABEL_MagicalEggData;
+
+        protected override string CatalogAddress => throw new System.NotImplementedException();
+
+        protected override void OnLoadedDataBase(ScriptableObject loadedAsset)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
 }

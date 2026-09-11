@@ -1,5 +1,5 @@
 using CoreEngine.Actor;
-using CoreEngine.Extentions;
+using CoreEngine.Extensions;
 using Farm.StaticData.Item;
 using System;
 using UnityEngine;

@@ -4,17 +4,17 @@ namespace Farm.Character.StateMachine
 {
     public class State_Idle : BaseCharacterState
     {
-        baseCharacterAnim anim;
-
-        public override void Initialize(BaseCharacter owner)
+        public override void Enter(CharacterStateController controller)
         {
-            anim = owner.anim;
-            base.Initialize(owner);
+            CharacterAnim anim = null;
+            if (controller.Host.TryGetFeature(out anim))
+                anim.SetIsMove(false);
         }
 
-        public override CharacterState? CheckTransitions()
+        public override CharacterState? CheckTransitions(CharacterStateController controller)
         {
-            if (owner.isMove)
+            BaseCharacter owner = controller.Host as BaseCharacter;
+            if (owner?.isMove ?? false)
             {
                 if (owner.isSprint) return CharacterState.Sprint;
                 else return CharacterState.Walk;
@@ -22,14 +22,9 @@ namespace Farm.Character.StateMachine
             return null;
         }
 
-        public override void Enter()
+        public override void Exit(CharacterStateController controller, CharacterState? nextState)
         {
-            anim.SetIsMove(false);
-        }
-
-        public override void Exit(CharacterState? nextState)
-        {
-
+            
         }
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using CoreEngine.Extentions;
+using CoreEngine.Extensions;
 using Farm.StaticData.Item;
 using Farm.Manager.StaticData;
 

@@ -4,35 +4,45 @@ namespace Farm.Character.StateMachine
 {
     public class State_Walk : BaseCharacterState
     {
-        baseCharacterAnim anim;
+        
 
-        public override void Initialize(BaseCharacter owner)
+        public override void Enter(CharacterStateController controller)
         {
-            base.Initialize(owner);
-            anim = owner.anim;
+            CharacterAnim anim = null;
+            if (controller.Host.TryGetComponent(out anim))
+            {
+                anim.SetIsMove(true);
+                anim.SetIsSprint(false);
+            }
         }
 
-        public override CharacterState? CheckTransitions()
+        public override CharacterState? CheckTransitions(CharacterStateController controller)
         {
+            BaseCharacter owner = controller.Host as BaseCharacter;
+            if (owner == null) return null;
+
             if (!owner.isMove) return CharacterState.Idle;
             else if (owner.isSprint) return CharacterState.Sprint;
             return null;
         }
 
-        public override void Enter()
+        public override void Update(CharacterStateController controller, float deltaTime)
         {
-            anim.SetIsMove(true);
-            anim.SetIsSprint(false);
+            base.Update(controller, deltaTime);
+
+            BaseCharacter owner = controller.Host as BaseCharacter;
+            if (owner == null) return;
+
+            CharacterAnim anim = null;
+            if (controller.Host.TryGetComponent(out anim))
+            {
+                anim.SetInputMove(owner.inputMove);
+            }
         }
 
-        public override void Exit(CharacterState? nextState)
+        public override void Exit(CharacterStateController controller, CharacterState? nextState)
         {
-
-        }
-
-        public override void Update(float deltaTime)
-        {
-            anim.SetInputMove(owner.inputMove);
+            
         }
     }
 }

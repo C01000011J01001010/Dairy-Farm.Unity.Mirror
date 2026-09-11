@@ -1,9 +1,21 @@
 
 using UnityEngine;
 
-[AddComponentMenu(AssetMenu + "/QuestStaticManager")]
-
-public class QuestStaticManager : BaseStaticDataManager<QuestData>
+using CoreEngine.Manager;
+namespace Farm.StaticData
 {
-    protected override string Label => Constants.LABEL_QuestData;
+    //[AddComponentMenu(AssetMenu + "/QuestStaticManager")]
+    [AddComponentMenu("QuestStaticManager")]
+
+    public class QuestStaticManager : BaseStaticDataManager<QuestData>
+    {
+        //protected override string Label => Constants.LABEL_QuestData;
+
+        protected override string CatalogAddress => throw new System.NotImplementedException();
+
+        protected override void OnLoadedDataBase(ScriptableObject loadedAsset)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }
