@@ -10438,6 +10438,23 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &779466378 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2139239437489205427, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+  m_PrefabInstance: {fileID: 6252017686205240020}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &779466382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 779466378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 922baa82bd3e2504da062e2f77999e45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Farm.Fishing.FishingViewer
 --- !u!224 &788358783 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5428085241932485388, guid: b783cb2ad37a8ba40835e88443502d2a, type: 3}
@@ -11832,143 +11849,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &1366824173
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1366824176}
-  - component: {fileID: 1366824175}
-  - component: {fileID: 1366824174}
-  - component: {fileID: 1366824177}
-  m_Layer: 0
-  m_Name: Main Camera
-  m_TagString: MainCamera
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!81 &1366824174
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366824173}
-  m_Enabled: 1
---- !u!20 &1366824175
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366824173}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 1
-  orthographic size: 5
-  m_Depth: -1
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!4 &1366824176
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366824173}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6252017686205240048}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1366824177
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366824173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
-  m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
-  m_Antialiasing: 0
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_ClearDepth: 1
-  m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!114 &1383344373 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3325196971106207750, guid: fffd1513cf978c443a13cec95b6f1574, type: 3}
@@ -35404,6 +35284,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tori
       objectReference: {fileID: 0}
+    - target: {fileID: 3187447497345417329, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5876226067001629214, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       propertyPath: m_Constraints
       value: 4
@@ -35420,10 +35304,14 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6219577974002766604, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
-      propertyPath: fishModule
+    - target: {fileID: 6519155435355337964, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: terrainGrid
       value: 
-      objectReference: {fileID: 6252017686205240035}
+      objectReference: {fileID: 1464263674}
+    - target: {fileID: 6519155435355337964, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: waterTilemap
+      value: 
+      objectReference: {fileID: 1536885724}
     - target: {fileID: 7056573058341501588, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -35464,57 +35352,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 6219577974002766604, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+    - target: {fileID: 8359489026994692291, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: emojis.Array.data[0].sprite
+      value: 
+      objectReference: {fileID: -1416568079, guid: c737523f18427e542862f117164eeb59, type: 3}
+    - target: {fileID: 8359489026994692291, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: emojis.Array.data[1].sprite
+      value: 
+      objectReference: {fileID: -1466744790, guid: c737523f18427e542862f117164eeb59, type: 3}
+    - target: {fileID: 8539186167760205720, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: m_SortingOrder
+      value: 99
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7056573058341501588, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1366824176}
+    m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
-      insertIndex: 10
-      addedObject: {fileID: 6252017686205240022}
-    - targetCorrespondingSourceObject: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 2139239437489205427, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6252017686205240035}
+      addedObject: {fileID: 779466382}
   m_SourcePrefab: {fileID: 100100000, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
---- !u!1 &6252017686205240021 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
-  m_PrefabInstance: {fileID: 6252017686205240020}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6252017686205240022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6252017686205240021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69950ca6fef0df84eae24604a7e4736d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterQuestBook
---- !u!114 &6252017686205240035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6252017686205240021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb74f39d524ba1240b62da30adef2dc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Farm.Fishing.FishModule
-  waterTilemap: {fileID: 1536885724}
-  terrainGrid: {fileID: 1464263674}
---- !u!4 &6252017686205240048 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7056573058341501588, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
-  m_PrefabInstance: {fileID: 6252017686205240020}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6292144794035441961
 Transform:
   m_ObjectHideFlags: 0

@@ -8,8 +8,8 @@ namespace Farm.Fishing
         public string fishName;
         public Sprite icon;
 
-        [Tooltip("물고기 가중치")]
-        public float weight = 10f;
+        [Tooltip("물고기 등급")]
+        public float Grade = 10f;
     }
     
 }

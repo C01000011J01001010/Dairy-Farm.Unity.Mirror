@@ -24,6 +24,9 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
     public float moveSpeed = 2.5f;
     public float SprintMul = 2f;
 
+    //이동을 막는 플래그 추가
+    public bool canMove = true;
+
     protected bool isReady;
 
     private List<IActorFeature> modules = new(); // 모듈 초기화, 업데이트 순서용
@@ -139,7 +142,13 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
 
     public virtual void Move(Vector2 input)
     {
-        inputMove = input;
+        inputMove = input; //canMove 여부와 상관없이 항상 최신 입력을 기록
+        if (!canMove)
+        {
+            isMove = false;
+            return;
+        }
+
         isMove = input.sqrMagnitude > 0.01f;
 
         // 3. Scale -1을 이용한 좌우 반전 로직
@@ -147,7 +156,6 @@ public class BaseCharacter : MonoBehaviour, IScenedInitialize
         if (input.x != 0)
         {
             float direction = input.x > 0 ? 1f : -1f;
-
             // 부모의 Scale을 뒤집어 하위 무기, 이펙트 위치까지 한꺼번에 반전
             transform.localScale = new Vector3(direction, 1f, 1f);
         }

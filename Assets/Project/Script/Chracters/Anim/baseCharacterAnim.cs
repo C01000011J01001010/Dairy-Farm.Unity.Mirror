@@ -9,7 +9,13 @@ public class baseCharacterAnim : BaseAnim
     int Hash_IsMove;
     int Hash_IsSprint;
 
+    //낚시 관련 애니메이션
+    // 낚시 캐스팅
     int Hash_IsFishing;
+    // 물고기 캐치
+    int Hash_FishCatch;
+    // 물고기 놓침
+    int Hash_FishMiss;
 
 
     protected override void GetAnimPrarmHash()
@@ -20,6 +26,8 @@ public class baseCharacterAnim : BaseAnim
         Hash_IsMove = Animator.StringToHash("IsMove");
         Hash_IsSprint = Animator.StringToHash("IsSprint");
         Hash_IsFishing = Animator.StringToHash("isFishing");
+        Hash_FishCatch = Animator.StringToHash("FishCatch");
+        Hash_FishMiss = Animator.StringToHash("FishMiss");
     }
 
     private void Awake()
@@ -35,6 +43,9 @@ public class baseCharacterAnim : BaseAnim
 
     public void SetIsMove(bool isMove) => SetParam(Hash_IsMove, isMove);
     public void SetIsSprint(bool isRun) => SetParam(Hash_IsSprint, isRun);
+
+    public void SetFishCatch() => SetParam(Hash_FishCatch);
+    public void SetFishMiss() => SetParam(Hash_FishMiss);
 
     public void SetIsFishing(bool isFishing)
     {
