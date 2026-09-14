@@ -8,7 +8,6 @@ namespace Farm.Character
         public event System.Action Event_OnControllTargetSet;
         public event System.Action Event_OnControllTargetRemoved;
 
-        CharacterTileChecker tileChecker;
         CharacterActionController actionController;
         CharacterQuestBook questBook;
 

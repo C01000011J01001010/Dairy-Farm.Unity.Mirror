@@ -1,6 +1,6 @@
 using UnityEngine;
-using CoreEngine.Manager;
-namespace Farm.StaticData
+using CoreEngine.GameData;
+namespace Farm.GameData
 {
     //[AddComponentMenu(AssetMenu + "/MagicalEggStaticManager")]
     [AddComponentMenu("MagicalEggStaticManager")]

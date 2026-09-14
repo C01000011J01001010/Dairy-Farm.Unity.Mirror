@@ -1,5 +1,5 @@
 using UnityEngine;
-using CoreEngine.Data;
+using CoreEngine.GameData;
 
 public class BaseQuestReward : BaseReward
 {

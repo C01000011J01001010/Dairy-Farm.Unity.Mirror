@@ -1,4 +1,4 @@
-using CoreEngine.Data;
+using CoreEngine.GameData;
 using Farm.Character;
 using System;
 using UnityEngine;
@@ -10,7 +10,7 @@ using UnityEngine;
 //    Material    // 재료
 //}
 
-namespace Farm.StaticData.Item
+namespace Farm.GameData.Item
 {
     public class ItemData : BaseData_ForUi
     {

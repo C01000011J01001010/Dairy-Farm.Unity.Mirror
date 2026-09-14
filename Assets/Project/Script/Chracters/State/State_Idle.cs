@@ -1,19 +1,20 @@
 using UnityEngine.TextCore.Text;
+using CoreEngine.Actor;
 
 namespace Farm.Character.StateMachine
 {
     public class State_Idle : BaseCharacterState
     {
-        public override void Enter(CharacterStateController controller)
+        public override void Enter(IActorHost host)
         {
-            CharacterAnim anim = null;
-            if (controller.Host.TryGetFeature(out anim))
+            CharacterAnimFeature anim = null;
+            if (host.TryGetFeature(out anim))
                 anim.SetIsMove(false);
         }
 
-        public override CharacterState? CheckTransitions(CharacterStateController controller)
+        public override CharacterState? CheckTransitions(IActorHost host)
         {
-            BaseCharacter owner = controller.Host as BaseCharacter;
+            BaseCharacter owner = host as BaseCharacter;
             if (owner?.isMove ?? false)
             {
                 if (owner.isSprint) return CharacterState.Sprint;
@@ -22,9 +23,9 @@ namespace Farm.Character.StateMachine
             return null;
         }
 
-        public override void Exit(CharacterStateController controller, CharacterState? nextState)
+        public override void Exit(IActorHost host, CharacterState? nextState)
         {
-            
+
         }
     }
 }

@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using UnityEngine;
-using CoreEngine.Data;
+using CoreEngine.GameData;
 using Farm.Character;
 
-namespace Farm.StaticData.Item
+namespace Farm.GameData.Item
 {
     [Serializable]
     public class ItemDataContainer : BaseDataContainer<ItemData>

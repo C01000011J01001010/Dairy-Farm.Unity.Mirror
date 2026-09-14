@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using CoreEngine.Data;
+using CoreEngine.GameData;
 
 public class WorkerSelectButton : BaseObjectViewer<Worker>
 {

@@ -9,16 +9,20 @@ using UnityEngine.TextCore.Text;
 
 namespace Farm.Character
 {
-    [RequireComponent(typeof(CharacterAnim))]
-    [RequireComponent(typeof(CharacterStateController))]
     [RequireComponent(typeof(Rigidbody2D))]
-    public class BaseCharacter : CoreMonoBehaviour, IActorHost, ITickable, IFixedTickable
+    public class BaseCharacter : BaseActor, IActorHost, ITickable, IFixedTickable
     {
         [SerializeField] protected int _priority = 11;
         public int Priority => _priority;
 
 
-        public CharacterAnim anim { get; protected set; }
+        [SerializeField]
+        protected CharacterAnimFeature animFeature;
+
+        [SerializeField]
+        protected CharacterTileChecker tileChecker;
+
+        //protected CharacterStateController
 
         public TickGroup TickGroup => TickGroup.Character;
 
@@ -52,7 +56,7 @@ namespace Farm.Character
         public virtual IEnumerator Initialize()
         {
             rigidBody = GetComponent<Rigidbody2D>();
-            anim = GetComponent<CharacterAnim>();
+            //anim = GetComponent<CharacterAnimFeature>();
 
             //foreach (ICharacterModule module in modules)
             //{

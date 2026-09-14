@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using CoreEngine.Manager;
-namespace Farm.StaticData
+using CoreEngine.GameData;
+namespace Farm.GameData
 {
     /// <summary>
     /// 농작물의 정적 데이터 관리

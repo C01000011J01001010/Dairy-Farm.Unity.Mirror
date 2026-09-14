@@ -1,5 +1,5 @@
-using CoreEngine.Data;
-using Farm.StaticData.Item;
+using CoreEngine.GameData;
+using Farm.GameData.Item;
 using UnityEngine;
 
 namespace Farm.Ui.Item

@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 using CoreEngine.Extensions;
-using Farm.StaticData.Item;
-using Farm.Manager.StaticData;
+using Farm.GameData.Item;
+using Farm.GameData;
 
 namespace Farm.Character
 {

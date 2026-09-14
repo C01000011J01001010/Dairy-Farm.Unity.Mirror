@@ -1,10 +1,10 @@
-using Farm.StaticData.Item;
+using Farm.GameData.Item;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CoreEngine.Manager;
+using CoreEngine.GameData;
 
-namespace Farm.Manager.StaticData
+namespace Farm.GameData
 {
     /// <summary>
     /// 아이템의 정적 데이터 관리

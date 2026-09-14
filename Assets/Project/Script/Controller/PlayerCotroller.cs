@@ -2,13 +2,9 @@ using CoreEngine;
 using CoreEngine.Facades;
 using CoreEngine.Ui;
 using Farm.Character;
-using Farm.GameLogic.Time;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.XR;
-using UnityEngine.TextCore.Text;
-
+using Farm.Input;
 
 namespace Farm.Controller
 {

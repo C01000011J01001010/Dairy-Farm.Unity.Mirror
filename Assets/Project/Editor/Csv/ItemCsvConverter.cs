@@ -1,7 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-using Farm.StaticData.Item;
+using Farm.GameData.Item;
 using CoreEditor.EditorTools;
 
 namespace Farm.Editor.CsvConverter

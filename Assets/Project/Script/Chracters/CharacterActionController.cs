@@ -1,6 +1,6 @@
 using CoreEngine.Actor;
 using CoreEngine.Extensions;
-using Farm.StaticData.Item;
+using Farm.GameData.Item;
 using System;
 using UnityEngine;
 

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using CoreEngine.Data;
+using CoreEngine.GameData;
 using CoreEngine.Actor;
 
 // 이미 작물이 있는 곳에 중복되는거 금지

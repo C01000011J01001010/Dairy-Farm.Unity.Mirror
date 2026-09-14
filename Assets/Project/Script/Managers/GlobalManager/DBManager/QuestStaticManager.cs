@@ -1,8 +1,7 @@
 
 using UnityEngine;
-
-using CoreEngine.Manager;
-namespace Farm.StaticData
+using CoreEngine.GameData;
+namespace Farm.GameData
 {
     //[AddComponentMenu(AssetMenu + "/QuestStaticManager")]
     [AddComponentMenu("QuestStaticManager")]

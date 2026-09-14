@@ -1,5 +1,5 @@
 using CoreEngine.Actor;
-using CoreEngine.Data;
+using CoreEngine.GameData;
 
 public enum ComparisonType
 {

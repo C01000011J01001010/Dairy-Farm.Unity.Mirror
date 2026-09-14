@@ -1,5 +1,5 @@
 using UnityEngine;
-using CoreEngine.Data;
+using CoreEngine.GameData;
 
 /// <summary>
 /// 농작물에 대한 정적 데이터를 저장하는 SO 스크립트

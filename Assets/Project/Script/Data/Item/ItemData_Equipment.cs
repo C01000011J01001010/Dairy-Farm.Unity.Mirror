@@ -1,4 +1,4 @@
-namespace Farm.StaticData.Item
+namespace Farm.GameData.Item
 {
     public class ItemData_Equipment : ItemData
     {

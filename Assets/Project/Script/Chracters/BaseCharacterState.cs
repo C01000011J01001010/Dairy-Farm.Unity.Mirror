@@ -12,7 +12,7 @@ namespace Farm.Character.StateMachine
         Sprint,
     }
 
-    public abstract class BaseCharacterState : BaseState<CharacterState, CharacterStateController>
+    public abstract class BaseCharacterState : BaseState<CharacterState>
     {
 
     }

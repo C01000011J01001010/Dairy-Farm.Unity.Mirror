@@ -1,7 +1,7 @@
-using CoreEngine.Data;
+using CoreEngine.GameData;
 using Farm.Character;
 
-namespace Farm.StaticData.Quest
+namespace Farm.GameData.Quest
 {
     public class QuestConditionContainer : BaseObjectContainer<BaseQuestCondition>
     {

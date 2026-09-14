@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Farm.StaticData.Item
+namespace Farm.GameData.Item
 {
     public class EquipmentContainer : ItemDataContainer
     {

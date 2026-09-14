@@ -6,6 +6,7 @@ using CoreEngine.Actor;
 /// <summary>
 /// 캐릭터가 현재 타겟으로하는 타일 확인해주는 객체
 /// </summary>
+[System.Serializable]
 public class CharacterTileChecker : BaseActorFeature, IActorFeature
 {
     [SerializeField] private Tilemap targetTilemap;   // 현재 사용 중인 타일맵

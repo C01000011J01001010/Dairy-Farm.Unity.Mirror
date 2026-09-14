@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Farm.Character.StateMachine
 {
-    public class CharacterStateController : BaseActorFeature//: BaseStateController<CharacterState>
+    public class CharacterStateController : BaseActorFeature//BaseStateController<BaseCharacterState, CharacterStateManager, CharacterStateController>//: BaseStateController<CharacterState>
     {
         //public BaseCharacter Owner { get; private set; }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using CoreEngine.Data;
+using CoreEngine.GameData;
 
 public class FieldShower : BaseObjectViewer<ProductField>
 {

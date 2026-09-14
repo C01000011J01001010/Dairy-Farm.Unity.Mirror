@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Farm.GameLogic.Time;
-using Farm.StaticData;
+using Farm.GameData;
 using CoreEngine.Facades;
 using CoreEngine.EventBus;
 

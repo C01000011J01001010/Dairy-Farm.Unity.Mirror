@@ -1114,7 +1114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &297942956
 SpriteRenderer:
   serializedVersion: 2
@@ -11096,7 +11096,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!156049354 &1464263674
 Grid:
   m_ObjectHideFlags: 0
@@ -32556,7 +32556,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2029615456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33629,7 +33629,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1001 &6252017686205240020
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33645,6 +33645,14 @@ PrefabInstance:
     - target: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       propertyPath: m_Name
       value: Tori
+      objectReference: {fileID: 0}
+    - target: {fileID: 3619393631819319454, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: myScope
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125808627709199520, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+      propertyPath: m_EditorClassIdentifier
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5876226067001629214, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
       propertyPath: m_Constraints
@@ -33702,12 +33710,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2267313851403351372, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+    - {fileID: 180094340486053446, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
-      insertIndex: 10
+      insertIndex: 9
       addedObject: {fileID: 6252017686205240022}
   m_SourcePrefab: {fileID: 100100000, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
 --- !u!1 &6252017686205240021 stripped

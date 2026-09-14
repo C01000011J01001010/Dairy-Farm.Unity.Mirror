@@ -1,9 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
-using CoreEngine.Data;
-using CoreEngine;
-using CoreEngine.Manager.Pool;
+using CoreEngine.GameData;
+using CoreEngine.Pool;
 
 /// <summary>
 /// 게임에 등장하는 농작물 객체에 붙일 스크립트

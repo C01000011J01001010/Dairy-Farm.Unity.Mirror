@@ -1,5 +1,5 @@
 
-namespace Farm.StaticData.Item
+namespace Farm.GameData.Item
 {
     public enum ConsumableType
     {

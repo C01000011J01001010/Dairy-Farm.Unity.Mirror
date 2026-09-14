@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Farm.Character;
 
-namespace Farm.StaticData.Item
+namespace Farm.GameData.Item
 {
     [CreateAssetMenu(fileName = "PlantSeed", menuName = "Item/ItemEffect/PlantSeed")]
     public class PlantSeed : BaseItemEffect
