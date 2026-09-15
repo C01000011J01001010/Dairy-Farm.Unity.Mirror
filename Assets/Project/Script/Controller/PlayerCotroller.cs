@@ -75,12 +75,12 @@ namespace Farm.Controller
         #region Tick
         private void InputMove()
         {
-            character?.Move(inputManager.Move);
+            //character?.Move(inputManager.Move);
         }
 
         private void InputSprint()
         {
-            character?.SprintHold(inputManager.Sprint);
+            //character?.SprintHold(inputManager.Sprint);
         }
 
         private void InputScroll()

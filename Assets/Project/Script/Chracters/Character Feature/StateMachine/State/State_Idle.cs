@@ -1,5 +1,6 @@
 using UnityEngine.TextCore.Text;
 using CoreEngine.Actor;
+using Farm.Character.Move;
 
 namespace Farm.Character.StateMachine
 {
@@ -7,17 +8,17 @@ namespace Farm.Character.StateMachine
     {
         public override void Enter(IActorHost host)
         {
-            CharacterAnimFeature anim = null;
-            if (host.TryGetFeature(out anim))
-                anim.SetIsMove(false);
+            if (!host.TryGetFeature(out CharacterAnimFeature anim)) return;
+
+            anim.SetIsMove(false);
         }
 
         public override CharacterState? CheckTransitions(IActorHost host)
         {
-            BaseCharacter owner = host as BaseCharacter;
-            if (owner?.isMove ?? false)
+            if (!host.TryGetFeature(out CharacterMoveFeature move)) return null;
+            if (move.isMove)
             {
-                if (owner.isSprint) return CharacterState.Sprint;
+                if (move.isSprint) return CharacterState.Sprint;
                 else return CharacterState.Walk;
             }
             return null;

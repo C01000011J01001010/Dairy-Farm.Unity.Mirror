@@ -7,6 +7,7 @@ using CoreEngine.EventBus;
 
 namespace Farm.Character
 {
+    [System.Serializable]
     public class CharacterQuestBook : BaseDatabaseAccess<QuestStaticManager, QuestData>
     {
         #region 데이터

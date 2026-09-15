@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace Farm.Character
 {
+    [System.Serializable]
     public class CharacterCropDataSheet : BaseDatabaseAccess<CropStaticManager, CropData>
     {
         #region 저장할 데이터

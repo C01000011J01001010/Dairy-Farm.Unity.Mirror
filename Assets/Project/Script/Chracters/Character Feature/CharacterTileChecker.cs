@@ -2,12 +2,13 @@ using UnityEngine;
 using UnityEngine.Tilemaps; // 타일맵 관련 기능을 위해 필수!
 using UnityEngine.InputSystem;
 using CoreEngine.Actor;
+using CoreEngine;
 
 /// <summary>
 /// 캐릭터가 현재 타겟으로하는 타일 확인해주는 객체
 /// </summary>
 [System.Serializable]
-public class CharacterTileChecker : BaseActorFeature, IActorFeature
+public class CharacterTileChecker : BaseActorFeature, IActorFeature, ITick
 {
     [SerializeField] private Tilemap targetTilemap;   // 현재 사용 중인 타일맵
     [SerializeField] private GameObject tileMarker;   // 타일을 표시할 view

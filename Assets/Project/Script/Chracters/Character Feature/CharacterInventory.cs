@@ -6,6 +6,7 @@ using Farm.GameData;
 
 namespace Farm.Character
 {
+    [System.Serializable]
     public class CharacterInventory : BaseDatabaseAccess<ItemStaticManager, ItemData>
     {
         protected int curItemIndex;

@@ -1,6 +1,9 @@
 using CoreEngine;
 using CoreEngine.Actor;
+using CoreEngine.Pool;
+using Farm.Character.Move;
 using Farm.Character.StateMachine;
+using Farm.Egg;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,179 +13,96 @@ using UnityEngine.TextCore.Text;
 namespace Farm.Character
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class BaseCharacter : BaseActor, IActorHost, ITickable, IFixedTickable
+    public class BaseCharacter : BaseActorHost, IActorHost, IPoolable, ITickable, IFixedTickable
     {
-        [SerializeField] protected int _priority = 11;
-        public int Priority => _priority;
-
-
-        [SerializeField]
-        protected CharacterAnimFeature animFeature;
-
-        [SerializeField]
-        protected CharacterTileChecker tileChecker;
-
-        //protected CharacterStateController
+        #region featrue
+        [SerializeField] protected CharacterAnimFeature animFeature = new();
+        [SerializeField] protected CharacterStateController stateController = new();
+        [SerializeField] protected CharacterTileChecker tileChecker = new();
+        [SerializeField] protected CharacterInventory inventory = new();
+        [SerializeField] protected CharacterQuestBook questBook = new();
+        [SerializeField] protected CharacterCropDataSheet cropDataSheet = new();
+        [SerializeField] protected CharacterEggEncyclopedia eggEncyclopedia = new();
+        [SerializeField] protected CharacterActionController actionController = new();
+        [SerializeField] protected CharacterMoveFeature moveFeature = new();
+        #endregion
 
         public TickGroup TickGroup => TickGroup.Character;
 
         public FixedTickGroup FixedTickGroup => FixedTickGroup.Physics;
 
-        protected Rigidbody2D rigidBody;
-
-        public Vector2 inputMove;
-        public bool isMove;
-        public bool isSprint;
-        public float moveSpeed = 2.5f;
-        public float SprintMul = 2f;
-
-        //private List<ICharacterModule> modules = new(); // 모듈 초기화, 업데이트 순서용
-        //private Dictionary<Type, ICharacterModule> moduleDict = new();// 중복방지, Get용
-
-        CharacterStateController characterStateController;
-        CharacterInventory characterInventory;
-        CharacterCropDataSheet characterCropDataSheet;
+        public IPoolReleaser Releaser { get; set; }
 
 
-        public virtual void Exit()
+        protected override void Awake()
         {
-            // 초기화 순서와 반대로 종료
-            //for (int i = modules.Count - 1; i >= 0; i--)
-            //{
-            //    modules[i].Exit();
-            //}
+            base.Awake();
         }
 
-        public virtual IEnumerator Initialize()
+        private void OnDestroy()
         {
-            rigidBody = GetComponent<Rigidbody2D>();
-            //anim = GetComponent<CharacterAnimFeature>();
-
-            //foreach (ICharacterModule module in modules)
-            //{
-            //    module.Initialize(this);
-            //}
-            yield return null;
-        }
-        public virtual IEnumerator PostInitialize()
-        {
-            //foreach (ICharacterModule module in modules)
-            //{
-            //    module.PostInitialize();
-
-            //    // 후처리까지 끝났으니 Tick 시작
-            //    module.SetActive(true);
-            //}
-            yield return null;
+            FeatureHandler.Dispose_RegisteredFeatures();
         }
 
-        //protected void TryAddCharacterModule<Module>() where Module : ICharacterModule
-        //{
-        //    ICharacterModule module = GetComponent<Module>();
-        //    if(module == null)
-        //    {
-        //        Debug.LogError($"이 모듈({typeof(Module).Name})은 캐릭터에 준비되지 않음 모듈");
-        //    }
-        //    Type moduleType = module.GetType();
-
-        //    // 모듈 중복 방지
-        //    if(module != null && !moduleDict.ContainsKey(moduleType))
-        //    {
-        //        modules.Add(module);
-        //        moduleDict.Add(moduleType, module);
-        //    }
-        //    else
-        //    {
-        //        Debug.LogError($"{typeof(Module).Name}을 캐릭터에 준비하지 않았음");
-        //    }
-        //}
-
-        //public T GetModule<T>() where T : class, ICharacterModule
-        //{
-        //    Type moduleType = typeof(T);
-        //    if (moduleDict.TryGetValue(moduleType, out ICharacterModule manager))
-        //    {
-        //        return (T)manager;
-        //    }
-
-        //    Debug.LogError($"Object({moduleType.Name}) is not in moduleDict");
-        //    return null;
-        //}
-
-        //protected void Subscribe()
-        //{
-        //    CharacterManager mng = WorldManager.GetManager<CharacterManager>();
-        //    mng?.AddList(this);
-        //}
-
-        //protected void Unsubscribe()
-        //{
-        //    CharacterManager mng = WorldManager.GetManager<CharacterManager>();
-        //    mng?.RemoveList(this);
-        //}
-
-        public virtual void Move(Vector2 input)
+        protected override void OnEnable()
         {
-            inputMove = input;
-            isMove = input.sqrMagnitude > 0.01f;
-
-            // 3. Scale -1을 이용한 좌우 반전 로직
-            // x값이 0일 때는 마지막 방향을 유지하기 위해 '0이 아닐 때만' 업데이트
-            if (input.x != 0)
-            {
-                float direction = input.x > 0 ? 1f : -1f;
-
-                // 부모의 Scale을 뒤집어 하위 무기, 이펙트 위치까지 한꺼번에 반전
-                transform.localScale = new Vector3(direction, 1f, 1f);
-            }
-            // 위 아래 일 시 정상 scale로 변경
-            else if (input.y != 0)
-            {
-                transform.localScale = Vector3.one;
-            }
+            base.OnEnable();
+            OnSpawn();
         }
 
-        public void SprintHold(bool value) => isSprint = value;
+        public void OnSpawn()
+        {
+            FeatureHandler.RegisterFeature(animFeature);
+            FeatureHandler.RegisterFeature(stateController);
+            FeatureHandler.RegisterFeature(tileChecker);
+            FeatureHandler.RegisterFeature(inventory);
+            FeatureHandler.RegisterFeature(questBook);
+            FeatureHandler.RegisterFeature(cropDataSheet);
+            FeatureHandler.RegisterFeature(eggEncyclopedia);
+            FeatureHandler.RegisterFeature(actionController);
+            FeatureHandler.RegisterFeature(moveFeature);
+
+            FeatureHandler.Initialize_RegisteredFeatures();
+
+            stateController.StartState();
+        }
+
+        private void InitializeFeaure()
+        {
+
+        }
+
+        public void OnDespawn()
+        {
+            
+        }
+
+        
+
+        //public void SprintHold(bool value) => isSprint = value;
 
         //public void SprintToggle() => isRun = !isRun;
 
         public virtual void Tick(float deltaTime)
         {
-            //foreach (ICharacterModule module in modules)
-            //{
-            //    if (module.IsActive)
-            //    {
-            //        module.Tick(Time.deltaTime);
-            //    }
-            //}
+            FeatureHandler.Tick_InitializedFeatures(deltaTime);
+            //tileChecker.Tick(deltaTime);
+            //stateController.Tick(deltaTime);
         }
 
         public virtual void FixedTick(float fixedDeltaTime)
         {
-            //foreach (ICharacterModule module in modules)
-            //{
-            //    if (module.IsActive)
-            //    {
-            //        module.FixedTick(Time.fixedDeltaTime);
-            //    }
-            //}
-
-            if (isMove)
-            {
-                Physics_Move();
-            }
+            FeatureHandler.Tick_InitializedFeatures(fixedDeltaTime);
+            //moveFeature.FixedTick(fixedDeltaTime);
+            //stateController.FixedTick(fixedDeltaTime);
         }
 
-        private void Physics_Move()
-        {
-            Vector2 nextVec = inputMove.normalized * moveSpeed * Time.fixedDeltaTime;
-            if (isSprint) nextVec *= SprintMul;
-            rigidBody.MovePosition(rigidBody.position + nextVec);
-        }
+        
 
-        public bool TryGetFeature<T>(out T feature) where T : class, IActorFeature
+        protected override void OnValidate()
         {
-            throw new NotImplementedException();
+            base.OnValidate();
+            stateController.OnValidate();
         }
     }
 }

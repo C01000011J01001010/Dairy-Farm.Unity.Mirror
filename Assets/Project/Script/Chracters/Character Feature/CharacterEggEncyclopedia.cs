@@ -1,15 +1,16 @@
-
-
 using Farm.GameData;
 using System.Collections.Generic;
+using UnityEngine;
+using Farm.GameData.Egg;
 
 namespace Farm.Egg
 {
+    [System.Serializable]
     public class CharacterEggEncyclopedia : BaseDatabaseAccess<MagicalEggStaticManager, MagicalEggData>
     {
         #region 저장할 데이터
         // 캐릭터는 한번에 하나의 알만 갖음
-        private MagicalEggDataContainer curEgg;
+        [SerializeField] private MagicalEggDataContainer curEgg;
 
         // 행복도 100%를 달성한 알을 컬렉션으로 갖음, egg정보는 GetData 메서드로 호출
         private HashSet<int> eggCollection;

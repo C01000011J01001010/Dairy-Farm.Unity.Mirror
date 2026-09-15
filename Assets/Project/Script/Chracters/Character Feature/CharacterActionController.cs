@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Farm.Character
 {
+    [System.Serializable]
     public class CharacterActionController : BaseActorFeature, IDisposable
     {
         // 현재 손에 들고 있는(선택된) 아이템
@@ -14,6 +15,10 @@ namespace Farm.Character
         private BaseCharacter character;
 
 
+        ~CharacterActionController()
+        {
+            Dispose();
+        }
         public void Dispose()
         {
             inventory.Event_OnSelectedSlotChanged -= EquipItem;

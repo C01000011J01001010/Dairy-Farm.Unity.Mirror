@@ -1,12 +1,11 @@
 using CoreEngine.Actor;
-using System;
 using UnityEngine;
 using UnityEngine.Windows;
 using CoreEngine.Animation;
 
 namespace Farm.Character
 {
-    [Serializable]
+    [System.Serializable]
     public class CharacterAnimFeature : BaseAnimFeature
     {
         int Hash_InputX;
