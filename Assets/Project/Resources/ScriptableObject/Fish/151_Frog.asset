@@ -10,8 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41db99c37c1a5b14abc81880f6f9f8ec, type: 3}
-  m_Name: Normalfish_0
+  m_Name: 151_Frog
   m_EditorClassIdentifier: Assembly-CSharp::Farm.Fishing.FishData
-  fishName: "\uBE68\uAC31\uC774"
-  icon: {fileID: 5957622834483865180, guid: 6628d30dda655e542a5d5168e3cd3b33, type: 3}
-  weight: 10
+  index: 151
+  nameTag: Frog
+  description: 
+  icon: {fileID: 0}
+  gradeCategory: {fileID: 11400000, guid: 40db6550ad749464591cbfc4bcf19ea0, type: 2}
+  weight: 1

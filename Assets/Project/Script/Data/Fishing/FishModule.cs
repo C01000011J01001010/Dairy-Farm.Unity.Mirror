@@ -73,6 +73,13 @@ namespace Farm.Fishing
         {
             ItemDataContainer item = inventory.GetItem(index);
             isFishingRodEquipped = !item.IsEmpty() && item.Get().Index == FISHING_ROD_INDEX;
+
+            // 낚시 진행중 다른 장비로 교체 시
+            if (isFishingActive && !isFishingRodEquipped)
+            {
+                // 중단처리
+                ResolveMiss(isGenuineMiss: false);
+            }
         }
 
         //낚시대를 들고있을때만 릴 단계를 변경할수있게
@@ -89,23 +96,26 @@ namespace Farm.Fishing
         //현재 reelTier 기준으로 기본에서 해당단계 테이블을 합쳐 가중치로 비례하여 물고기 랜덤획득
         public FishData RollFish()
         {
-            List<FishData> pool = new List<FishData>();
-            for (int i = 0; i <= reelTier; i++)
-                pool.AddRange(table.GetTier(i));
-
+            //GetPool로 릴 단계가 허용하는 Pool을 받아옴
+            List<FishData> pool = table.GetPool(reelTier);
+            
             float totalWeight = 0f;
-            foreach (FishData fish in pool) totalWeight += fish.Grade;
+            foreach (FishData fish in pool)
+            {
+                totalWeight += fish.weight;
+            }
 
             float roll = UnityEngine.Random.Range(0f, totalWeight);
             float cumulative = 0f;
             foreach (FishData fish in pool)
             {
-                cumulative += fish.Grade;
-                if (roll <= cumulative) return fish;
+                cumulative += fish.weight;
+                if (roll <= cumulative)
+                {
+                    return fish;
+                }
             }
-
             return pool[pool.Count - 1];
-
         }
 
         //=== 방향추적 ===
