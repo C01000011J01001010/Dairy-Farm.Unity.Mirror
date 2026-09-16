@@ -1,19 +1,24 @@
+using CoreEngine;
 using System;
 using System.Collections;
 
-public abstract class BaseSelection : BaseUi, IInitialize
+namespace Temp
 {
-    public override void Exit()
+    public abstract class BaseSelection : BaseUi//, IInitialize
     {
-        ClearButtonCallback();
-    }
+        public override void Exit()
+        {
+            ClearButtonCallback();
+        }
 
-    public override IEnumerator Initialize()
-    {
-        SetButtonCallback();
-        yield return null;
-    }
+        public override IEnumerator Initialize()
+        {
+            SetButtonCallback();
+            yield return null;
+        }
 
-    protected abstract void SetButtonCallback();
-    protected abstract void ClearButtonCallback();
+        protected abstract void SetButtonCallback();
+        protected abstract void ClearButtonCallback();
+    }
 }
+

@@ -13,27 +13,17 @@ public class Constants
     //#endregion
 
     #region Addressable Label
-    public const string LABEL_GlobalPoolling = "GlobalPoolling";
-    public const string LABEL_ScenedPoolling = "ScenedPoolling";
+    //public const string LABEL_GlobalPoolling = "GlobalPoolling";
+    //public const string LABEL_ScenedPoolling = "ScenedPoolling";
 
     public const string LABEL_CropData = "CropData";
     public const string LABEL_ItemData = "ItemData";
     public const string LABEL_QuestData = "QuestData";
     public const string LABEL_MagicalEggData = "MagicalEggData";
 
-    public const string LABEL_ScenedUi = "ScenedUi";
-    public const string LABEL_GlobalUi = "GlobalUi";
-
-
-
+    //public const string LABEL_ScenedUi = "ScenedUi";
+    //public const string LABEL_GlobalUi = "GlobalUi";
     #endregion
-
-    #region Scene이름
-    public const string SCENE_NAME_GlobalScene = "GlobalScene";
-    public const string SCENE_NAME_TitleScene = "TitleScene";
-    public const string SCENE_NAME_SampleScene = "SampleScene";
-    #endregion
-
 
     #region Layer Name
     public const string LAYER_PlayerCharacter = "PlayerCharacter";

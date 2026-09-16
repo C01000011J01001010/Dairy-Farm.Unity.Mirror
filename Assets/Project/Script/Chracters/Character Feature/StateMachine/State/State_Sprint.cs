@@ -18,7 +18,7 @@ namespace Farm.Character.StateMachine
             if (!host.TryGetFeature(out CharacterMoveFeature move)) return null;
 
             if (!move.isMove) return CharacterState.Idle;
-            else if (!move.isSprint) return CharacterState.Walk;
+            else if (!move.IsSprint) return CharacterState.Walk;
             return null;
         }
 

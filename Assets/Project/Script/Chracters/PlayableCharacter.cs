@@ -1,23 +1,44 @@
+using CoreEngine.CameraSystem;
+using CoreEngine.EventBus;
+using CoreEngine.Pool;
 using System.Collections;
 using UnityEngine;
 
 namespace Farm.Character
 {
-    public class PlayableCharacter : BaseCharacter
+    public enum CharacterRequest { RequestControl, RequestRelease}
+    public struct CharacterRequestEvent : IEvent
     {
-        public event System.Action Event_OnControllTargetSet;
-        public event System.Action Event_OnControllTargetRemoved;
-
-        // 새로 연결되는 캐릭터만 해당하니 이벤트 등록 안함
-        public virtual void OnControllTargetSet()
+        public readonly PlayableCharacter requester;
+        public readonly CharacterRequest Request;
+        public CharacterRequestEvent(PlayableCharacter changedCharacter, CharacterRequest request)
         {
-            Event_OnControllTargetSet?.Invoke();
+            requester = changedCharacter;
+            Request = request;
+        }
+    }
+    public class PlayableCharacter : BaseCharacter, ISpawnable
+    {
+        public override void OnSpawn()
+        {
+            base.OnSpawn();
+
+            EventBus<CharacterRequestEvent>.Publish(
+                new CharacterRequestEvent(this, CharacterRequest.RequestControl));
+
+            System.Type cameraType = typeof(TargetCameraController2D);
+            EventBus<SetCameraTargetEvent>.Publish(
+                new(transform, cameraType));
+
+            EventBus<SwitchCameraEvent>.Publish(
+                new SwitchCameraEvent(cameraType, null));
         }
 
-        // 연결된 캐릭터만 제거하는거니 이벤트로 등록 안함
-        public virtual void OnControllTargetRemoved()
+        public override void OnDespawn()
         {
-            Event_OnControllTargetRemoved?.Invoke();
+            base.OnDespawn();
+            var evt = new CharacterRequestEvent(this, CharacterRequest.RequestRelease);
+            EventBus<CharacterRequestEvent>.Publish(evt);
         }
     }
 }

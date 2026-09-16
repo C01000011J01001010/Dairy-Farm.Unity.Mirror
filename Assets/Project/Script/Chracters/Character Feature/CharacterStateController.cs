@@ -1,6 +1,6 @@
-using CoreEngine.Actor;
 using CoreEngine.DesignPattern.StateMachine;
 using CoreEngine;
+using System.Diagnostics;
 
 
 namespace Farm.Character.StateMachine
@@ -11,6 +11,7 @@ namespace Farm.Character.StateMachine
     {
 
 #if UNITY_EDITOR
+        [Conditional("UNITY_EDITOR")]
         public void OnValidate()
         {
             defaultStateType = CharacterState.Idle;

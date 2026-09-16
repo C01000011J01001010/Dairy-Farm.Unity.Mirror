@@ -5,20 +5,21 @@ using UnityEngine;
 
 namespace Farm.Character.Move
 {
+    [System.Serializable]
     public class CharacterMoveFeature : BaseActorFeature, IFixedTick
     {
         public Vector2 inputMove;
         public bool isMove;
-        public bool isSprint;
-        public float moveSpeed = 2.5f;
+        public float moveSpeed = 6f;
         public float SprintMul = 2f;
 
-        private Rigidbody2D rigidbody;
+        public bool IsSprint { get; private set; }
+        private Rigidbody2D _rigidbody;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            if(!Host.TryGetComponent(out rigidbody))
+            if(!Host.TryGetComponent(out _rigidbody))
             {
                 LogHelper.LogWarning($"[{Host?.name}]에 {nameof(Rigidbody2D)} 없음");
             }
@@ -26,10 +27,7 @@ namespace Farm.Character.Move
 
         public void FixedTick(float fixedDeltaTime)
         {
-            if (isMove)
-            {
-                Physics_Move();
-            }
+            Physics_Move(fixedDeltaTime);
         }
 
         public virtual void Move(Vector2 input)
@@ -37,7 +35,7 @@ namespace Farm.Character.Move
             inputMove = input;
             isMove = input.sqrMagnitude > 0.01f;
 
-            // 3. Scale -1을 이용한 좌우 반전 로직
+            // Scale -1을 이용한 좌우 반전 로직
             // x값이 0일 때는 마지막 방향을 유지하기 위해 '0이 아닐 때만' 업데이트
             if (input.x != 0)
             {
@@ -53,11 +51,29 @@ namespace Farm.Character.Move
             }
         }
 
-        private void Physics_Move()
+        private void Physics_Move(float fixedDataTime)
         {
-            Vector2 nextVec = inputMove.normalized * moveSpeed * Time.fixedDeltaTime;
-            if (isSprint) nextVec *= SprintMul;
-            rigidbody.MovePosition(rigidbody.position + nextVec);
+            if(isMove)
+            {
+                // 탑다운 선형 움직임
+                Vector2 nextVec = inputMove.normalized * moveSpeed;
+                if (IsSprint) nextVec *= SprintMul;
+                _rigidbody.linearVelocity = nextVec; 
+
+                // 가속 감속 움직임
+                //Vector2 nextVec = inputMove.normalized * moveSpeed * fixedDataTime;
+                //if (IsSprint) nextVec *= SprintMul;
+                //_rigidbody.AddForce(nextVec, ForceMode2D.Impulse);
+            }
+            else
+            {
+                _rigidbody.linearVelocity = Vector2.zero;
+            }
+        }
+
+        public void SetSprint(bool isSprint)
+        {
+            IsSprint = isSprint;
         }
     }
 }

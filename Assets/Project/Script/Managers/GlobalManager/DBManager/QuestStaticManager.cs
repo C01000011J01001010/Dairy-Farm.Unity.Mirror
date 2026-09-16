@@ -10,11 +10,11 @@ namespace Farm.GameData
     {
         //protected override string Label => Constants.LABEL_QuestData;
 
-        protected override string CatalogAddress => throw new System.NotImplementedException();
+        protected override string CatalogAddress => Constants.LABEL_QuestData;
 
         protected override void OnLoadedDataBase(ScriptableObject loadedAsset)
         {
-            throw new System.NotImplementedException();
+
         }
     }
 }

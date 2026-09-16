@@ -4,16 +4,12 @@ using CoreEngine.Pool;
 using Farm.Character.Move;
 using Farm.Character.StateMachine;
 using Farm.Egg;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace Farm.Character
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class BaseCharacter : BaseActorHost, IActorHost, IPoolable, ITickable, IFixedTickable
+    public class BaseCharacter : BaseActorHostExtended, IActorHost, IPoolable, ITickable, IFixedTickable
     {
         #region featrue
         [SerializeField] protected CharacterAnimFeature animFeature = new();
@@ -33,24 +29,7 @@ namespace Farm.Character
 
         public IPoolReleaser Releaser { get; set; }
 
-
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
-        private void OnDestroy()
-        {
-            FeatureHandler.Dispose_RegisteredFeatures();
-        }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            OnSpawn();
-        }
-
-        public void OnSpawn()
+        protected override void RegisterFeatures()
         {
             FeatureHandler.RegisterFeature(animFeature);
             FeatureHandler.RegisterFeature(stateController);
@@ -61,27 +40,13 @@ namespace Farm.Character
             FeatureHandler.RegisterFeature(eggEncyclopedia);
             FeatureHandler.RegisterFeature(actionController);
             FeatureHandler.RegisterFeature(moveFeature);
+        }
 
-            FeatureHandler.Initialize_RegisteredFeatures();
-
+        public override void OnSpawn()
+        {
+            base.OnSpawn();
             stateController.StartState();
         }
-
-        private void InitializeFeaure()
-        {
-
-        }
-
-        public void OnDespawn()
-        {
-            
-        }
-
-        
-
-        //public void SprintHold(bool value) => isSprint = value;
-
-        //public void SprintToggle() => isRun = !isRun;
 
         public virtual void Tick(float deltaTime)
         {
@@ -92,12 +57,10 @@ namespace Farm.Character
 
         public virtual void FixedTick(float fixedDeltaTime)
         {
-            FeatureHandler.Tick_InitializedFeatures(fixedDeltaTime);
+            FeatureHandler.FixedTick_InitializedFeatures(fixedDeltaTime);
             //moveFeature.FixedTick(fixedDeltaTime);
             //stateController.FixedTick(fixedDeltaTime);
         }
-
-        
 
         protected override void OnValidate()
         {

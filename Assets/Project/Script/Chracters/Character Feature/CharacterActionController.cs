@@ -21,8 +21,8 @@ namespace Farm.Character
         }
         public void Dispose()
         {
-            inventory.Event_OnSelectedSlotChanged -= EquipItem;
-            inventory.Event_OnItemUseInput -= OnItemUseInput;
+            //inventory.Event_OnSelectedSlotChanged -= EquipItem;
+            //inventory.Event_OnItemUseInput -= OnItemUseInput;
         }
 
         protected override void OnInitialized()
@@ -31,8 +31,8 @@ namespace Farm.Character
             character = Host as BaseCharacter;
 
             if (!Host.TryGetFeature(out inventory)) return;
-            inventory.Event_OnSelectedSlotChanged += EquipItem;
-            inventory.Event_OnItemUseInput += OnItemUseInput;
+            //inventory.Event_OnSelectedSlotChanged += EquipItem;
+            //inventory.Event_OnItemUseInput += OnItemUseInput;
         }
 
 

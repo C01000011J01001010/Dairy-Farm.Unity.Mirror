@@ -3,6 +3,7 @@ using UnityEngine.Tilemaps; // 타일맵 관련 기능을 위해 필수!
 using UnityEngine.InputSystem;
 using CoreEngine.Actor;
 using CoreEngine;
+using CoreEngine.Helpers;
 
 /// <summary>
 /// 캐릭터가 현재 타겟으로하는 타일 확인해주는 객체
@@ -33,6 +34,12 @@ public class CharacterTileChecker : BaseActorFeature, IActorFeature, ITick
         Vector3 curPos = Host.transform.position;
         // TODO 캐릭터 정면 +0.5 만큼 위치 이동
         curPos.z = 0f;
+
+        if(targetTilemap == null)
+        {
+            LogHelper.LogWarning("targetTilemap 동적 관리 필요");
+            return;
+        }
 
         // 월드 좌표를 타일맵의 '셀(칸) 좌표'로 변환
         Vector3Int cellPosition = targetTilemap.WorldToCell(curPos);

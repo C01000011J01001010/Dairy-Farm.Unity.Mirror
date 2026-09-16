@@ -1,11 +1,14 @@
-using System;
+
 using UnityEngine;
 using CoreEngine.Extensions;
 using Farm.GameData.Item;
 using Farm.GameData;
+using CoreEngine.Interface;
+using Farm.Ui.Quest;
 
 namespace Farm.Character
 {
+
     [System.Serializable]
     public class CharacterInventory : BaseDatabaseAccess<ItemStaticManager, ItemData>
     {
@@ -14,16 +17,17 @@ namespace Farm.Character
         protected ItemDataContainer[] items = new ItemDataContainer[9];
         public ItemDataContainer[] Items => items;
 
-        public event Action<int/*slotIndex*/> Event_OnSelectedSlotChanged;
-        public event Action<int/*slotIndex*/> Event_OnItemSlotChanged;
-        public event Action Event_OnItemUseInput;
+        //public event Action<int/*slotIndex*/> Event_OnSelectedSlotChanged;
+        //public event Action<int/*slotIndex*/> Event_OnItemSlotChanged;
+        //public event Action Event_OnItemUseInput;
 
-        public BaseCharacter character;
+        InterfaceReceiver<IQuickSlotUpdate> _quickSlotUpdateReceiver = new();
+
+        private CharacterActionController actionController;
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            character = Host as BaseCharacter;
             // 게임 시작 시 빈 슬롯으로 깔끔하게 초기화
             for (int i = 0; i < items.Length; i++)
             {
@@ -31,6 +35,9 @@ namespace Farm.Character
             }
             // 초기 슬롯 인덱스 설정
             curItemIndex = 0;
+
+            Host.TryGetFeature(out actionController);
+            _quickSlotUpdateReceiver.Bind();
 
 #if UNITY_EDITOR
             Debug.LogWarning("테스트 구문");
@@ -58,6 +65,7 @@ namespace Farm.Character
         public void ScrollSlot(float scrollDelta)
         {
             if (scrollDelta == 0) return;
+            if (!_quickSlotUpdateReceiver.TryGet(out var quickSlotUpdate)) return;
 
             // UI에 있던 인덱스 순환 로직을 Model(인벤토리)로 가져옴
             if (scrollDelta > 0) curItemIndex--;
@@ -68,16 +76,22 @@ namespace Farm.Character
 
             // 상태가 변했으므로 이벤트 발생
             // -> 구독 중인 UI가 화면을 갱신함
-            Event_OnSelectedSlotChanged?.Invoke(curItemIndex);
+
+            quickSlotUpdate.OnSelectedSlotChanged(curItemIndex);
+            actionController.EquipItem(curItemIndex);
+            //Event_OnSelectedSlotChanged?.Invoke(curItemIndex);
         }
 
         // 마우스 클릭이나 숫자키 등으로 특정 슬롯을 직접 지정할 때 사용
         public void SetSelectedSlot(int index)
         {
+            if (!_quickSlotUpdateReceiver.TryGet(out var quickSlotUpdate)) return;
             if (0 <= index && index < items.Length)
             {
                 curItemIndex = index;
-                Event_OnSelectedSlotChanged?.Invoke(curItemIndex);
+                quickSlotUpdate.OnSelectedSlotChanged(curItemIndex);
+                actionController.EquipItem(curItemIndex);
+                //Event_OnSelectedSlotChanged?.Invoke(curItemIndex);
             }
             else
             {
@@ -92,6 +106,7 @@ namespace Farm.Character
         {
             int curCount = count;
             if (curCount < 0) return;
+            if (!_quickSlotUpdateReceiver.TryGet(out var quickSlotUpdate)) return;
 
             // ItemManager를 통해 ID에 해당하는 원본 데이터를 가져옴
             ItemData newItem = GetData(itemID);
@@ -103,8 +118,8 @@ namespace Farm.Character
                 if (!itemslot.IsEmpty() && itemslot.Get() == newItem)
                 {
                     ChangeInPossessionAmount(itemslot, newItem, curCount, out curCount);
-
-                    Event_OnItemSlotChanged?.Invoke(i);
+                    quickSlotUpdate.OnItemSlotChanged(i);
+                    //Event_OnItemSlotChanged?.Invoke(i);
                     break;
                 }
             }
@@ -119,7 +134,8 @@ namespace Farm.Character
                 if (itemslot.IsEmpty() && itemslot.Set(newItem))
                 {
                     ChangeInPossessionAmount(itemslot, newItem, curCount, out curCount);
-                    Event_OnItemSlotChanged?.Invoke(i);
+                    quickSlotUpdate.OnItemSlotChanged(i);
+                    //Event_OnItemSlotChanged?.Invoke(i);
                     return;
                 }
             }
@@ -168,7 +184,7 @@ namespace Farm.Character
 
             // 아이템 타입에 따른 사용
             ItemData staticData = item.Get();
-            bool isSuccess = item.TryUse(character, count);
+            bool isSuccess = item.TryUse(Host as BaseCharacter, count);
             // 사용 결과에 따른 처리
             if (isSuccess)
             {
@@ -182,7 +198,9 @@ namespace Farm.Character
                 {
                     item.Pop(count, out _);
                 }
-                Event_OnItemUseInput?.Invoke();
+
+                actionController.OnItemUseInput();
+                //Event_OnItemUseInput?.Invoke();
             }
             else
             {
