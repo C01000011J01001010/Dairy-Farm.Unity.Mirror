@@ -4,7 +4,7 @@ using CoreEngine.Extensions;
 using Farm.GameData.Item;
 using Farm.GameData;
 using CoreEngine.Interface;
-using Farm.Ui.Quest;
+using Farm.Ui.Item;
 
 namespace Farm.Character
 {

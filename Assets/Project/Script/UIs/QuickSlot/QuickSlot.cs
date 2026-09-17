@@ -2,13 +2,12 @@ using Farm.Character;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Farm.Ui.Item;
 using Farm.Controller;
 using CoreEngine.EventBus;
 using CoreEngine.Interface;
 using CoreEngine;
 
-namespace Farm.Ui.Quest
+namespace Farm.Ui.Item
 {
     public interface IQuickSlotUpdate
     {

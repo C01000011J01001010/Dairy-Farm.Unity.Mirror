@@ -17,7 +17,7 @@ namespace Farm.Character
             Request = request;
         }
     }
-    public class PlayableCharacter : BaseCharacter, ISpawnable
+    public class PlayableCharacter : BaseCharacter
     {
         public override void OnSpawn()
         {

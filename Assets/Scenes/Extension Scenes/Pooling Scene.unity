@@ -180,7 +180,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3174206237122861089, guid: f5ebff851da7d1f42b6103cc89acc226, type: 3}
     - target: {fileID: 3191963478096537523, guid: 0a6ed408f7c8b4740af443c203c21c69, type: 3}
+      propertyPath: poolSetups.Array.data[1].prefab
+      value: 
+      objectReference: {fileID: 3174206237122861089, guid: f5ebff851da7d1f42b6103cc89acc226, type: 3}
+    - target: {fileID: 3191963478096537523, guid: 0a6ed408f7c8b4740af443c203c21c69, type: 3}
       propertyPath: poolSetups.Array.data[0].maxSize
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191963478096537523, guid: 0a6ed408f7c8b4740af443c203c21c69, type: 3}
+      propertyPath: poolSetups.Array.data[1].maxSize
       value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 3191963478096537523, guid: 0a6ed408f7c8b4740af443c203c21c69, type: 3}
@@ -188,7 +196,15 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3191963478096537523, guid: 0a6ed408f7c8b4740af443c203c21c69, type: 3}
+      propertyPath: poolSetups.Array.data[1].defaultAmount
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191963478096537523, guid: 0a6ed408f7c8b4740af443c203c21c69, type: 3}
       propertyPath: poolSetups.Array.data[0].defaultCapacity
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191963478096537523, guid: 0a6ed408f7c8b4740af443c203c21c69, type: 3}
+      propertyPath: poolSetups.Array.data[1].defaultCapacity
       value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -204,6 +220,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1034023055246901128, guid: 00af9387f80203749ae9137f00b775a4, type: 3}
+      propertyPath: poolSetups.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034023055246901128, guid: 00af9387f80203749ae9137f00b775a4, type: 3}
+      propertyPath: poolSetups.Array.data[1].prefab
+      value: 
+      objectReference: {fileID: 2660491773962496629, guid: 176f481974d777b45918e5c503c0d21b, type: 3}
+    - target: {fileID: 1034023055246901128, guid: 00af9387f80203749ae9137f00b775a4, type: 3}
+      propertyPath: poolSetups.Array.data[1].maxSize
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034023055246901128, guid: 00af9387f80203749ae9137f00b775a4, type: 3}
+      propertyPath: poolSetups.Array.data[1].defaultAmount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1034023055246901128, guid: 00af9387f80203749ae9137f00b775a4, type: 3}
+      propertyPath: poolSetups.Array.data[1].defaultCapacity
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1068257234437177550, guid: 00af9387f80203749ae9137f00b775a4, type: 3}
       propertyPath: m_Name
       value: CharacterPoolManager
