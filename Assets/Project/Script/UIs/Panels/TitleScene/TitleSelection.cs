@@ -7,14 +7,15 @@ using UnityEngine.UI;
 
 namespace Temp
 {
-    public sealed class TitleSelection : BaseSelection, IInitialize//, IScenedUi
+    public sealed class TitleSelection : BaseSelection
     {
         private BaseButton[] _buttonList;
         [SerializeField] private SceneReference _sceneReference;
 
 
-        public override IEnumerator Initialize()
+        protected override IEnumerator OnInitialize()
         {
+            yield return base.OnInitialize();
             _buttonList = gameObject.GetComponentsInChildren<BaseButton>();
 
             foreach (BaseButton button in _buttonList)

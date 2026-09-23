@@ -2,7 +2,7 @@ using CoreEngine.GameData;
 using Farm.GameData.Item;
 using UnityEngine;
 
-namespace Farm.Ui.Item
+namespace Farm.UI.Item
 {
     public class ItemViewer : BaseDataViewer_ForUi<ItemDataContainer, ItemData>
     {

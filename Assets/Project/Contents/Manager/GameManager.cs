@@ -15,16 +15,14 @@ namespace Farm.GameRule
 
         public int Priority => (int)ManagerPriority.TopLevel;
 
-        private void Start()
+
+        protected override IEnumerator OnInitialize()
         {
+            yield return base.OnInitialize();
+            characterPoolManager = CoreFacade.GetManager<CharacterPoolManager>();
+
             _routine = Initial();
             StartCoroutine(_routine);
-        }
-
-        public override IEnumerator Initialize()
-        {
-            yield return base.Initialize();
-            characterPoolManager = CoreFacade.GetManager<CharacterPoolManager>();
         }
 
         protected override void OnDestroy()

@@ -35,12 +35,12 @@ namespace Farm.GameLogic.Time
         private float _timerForMinute = 0f;
         private float _timerForHour = 0f;
 
-        public override IEnumerator Initialize()
+        protected override IEnumerator OnInitialize()
         {
+            yield return base.OnInitialize();
             // BaseManager(BaseLeaf)의 OnEnable에서 RegisterTick()이 자동 호출되므로 초기화만 수행
             _timerForMinute = 0f;
             _timerForHour = 0f;
-            yield break;
         }
 
         /// <summary>

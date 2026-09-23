@@ -40,18 +40,18 @@ namespace Farm.Input
         //public event System.Action Event_OnUseItemInput;
 
 
-        public override void Exit()
+        public override void OnExit()
         {
-            base.Exit();
+            base.OnExit();
 
             PlayerActions.UseItem.performed -= OnUseItemInput;
 
             interfacePublisherBinder.UnbindAll();
         }
 
-        public override IEnumerator Initialize()
+        protected override IEnumerator OnInitialize()
         {
-            yield return base.Initialize();
+            yield return base.OnInitialize();
 
             PlayerActions.UseItem.performed += OnUseItemInput;
 

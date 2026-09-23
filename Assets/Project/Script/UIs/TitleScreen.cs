@@ -13,8 +13,9 @@ namespace Temp
 
         private Coroutine titleAnimation;
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             if (titleAnimation != null)
             {
                 StopCoroutine(titleAnimation);
@@ -22,13 +23,14 @@ namespace Temp
             }
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             if (titleAnimation != null) StopCoroutine(titleAnimation);
             titleAnimation = StartCoroutine(FloatingMovement());
         }
 
-        public override void Exit()
+        public override void OnExit()
         {
             if (titleAnimation != null)
             {
@@ -37,7 +39,7 @@ namespace Temp
             }
         }
 
-        public override IEnumerator Initialize()
+        protected override IEnumerator OnInitialize()
         {
             // 초기화와 별개로 유지
             if (titleAnimation != null) StopCoroutine(titleAnimation);

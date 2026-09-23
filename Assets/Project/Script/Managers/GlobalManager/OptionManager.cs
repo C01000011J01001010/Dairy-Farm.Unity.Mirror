@@ -70,14 +70,14 @@ public class OptionManager : BaseManager
 
     
 
-    public override void Exit()
+    public override void OnExit()
     {
-        base.Exit();
+        base.OnExit();
     }
 
-    public override IEnumerator Initialize()
+    protected override IEnumerator OnInitialize()
     {
-        base.Initialize();
+        yield return base.OnInitialize();
         CreateVolume();
         //ApplyGraphicSetting(FileManager.savedGraphicOption);
 

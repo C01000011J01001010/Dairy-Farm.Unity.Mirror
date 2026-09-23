@@ -7,7 +7,7 @@ using CoreEngine.EventBus;
 using CoreEngine.Interface;
 using CoreEngine;
 
-namespace Farm.Ui.Item
+namespace Farm.UI.Item
 {
     public interface IQuickSlotUpdate
     {
@@ -39,7 +39,7 @@ namespace Farm.Ui.Item
             _publisher = new(this);
         }
 
-        public override void Exit()
+        public override void OnExit()
         {
             // 이벤트 정리
             for (int i = 0; i < itemSlots.Length; i++)
@@ -56,9 +56,9 @@ namespace Farm.Ui.Item
             EventBus<ControlTargetChangedEvent>.Unsubscribe(OnControlTargetChanged);
         }
 
-        public override IEnumerator Initialize()
+        protected override IEnumerator OnInitialize()
         {
-            base.Initialize();
+            yield return base.OnInitialize();
 
             itemSlots = GetComponentsInChildren<BaseButton>();
             itemViewers = new ItemViewer[itemSlots.Length];
